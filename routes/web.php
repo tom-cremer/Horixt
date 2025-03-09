@@ -3,6 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
+//Imports
+require __DIR__.'/auth.php';
+require __DIR__.'/track.php';
+
+// Principal views
+
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
@@ -19,4 +25,3 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
 });
 
-require __DIR__.'/auth.php';
