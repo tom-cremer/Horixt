@@ -1,45 +1,77 @@
-<aside :class="@json($collapsed) ? 'w-16 px-2 py-5' : 'w-72 p-5'"
-       class="flex flex-col border-r border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 row-span-2 max-h-screen transition-all duration-300">
+@php
+    $collapsed = session('sidebar_collapsed', false);
+@endphp
 
-    <button wire:click="toggle" class="p-2 mb-4 bg-zinc-200 rounded hover:bg-zinc-300">☰</button>
+<aside
+       class=" {{ $collapsed ? 'w-16 px-2 py-5' : 'w-72 p-5' }} flex flex-col border-r border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 row-span-2 max-h-screen transition-all duration-300">
+
+    <button wire:click="toggle()" class="p-2 mb-4 bg-zinc-200 rounded hover:bg-zinc-300">☰</button>
 
     <a href="{{ route('dashboard') }}" class="mr-5 flex items-center space-x-2 " wire:navigate>
         <x-app-logo/>
     </a>
 
     <div class="flex flex-col gap-1 mt-4">
-            <div class="relative group" :class="@json($collapsed) ? 'w-fit' : ''">
-                <button class="flex items-center gap-2 p-2 text-left text-sm font-semibold w-full hover:bg-zinc-200 rounded-xl transition-colors duration-200" wire:navigate
-                        href="{{ route('dashboard') }}">
-                    <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-neutral-100 dark:bg-neutral-800 relative">
+        <div class="relative group {{$collapsed ? 'w-fit' : ''}}">
+            <button
+                class="flex items-center gap-2 p-2 text-left text-sm font-semibold w-full hover:bg-zinc-200 rounded-xl transition-colors duration-200"
+                wire:navigate
+                href="{{ route('dashboard') }}">
+                    <span
+                        class="flex items-center justify-center w-8 h-8 rounded-lg bg-neutral-100 dark:bg-neutral-800 relative">
                         <flux:icon name="house"/>
                     </span>
-                    <span class="transition-all delay-300 ease-in-out" :class="@json($collapsed) ? 'opacity-0 hidden' : ''">Dashboard</span>
-                </button>
+                <span class="transition-all delay-300 ease-in-out {{$collapsed ? 'opacity-0 hidden' : ''}}">Dashboard</span>
+            </button>
 
-                <!-- Tooltip -->
+            <!-- Tooltip -->
+            @if($collapsed)
                 <div
-                    class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-white bg-neutral-800 rounded-md opacity-0 group-hover:opacity-100 transition-opacity"
-                    x-show="@json($collapsed)">
+                    class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-white bg-neutral-800 rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
                     Dashboard
                 </div>
-            </div>
-            <div class="relative group" :class="@json($collapsed) ? 'w-fit' : ''">
-                <button class="flex items-center gap-2 p-2 text-left text-sm font-semibold w-full hover:bg-zinc-200 rounded-xl transition-colors duration-200" wire:navigate
-                        href="{{ route('tracks') }}">
-                    <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-neutral-100 dark:bg-neutral-800 relative">
+            @endif
+        </div>
+        <div class="relative group {{$collapsed ? 'w-fit' : ''}}">
+            <button
+                class="flex items-center gap-2 p-2 text-left text-sm font-semibold w-full hover:bg-zinc-200 rounded-xl transition-colors duration-200"
+                wire:navigate
+                href="{{ route('tracks') }}">
+                    <span
+                        class="flex items-center justify-center w-8 h-8 rounded-lg bg-neutral-100 dark:bg-neutral-800 relative">
                         <x-icons.gantt-chart/>
                     </span>
-                    <span class="transition-all delay-300 ease-in-out" :class="@json($collapsed) ? 'opacity-0 hidden' : ''">Tracks</span>
-                </button>
+                <span class="transition-all delay-300 ease-in-out {{$collapsed ? 'opacity-0 hidden' : ''}}">Tracks</span>
+            </button>
 
-                <!-- Tooltip -->
+            <!-- Tooltip -->
+            @if($collapsed)
                 <div
-                    class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-white bg-neutral-800 rounded-md opacity-0 group-hover:opacity-100 transition-opacity"
-                    x-show="@json($collapsed)">
+                    class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-white bg-neutral-800 rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
                     Tracks
                 </div>
-            </div>
+            @endif
+        </div>
+        <div class="relative group {{$collapsed ? 'w-fit' : ''}}">
+            <button
+                class="flex items-center gap-2 p-2 text-left text-sm font-semibold w-full hover:bg-zinc-200 rounded-xl transition-colors duration-200"
+                wire:navigate
+                href="{{ route('projects') }}">
+                    <span
+                        class="flex items-center justify-center w-8 h-8 rounded-lg bg-neutral-100 dark:bg-neutral-800 relative">
+                        <flux:icon name="layout-grid"/>
+                    </span>
+                <span class="transition-all delay-300 ease-in-out {{$collapsed ? 'opacity-0 hidden' : ''}}">Projects</span>
+            </button>
+
+            <!-- Tooltip -->
+            @if($collapsed)
+                <div
+                    class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-white bg-neutral-800 rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
+                    Projects
+                </div>
+            @endif
+        </div>
     </div>
 
     {{--Spacer--}}
