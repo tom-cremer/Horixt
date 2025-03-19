@@ -6,6 +6,7 @@ use Livewire\Volt\Volt;
 //Imports
 require __DIR__.'/auth.php';
 require __DIR__.'/track.php';
+require __DIR__.'/project.php';
 
 // Principal views
 
