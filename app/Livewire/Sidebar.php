@@ -2,26 +2,22 @@
 
 namespace App\Livewire;
 
+use Livewire\Attributes\Session;
 use Livewire\Component;
-use Illuminate\Support\Facades\Session;
 
 class Sidebar extends Component
 {
-    public $collapsed;
-
-    public function mount()
-    {
-        $this->collapsed = Session::get('sidebar_collapsed', false);
-    }
+    #[Session]
+    public $collapsed = false;
 
     public function toggle()
     {
-        $this->collapsed = !$this->collapsed;
-        Session::put('sidebar_collapsed', $this->collapsed);
+        return $this->collapsed = !$this->collapsed;
     }
 
     public function render()
     {
-        return view('livewire.sidebar');
+        $collapsed = $this->collapsed;
+        return view('livewire.sidebar', compact('collapsed'));
     }
 }
