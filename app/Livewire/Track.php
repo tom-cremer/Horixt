@@ -64,14 +64,14 @@ class Track extends Component
             'ended_at' => Carbon::parse($this->selectedDate . ' ' . $this->ended_at),
         ]);
         Flux::modal('edit-track')->close();
-        $this->trackId = null;
+        $this->reset();
         $this->render();
     }
 
     public function deleteTrack($trackId)
     {
         \App\Models\Track::destroy($trackId);
-        $this->trackId = null;
+        $this->reset();
         $this->render();
     }
 
