@@ -1,7 +1,3 @@
-@php
-    $collapsed = session('sidebar_collapsed', false);
-@endphp
-
 <aside
        class=" {{ $collapsed ? 'w-16 px-2 py-5' : 'w-72 p-5' }} flex flex-col border-r border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 row-span-2 max-h-screen transition-all duration-300">
 
