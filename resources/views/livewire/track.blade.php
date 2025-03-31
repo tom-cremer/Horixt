@@ -2,7 +2,6 @@
     <div class="flex flex-col min-h-[100%] w-full">
         <!-- Action bar -->
         <div class="flex justify-between items-center p-4 border-b bg-white sticky top-0 z-10">
-
             <flux:button icon="plus" wire:click="addTrack">Add Track</flux:button>
 
             <label for="dateselect" class="hidden">Select a date</label>
@@ -24,7 +23,7 @@
                 </div>
 
                 <!-- Gantt Container (Now uses absolute positioning) -->
-                <div id="gantt-container" class="relative h-[300px] border-t border-gray-300 py-2">
+                <div id="gantt-container" class="relative h-[80vh] border-t border-gray-300 py-2">
                     @if ($tracks->isEmpty())
                         <div class="absolute left-1/4 top-1/2 transform -translate-y-1/2 text-center">
                             <flux:heading size="lg">No tracks for this day</flux:heading>
@@ -80,7 +79,7 @@
     </div>
 
     {{-- Modal d'edit de track --}}
-    <flux:modal name="edit-track" class="md:w-96">
+    <flux:modal name="edit-track" class="md:w-96" variant="flyout">
         <div class="space-y-6">
             <div>
                 <flux:heading size="lg">Edit Track</flux:heading>
@@ -104,7 +103,7 @@
 
 
     <!-- Modal d'ajout de track -->
-    <flux:modal name="add-track" class="md:w-96">
+    <flux:modal name="add-track" class="md:w-96" variant="flyout">
         <div class="space-y-6">
             <div>
                 <flux:heading size="lg">Add a Track</flux:heading>
