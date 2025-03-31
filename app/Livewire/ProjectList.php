@@ -2,10 +2,13 @@
 
 namespace App\Livewire;
 
+use App\Enums\ProjectPriority;
+use App\Enums\ProjectStatus;
+use App\Models\Project;
 use Flux\Flux;
 use Livewire\Component;
 
-class Project extends Component
+class ProjectList extends Component
 {
 
     public $name;
@@ -18,8 +21,7 @@ class Project extends Component
 
     public function createProject()
     {
-
-        \App\Models\Project::create([
+        Project::create([
             'name' => $this->name,
             'description' => $this->description,
             'status' => $this->status,
@@ -35,18 +37,19 @@ class Project extends Component
 
     public function editProject($projectId)
     {
-        $project = \App\Models\Project::find($projectId);
+        $project = Project::find($projectId);
         $this->name = $project->name;
         $this->description = $project->description;
         $this->status = $project->status;
         $this->end_date = $project->end_date;
         $this->priority = $project->priority;
+        $this->projectId = $project->id;
         Flux::modal('edit-project')->show();
     }
 
     public function updateProject($projectId)
     {
-        $project = \App\Models\Project::find($projectId);
+        $project = Project::find($projectId);
         $project->update([
             'name' => $this->name,
             'description' => $this->description,
@@ -59,11 +62,21 @@ class Project extends Component
         Flux::modal('edit-project')->close();
     }
 
+    public function deleteProject($projectId)
+    {
+        Project::find($projectId)->delete();
+    }
+
+    public function toProject($projectId)
+    {
+        return redirect()->route('projects.show', [$projectId]);
+    }
+
     public function render()
     {
-        $projects = \App\Models\Project::where('user_id', auth()->id())->get();
-        $statuses = \App\Enums\ProjectStatus::cases();
-        $priorities = \App\Enums\ProjectPriority::cases();
-        return view('livewire.project', compact('projects', 'statuses', 'priorities'));
+        $projects = Project::where('user_id', auth()->id())->get();
+        $statuses = ProjectStatus::cases();
+        $priorities = ProjectPriority::cases();
+        return view('livewire.projects.index', compact('projects', 'statuses', 'priorities'));
     }
 }
