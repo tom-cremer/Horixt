@@ -10,7 +10,7 @@
     <div class="flex flex-col gap-1 mt-4">
         <div class="relative group {{$collapsed ? 'w-fit' : ''}}">
             <button
-                class="flex items-center gap-2 p-2 text-left text-sm font-semibold w-full hover:bg-zinc-200 rounded-xl transition-colors duration-200"
+                class="peer flex items-center gap-2 p-2 text-left text-sm font-semibold w-full hover:bg-zinc-200 rounded-xl transition-colors duration-200"
                 wire:navigate
                 href="{{ route('dashboard') }}">
                     <span
@@ -23,14 +23,14 @@
             <!-- Tooltip -->
             @if($collapsed)
                 <div
-                    class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-white bg-neutral-800 rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
+                    class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-white bg-neutral-800 rounded-md opacity-0 peer-hover:opacity-100 transition-opacity">
                     Dashboard
                 </div>
             @endif
         </div>
         <div class="relative group {{$collapsed ? 'w-fit' : ''}}">
             <button
-                class="flex items-center gap-2 p-2 text-left text-sm font-semibold w-full hover:bg-zinc-200 rounded-xl transition-colors duration-200"
+                class="peer flex items-center gap-2 p-2 text-left text-sm font-semibold w-full hover:bg-zinc-200 rounded-xl transition-colors duration-200"
                 wire:navigate
                 href="{{ route('tracks') }}">
                     <span
@@ -43,16 +43,16 @@
             <!-- Tooltip -->
             @if($collapsed)
                 <div
-                    class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-white bg-neutral-800 rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
+                    class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-white bg-neutral-800 rounded-md opacity-0 peer-hover:opacity-100 transition-opacity">
                     Tracks
                 </div>
             @endif
         </div>
         <div class="relative group {{$collapsed ? 'w-fit' : ''}}">
             <button
-                class="flex items-center gap-2 p-2 text-left text-sm font-semibold w-full hover:bg-zinc-200 rounded-xl transition-colors duration-200"
+                class="peer flex items-center gap-2 p-2 text-left text-sm font-semibold w-full hover:bg-zinc-200 rounded-xl transition-colors duration-200"
                 wire:navigate
-                href="{{ route('projects') }}">
+                href="{{ route('projects.index') }}">
                     <span
                         class="flex items-center justify-center w-8 h-8 rounded-lg bg-neutral-100 dark:bg-neutral-800 relative">
                         <flux:icon name="layout-grid"/>
@@ -63,7 +63,7 @@
             <!-- Tooltip -->
             @if($collapsed)
                 <div
-                    class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-white bg-neutral-800 rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
+                    class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-white bg-neutral-800 rounded-md opacity-0 peer-hover:opacity-100 transition-opacity">
                     Projects
                 </div>
             @endif
