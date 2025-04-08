@@ -2,9 +2,10 @@
 
 namespace App\Livewire;
 
-use App\Enums\ProjectPriority;
-use App\Enums\ProjectStatus;
+use App\Models\Color;
+use App\Models\Priority;
 use App\Models\Project;
+use App\Models\Status;
 use Flux\Flux;
 use Livewire\Component;
 
@@ -13,22 +14,27 @@ class ProjectList extends Component
 
     public $name;
     public $description;
-    public $status;
-    public $end_date;
-    public $priority;
+    public $status_id;
+    public $priority_id;
+    public $color_id;
+    public $deadline;
     public $projectId;
 
+
+    public $statuses;
+    public $priorities;
+    public $colors;
 
     public function createProject()
     {
         Project::create([
             'name' => $this->name,
             'description' => $this->description,
-            'status' => $this->status,
             'user_id' => auth()->id(),
-            'start_date' => now(),
-            'end_date' => $this->end_date,
-            'priority' => $this->priority,
+            'status_id' => $this->status_id ?? Status::DEFAULT,
+            'priority_id' => $this->priority_id ?? Priority::DEFAULT,
+            'color_id' => $this->color_id ?? Color::DEFAULT,
+            'deadline' => $this->deadline,
         ]);
 
         $this->reset();
@@ -40,9 +46,10 @@ class ProjectList extends Component
         $project = Project::find($projectId);
         $this->name = $project->name;
         $this->description = $project->description;
-        $this->status = $project->status;
-        $this->end_date = $project->end_date;
-        $this->priority = $project->priority;
+        $this->status_id = $project->status_id;
+        $this->priority_id = $project->priority_id;
+        $this->color_id = $project->color_id;
+        $this->deadline = $project->deadline;
         $this->projectId = $project->id;
         Flux::modal('edit-project')->show();
     }
@@ -53,9 +60,10 @@ class ProjectList extends Component
         $project->update([
             'name' => $this->name,
             'description' => $this->description,
-            'status' => $this->status,
-            'end_date' => $this->end_date,
-            'priority' => $this->priority,
+            'status_id' => $this->status_id ?? $project->status_id ?? Status::DEFAULT,
+            'priority_id' => $this->priority_id ?? $project->priority_id ?? Priority::DEFAULT,
+            'color_id' => $this->color_id ?? $project->color_id ?? Color::DEFAULT,
+            'deadline' => $this->deadline,
         ]);
 
         $this->reset();
@@ -74,9 +82,22 @@ class ProjectList extends Component
 
     public function render()
     {
-        $projects = Project::where('user_id', auth()->id())->get();
-        $statuses = ProjectStatus::cases();
-        $priorities = ProjectPriority::cases();
-        return view('livewire.projects.index', compact('projects', 'statuses', 'priorities'));
+        $this->statuses = Status::all();
+        $this->priorities = Priority::all();
+        $this->colors = Color::all();
+
+        $projects = Project::with('status', 'priority')
+            ->where('user_id', auth()->id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('livewire.projects.index',
+            [
+                'projects' => $projects,
+                'statuses' => $this->statuses,
+                'priorities' => $this->priorities,
+                'colors' => $this->colors,
+            ]
+        );
     }
 }
