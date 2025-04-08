@@ -23,11 +23,11 @@
                                 <flux:subheading>{{$project->description}}</flux:subheading>
                             </div>
                             <div class="flex gap-2 mt-2">
-                                <flux:badge color="amber">
-                                    {{$project->status}}
+                                <flux:badge color="yellow">
+                                    {{$project->status->name}}
                                 </flux:badge>
                                 <flux:badge color="blue">
-                                    {{$project->priority}}
+                                    {{$project->priority->name}}
                                 </flux:badge>
                             </div>
                         </div>
@@ -37,7 +37,6 @@
                             </flux:button>
                         </div>
                     </div>
-
                 @endforeach
             </div>
         @endif
@@ -54,14 +53,14 @@
             <flux:input label="Title" placeholder="Project 101" wire:model.defer="name"/>
             <flux:input label="Description" placeholder="Project 101" wire:model.defer="description"/>
 
-            <flux:select wire:model="status" placeholder="Choose status...">
+            <flux:select wire:model="status_id" placeholder="Choose status...">
                 @foreach($statuses as $status)
-                    <flux:select.option value="{{$status}}">{{$status}}</flux:select.option>
+                    <flux:select.option value="{{$status->id}}">{{$status->name}}</flux:select.option>
                 @endforeach
             </flux:select>
-            <flux:select wire:model="priority" placeholder="Choose Priority...">
+            <flux:select wire:model="priority_id" placeholder="Choose Priority...">
                 @foreach($priorities as $priority)
-                    <flux:select.option value="{{$priority}}">{{$priority}}</flux:select.option>
+                    <flux:select.option value="{{$priority->id}}">{{$priority->name}}</flux:select.option>
                 @endforeach
             </flux:select>
 
@@ -81,14 +80,14 @@
             <flux:input label="Title" placeholder="Project 101" wire:model.defer="name"/>
             <flux:input label="Description" placeholder="Project 101" wire:model.defer="description"/>
 
-            <flux:select wire:model="status" placeholder="Choose status...">
+            <flux:select wire:model="status_id" placeholder="Choose status...">
                 @foreach($statuses as $status)
-                    <flux:select.option value="{{$status}}">{{$status}}</flux:select.option>
+                    <flux:select.option value="{{$status->id}}">{{$status->name}}</flux:select.option>
                 @endforeach
             </flux:select>
-            <flux:select wire:model="priority" placeholder="Choose Priority...">
+            <flux:select wire:model="priority_id" placeholder="Choose Priority...">
                 @foreach($priorities as $priority)
-                    <flux:select.option value="{{$priority}}">{{$priority}}</flux:select.option>
+                    <flux:select.option value="{{$priority->id}}">{{$priority->name}}</flux:select.option>
                 @endforeach
             </flux:select>
 
