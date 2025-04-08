@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('tracks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title');
             $table->text('description')->nullable();
             $table->dateTime('started_at');
             $table->dateTime('ended_at')->nullable();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('project_id')->nullable();
+            $table->unsignedBigInteger('color_id');
             $table->timestamps();
         });
     }

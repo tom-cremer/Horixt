@@ -16,12 +16,11 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('status')->default(ProjectStatus::PENDING->value);
-            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade'); // Mode solo
-            /*$table->foreignId('organisation_id')->nullable()->constrained()->onDelete('cascade'); // Mode organisation*/
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
-            $table->string('priority')->default(ProjectPriority::LOW->value);
+            $table->unsignedBigInteger('user_id'); // Mode solo
+            $table->unsignedBigInteger('status_id');
+            $table->unsignedBigInteger('priority_id');
+            $table->unsignedBigInteger('color_id');
+            $table->date('deadline')->nullable();
             $table->timestamps();
         });
     }
