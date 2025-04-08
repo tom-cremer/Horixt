@@ -1,8 +1,10 @@
-<div class="flex flex-col gap-4">
+<div class="flex gap-4">
     <div class="flex flex-col min-h-[100%] w-full">
         <!-- Action bar -->
         <div class="flex justify-between items-center p-4 border-b bg-white sticky top-0 z-10">
-            <flux:button icon="plus" wire:click="addTrack">Add Track</flux:button>
+            <flux:modal.trigger name="add-track" class="flex items-center gap-2">
+                <flux:button icon="plus">Add Track</flux:button>
+            </flux:modal.trigger>
 
             <label for="dateselect" class="hidden">Select a date</label>
             <input type="date" id="dateselect" wire:model="selectedDate" class="border p-2 rounded">
@@ -53,14 +55,13 @@
                                 $width = (($endHour * 60 + $endMinute) - ($startHour * 60 + $startMinute)) / 60 * 100;
                                 $top = $loop->index * 50; // Stacking tasks to avoid overlap
                             @endphp
-
                             <flux:dropdown position="bottom" align="start"
                                            class="gantt-task absolute"
                                            style="left: {{ $left }}px; width: {{ $width }}px; top: {{ $top+4 }}px;">
-                                <flux:button icon-trailing="ellipsis-vertical" class="w-full justify-start gap-3 break-all text-clip truncate">
-                                    {{ $track->title }}
-                                </flux:button>
-                                <flux:menu class="w-[180px]">
+                                <button class="flex w-full justify-start rounded-md p-2 {{$track->color->alias}} {{$track->color->alias}}--text">
+                                    {{ $track->title  }}
+                                </button>
+                                <flux:menu class="w-[180px] {{$track->color->light_color}} dark:{{$track->color->dark_color}}">
                                     <flux:menu.item wire:click="editTrack({{ $track->id }})">
                                         Edit
                                     </flux:menu.item>
@@ -69,7 +70,6 @@
                                     </flux:menu.item>
                                 </flux:menu>
                             </flux:dropdown>
-
                         @endforeach
                     @endif
                 </div>
@@ -91,6 +91,12 @@
             <flux:input label="Started At" type="time" wire:model.defer="started_at"/>
             <flux:input label="Ended At" type="time" wire:model.defer="ended_at"/>
 
+            <flux:select label="Colors" wire:model="color_id" placeholder="Select a color">
+                @foreach($colors as $color)
+                    <flux:select.option value="{{ $color->id }}" label="{{ $color->name }}"/>
+                @endforeach
+            </flux:select>
+
             <input type="hidden" wire:model="trackId">
 
             <div class="flex">
@@ -100,8 +106,6 @@
             </div>
         </div>
     </flux:modal>
-
-
     <!-- Modal d'ajout de track -->
     <flux:modal name="add-track" class="md:w-96" variant="flyout">
         <div class="space-y-6">
@@ -115,11 +119,18 @@
             <flux:input label="Started At" type="time" wire:model.defer="started_at"/>
             <flux:input label="Ended At" type="time" wire:model.defer="ended_at"/>
 
+            <flux:select label="Colors" wire:model="color_id" placeholder="Select a color">
+                @foreach($colors as $color)
+                    <flux:select.option value="{{ $color->id }}" label="{{ $color->name }}"/>
+                @endforeach
+            </flux:select>
+
+
             <input type="hidden" wire:model="selectedDate">
 
             <div class="flex">
                 <flux:spacer/>
-                <flux:button type="submit" wire:click="saveTrack" variant="primary">Add Track</flux:button>
+                <flux:button type="submit" wire:click="createTrack" variant="primary">Add Track</flux:button>
             </div>
         </div>
     </flux:modal>
