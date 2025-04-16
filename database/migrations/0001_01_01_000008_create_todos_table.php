@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('color_id');
             $table->unsignedBigInteger('user_id'); // Mode solo
             $table->unsignedBigInteger('project_id')->nullable();
+            $table->unsignedBigInteger('organization_id')->nullable();
             $table->timestamps();
         });
     }

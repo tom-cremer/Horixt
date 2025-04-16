@@ -19,6 +19,7 @@ return new class extends Migration
             $table->dateTime('ended_at')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('project_id')->nullable();
+            $table->unsignedBigInteger('organization_id')->nullable();
             $table->unsignedBigInteger('color_id');
             $table->timestamps();
         });
