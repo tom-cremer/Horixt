@@ -1,7 +1,7 @@
 <div class="flex gap-4">
     <div class="flex flex-col min-h-[100%] w-full">
         <!-- Action bar -->
-        <div class="flex justify-between items-center p-4 border-b bg-white sticky top-0 z-10">
+        <div class="flex justify-between items-center p-4 border-b sticky top-0 z-10">
             <flux:modal.trigger name="add-track" class="flex items-center gap-2">
                 <flux:button icon="plus">Add Track</flux:button>
             </flux:modal.trigger>
@@ -14,11 +14,11 @@
 
         <!-- Conteneur principal scrollable horizontalement -->
         <div class="flex-1 overflow-x-auto relative">
-            <div class="relative h-full w-max min-w-full border-t border-gray-300">
+            <div class="relative h-full w-max min-w-full  border-gray-300">
                 <!-- Grille (Header for Hours) -->
                 <div class="grid grid-cols-24 border-t border-l">
                     @for($i = 0; $i < 24; $i++)
-                        <div class="border-r text-center bg-gray-100 p-2 w-[100px]">
+                        <div class="border-r text-center bg-gray-100 dark:bg-zinc-800 p-2 w-[100px]">
                             {{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00
                         </div>
                     @endfor

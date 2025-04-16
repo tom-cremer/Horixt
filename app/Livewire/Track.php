@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Helper\Context;
 use App\Models\Color;
 use Carbon\Carbon;
 use Flux\Flux;
@@ -49,25 +50,48 @@ class Track extends Component
 
     public function createTrack()
     {
-        $this->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string|max:1000',
-            'started_at' => 'required',
-            'ended_at' => 'nullable',
-            'project_id' => 'nullable|exists:projects,id',
-            'color_id' => 'nullable|exists:colors,id',
-        ]);
+        if (Context::isOrganization()) {
+            $this->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'nullable|string|max:1000',
+                'started_at' => 'required|date',
+                'ended_at' => 'nullable|date|after_or_equal:started_at',
+                'project_id' => 'nullable|exists:projects,id',
+                'color_id' => 'nullable|exists:colors,id',
+            ]);
 
-        \App\Models\Track::create([
-            'title' => $this->title,
-            'description' => $this->description,
-            'started_at' => $this->started_at,
-            'ended_at' => $this->ended_at,
-            'user_id' => auth()->id(),
-            'project_id' => $this->project_id,
-            'color_id' => $this->color_id ?? Color::DEFAULT,
-        ]);
+            \App\Models\Track::create([
+                'title' => $this->title,
+                'description' => $this->description,
+                'started_at' => $this->started_at,
+                'ended_at' => $this->ended_at,
+                'user_id' => auth()->id(),
+                'project_id' => $this->project_id,
+                'color_id' => $this->color_id ?? Color::DEFAULT,
+                'organization_id' => Context::getOrganizationId(),
+            ]);
+        } else {
+            $this->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'nullable|string|max:1000',
+                'started_at' => 'required',
+                'ended_at' => 'nullable',
+                'project_id' => 'nullable|exists:projects,id',
+                'color_id' => 'nullable|exists:colors,id',
+            ]);
 
+            \App\Models\Track::create([
+                'title' => $this->title,
+                'description' => $this->description,
+                'started_at' => $this->started_at,
+                'ended_at' => $this->ended_at,
+                'user_id' => auth()->id(),
+                'project_id' => $this->project_id,
+                'color_id' => $this->color_id ?? Color::DEFAULT,
+                'organization_id' => null,
+            ]);
+
+        }
         Flux::modal('add-track')->close();
         $this->resetExcept(['selectedDate', 'colors']);
         $this->render();
