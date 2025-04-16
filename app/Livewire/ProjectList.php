@@ -77,7 +77,7 @@ class ProjectList extends Component
 
     public function toProject($projectId)
     {
-        return redirect()->route('projects.show', [$projectId]);
+        return redirect()->route('personal.projects.show', [$projectId]);
     }
 
     public function render()
