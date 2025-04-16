@@ -16,9 +16,10 @@ class Track extends Model
         'description',
         'started_at',
         'ended_at',
+        'color_id',
         'user_id',
         'project_id',
-        'color_id',
+        'organization_id'
     ];
 
     protected $casts = [

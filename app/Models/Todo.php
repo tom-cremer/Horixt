@@ -17,7 +17,8 @@ class Todo extends Model
         'priority_id',
         'color_id',
         'user_id',
-        'project_id'
+        'project_id',
+        'organization_id',
     ];
 
     public function project() :HasOne
