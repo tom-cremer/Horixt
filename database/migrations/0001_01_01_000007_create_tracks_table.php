@@ -13,14 +13,11 @@ return new class extends Migration
     {
         Schema::create('tracks', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('description')->nullable();
             $table->dateTime('started_at');
             $table->dateTime('ended_at')->nullable();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('project_id')->nullable();
-            $table->unsignedBigInteger('organization_id')->nullable();
-            $table->unsignedBigInteger('color_id');
+            $table->unsignedBigInteger('todo_id');
+            $table->integer('durations')->default(0);
             $table->timestamps();
         });
     }
