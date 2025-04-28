@@ -1,6 +1,7 @@
 <div>
     <flux:header class="flex justify-end gap-5">
-        <div class="w-full max-w-[500px]">
+        <livewire:partials.breadcrumb/>
+        <div class="max-w-[500px] w-full">
             <flux:input
                 wire:model="search"
                 type="text"
