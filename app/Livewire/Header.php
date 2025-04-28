@@ -43,6 +43,8 @@ class Header extends Component
         auth()->user()->organizations()->attach($organization->id);
 
         Flux::modal('create-organization')->close();
+
+        $this->dispatch('organization-created');
     }
 
     public function render()
