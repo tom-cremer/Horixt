@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->string('name');
             $table->text('description')->nullable();
             $table->unsignedBigInteger('user_id'); // Mode solo
+            $table->unsignedBigInteger('organization_id')->nullable(); // Mode organisation
             $table->unsignedBigInteger('status_id');
             $table->unsignedBigInteger('priority_id');
             $table->unsignedBigInteger('color_id');
