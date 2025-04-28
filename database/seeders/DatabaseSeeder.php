@@ -29,6 +29,5 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('azertyuiop$')
         ]);
 
-        Track::factory(10)->create();
     }
 }
