@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Helper;
+use App\Models\Organization;
+
 class Context
 {
     public static function isOrganization(): bool
@@ -11,6 +13,11 @@ class Context
     public static function getOrganizationId(): ?int
     {
         return session('organization_id');
+    }
+
+    public static function getOrganizationSlug(): ?string
+    {
+        return Organization::where('id', self::getOrganizationId())->first()->slug ?? null;
     }
 
     public static function isPersonal(): bool
