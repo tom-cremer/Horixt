@@ -13,12 +13,7 @@
 
         @else
 
-            @foreach($colors as $color)
-                <div
-                    class="inline-block  p-2 w-56 text-center rounded-xl {{$color->alias}} {{$color->alias}}--text flex items-center justify-center ">
-                    {{ $color->name }}
-                </div>
-            @endforeach
+                <h2 class="text-lg font-semibold">Personnal</h2>
         @endif
         {{--<x-placeholder-pattern class="relative size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />--}}
     </div>
