@@ -10,9 +10,9 @@ class ProjectDetails extends Component
 
     public Project $project;
 
-    public function mount($id)
+    public function mount($projectid)
     {
-        $this->project = Project::find($id);
+        $this->project = Project::find($projectid);
     }
 
     public function render()
