@@ -12,14 +12,11 @@ class Track extends Model
 
     use HasFactory;
     protected $fillable = [
-        'title',
-        'description',
         'started_at',
         'ended_at',
-        'color_id',
         'user_id',
-        'project_id',
-        'organization_id'
+        'todo_id',
+        'durations'
     ];
 
     protected $casts = [
@@ -28,18 +25,12 @@ class Track extends Model
     ];
 
 
-
-    public function color(): HasOne
-    {
-        return $this->hasOne(Color::class, 'id', 'color_id');
-    }
     public function user() :BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
-    public function project() :BelongsTo
+    public function todo() :BelongsTo
     {
-        return $this->belongsTo(Project::class, 'project_id', 'id');
+        return $this->belongsTo(Todo::class, 'todo_id', 'id');
     }
-
 }

@@ -15,13 +15,11 @@ class TrackFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->words(2, true),
-            'started_at' => $this->faker->dateTimeBetween('-1 week', 'now'),
-            'ended_at' => $this->faker->dateTimeBetween('-1 week', 'now'),
-            'description' => $this->faker->paragraph,
-            'user_id' => 1,
-            'color_id' => Color::DEFAULT,
-            'project_id' => null,
+            'started_at' => $this->faker->dateTime(),
+            'ended_at' => $this->faker->dateTime(),
+            'user_id' => $this->faker->numberBetween(1, 10),
+            'todo_id' => $this->faker->numberBetween(1, 10),
+            'durations' => $this->faker->numberBetween(0, 10000),
         ];
     }
 }
