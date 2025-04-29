@@ -77,10 +77,10 @@ class Todo extends Component
 
         if (Context::isOrganization()) {
             $todos = Todos::where('user_id', auth()->id())->where('organization_id', Context::getOrganizationId())->with(['project', 'status', 'priority'])->get();
-            $this->completedTodos = Todos::where('user_id', auth()->id())->where('is_done', true)->where('organization_id', Context::getOrganizationId())->with(['project', 'status', 'priority'])->get();
+            $this->completedTodos = Todos::where('user_id', auth()->id())->where('is_done', true)->where('organization_id', Context::getOrganizationId())->with(['project', 'status', 'priority'])->pluck('id')->toArray();
         } else {
             $todos = Todos::where('user_id', auth()->id())->where('organization_id', null)->with(['project', 'status', 'priority'])->get();
-            $this->completedTodos = Todos::where('user_id', auth()->id())->where('is_done', true)->where('organization_id')->with(['project', 'status', 'priority'])->get();
+            $this->completedTodos = Todos::where('user_id', auth()->id())->where('is_done', true)->where('organization_id', null)->with(['project', 'status', 'priority'])->pluck('id')->toArray();
         }
 
         return view('livewire.todo', [

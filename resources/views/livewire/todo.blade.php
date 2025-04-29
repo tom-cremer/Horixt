@@ -32,10 +32,10 @@
         </div>
     </flux:modal>
 
-    <div>
+    <div class="mt-4 flex flex-col gap-2">
         @foreach($todos as $todo)
             <div
-                class="flex items-center justify-between p-4 bg-white rounded-lg shadow-sm dark:bg-neutral-700 dark:text-neutral-100">
+                class="flex items-center justify-between p-2 bg-white transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 rounded-xl dark:bg-neutral-700 dark:text-neutral-100">
 
                 <div class="flex items-center gap-2">
                     <flux:checkbox
@@ -50,6 +50,7 @@
                     </div>
                 </div>
 
+                <livewire:track :todo="$todo->id" :key="'track-'.$todo->id" />
                 <div class="flex gap-2 items-center">
                     <span class="text-sm text-neutral-500">{{ $todo->status->name }}</span>
                     <span class="text-sm text-neutral-500">{{ $todo->priority->name }}</span>

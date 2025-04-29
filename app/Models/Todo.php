@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use App\Enums\ProjectPriority;
-use App\Enums\ProjectStatus;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Todo extends Model
@@ -32,5 +31,9 @@ class Todo extends Model
     public function priority() :HasOne
     {
         return $this->hasOne(Priority::class, 'id', 'priority_id');
+    }
+    public function tracks() :HasMany
+    {
+        return $this->hasMany(Track::class, 'todo_id', 'id');
     }
 }
