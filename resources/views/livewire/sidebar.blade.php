@@ -10,7 +10,9 @@
     </flux:button>
 
     {{-- Logo --}}
-    <div class="flex items-center gap-2 p-3 cursor-pointer" href="{{ \App\Helper\Context::isPersonal() ? route('personal.dashboard') : route('organization.dashboard', \App\Helper\Context::getOrganizationId()) }}" wire:navigate>
+    <div class="flex items-center gap-2 p-3 cursor-pointer"
+         href="{{ \App\Helper\Context::isPersonal() ? route('personal.dashboard') : route('organization.dashboard', \App\Helper\Context::getOrganizationId()) }}"
+         wire:navigate>
         {{-- Logo --}}
         <x-app-logo-icon/>
         @if(!$collapsed)
@@ -19,43 +21,45 @@
             </h1>
         @endif
     </div>
-    <flux:separator/>
     {{-- Organisations --}}
+    @if(\App\Helper\Context::isPersonal())
+        <flux:separator/>
+        <div class="my-2 space-y-1">
+            <div class="px-2 text-xs font-semibold text-neutral-500 uppercase tracking-wide">
+                @unless($collapsed)
+                    Organizations
+                @endunless
+            </div>
 
-    <div class="my-2 space-y-1" wire:poll.3s>
-        <div class="px-2 text-xs font-semibold text-neutral-500 uppercase tracking-wide">
-            @unless($collapsed)
-                Organizations
-            @endunless
-        </div>
-
-        @foreach(auth()->user()->organizations as $organization)
-            <div class="relative group {{ $collapsed ? 'w-fit' : '' }}">
-                <a
-                    wire:navigate
-                    href="{{ route('organization.dashboard', $organization->id) }}"
-                    class="peer flex items-center gap-2 p-2 text-sm font-medium rounded-xl hover:bg-neutral-200 transition-all duration-200 w-full"
-                >
+            @foreach($organizations as $organization)
+                <div class="relative group {{ $collapsed ? 'w-fit' : '' }}">
+                    <a
+                        wire:navigate
+                        href="{{ route('organization.dashboard', $organization->id) }}"
+                        class="peer flex items-center gap-2 p-2 text-sm font-medium rounded-xl hover:bg-neutral-200 transition-all duration-200 w-full"
+                    >
                 <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-neutral-100 dark:bg-neutral-800">
                     <flux:icon name="building-office-2"/>
                 </span>
-                    <span class="transition-all {{ $collapsed ? 'opacity-0 hidden' : '' }}">
+                        <span class="transition-all {{ $collapsed ? 'opacity-0 hidden' : '' }}">
                     {{ $organization->name }}
                 </span>
-                </a>
+                    </a>
 
-                <!-- Tooltip -->
-                @if($collapsed)
-                    <div
-                        class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-white bg-neutral-800 rounded-md opacity-0 peer-hover:opacity-100 transition-opacity whitespace-nowrap"
-                    >
-                        {{ $organization->name }}
-                    </div>
-                @endif
-            </div>
-        @endforeach
+                    <!-- Tooltip -->
+                    @if($collapsed)
+                        <div
+                            class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-white bg-neutral-800 rounded-md opacity-0 peer-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none"
+                        >
+                            {{ $organization->name }}
+                        </div>
+                    @endif
+                </div>
+            @endforeach
 
-    </div>
+        </div>
+    @endif
+
     <flux:separator/>
 
     {{-- Personal --}}
@@ -78,30 +82,8 @@
             <!-- Tooltip -->
             @if($collapsed)
                 <div
-                    class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-white bg-neutral-800 rounded-md opacity-0 peer-hover:opacity-100 transition-opacity">
+                    class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-white bg-neutral-800 rounded-md opacity-0 peer-hover:opacity-100 transition-opacity pointer-events-none">
                     Dashboard
-                </div>
-            @endif
-        </div>
-        {{--Tracks--}}
-        <div class="relative group {{$collapsed ? 'w-fit' : ''}}">
-            <button
-                class="peer flex items-center gap-2 p-2 text-left text-sm font-semibold w-full hover:bg-zinc-200 rounded-xl transition-colors duration-200"
-                wire:navigate
-                href="{{ \App\Helper\Context::isPersonal() ? route('personal.tracks') : route('organization.tracks', \App\Helper\Context::getOrganizationId()) }}">
-                    <span
-                        class="flex items-center justify-center w-8 h-8 rounded-lg bg-neutral-100 dark:bg-neutral-800 relative">
-                        <x-icons.gantt-chart/>
-                    </span>
-                <span
-                    class="transition-all delay-300 ease-in-out {{$collapsed ? 'opacity-0 hidden' : ''}}">Tracks</span>
-            </button>
-
-            <!-- Tooltip -->
-            @if($collapsed)
-                <div
-                    class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-white bg-neutral-800 rounded-md opacity-0 peer-hover:opacity-100 transition-opacity">
-                    Tracks
                 </div>
             @endif
         </div>
@@ -122,7 +104,7 @@
             <!-- Tooltip -->
             @if($collapsed)
                 <div
-                    class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-white bg-neutral-800 rounded-md opacity-0 peer-hover:opacity-100 transition-opacity">
+                    class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-white bg-neutral-800 rounded-md opacity-0 peer-hover:opacity-100 transition-opacity pointer-events-none">
                     Projects
                 </div>
             @endif
@@ -143,7 +125,7 @@
             <!-- Tooltip -->
             @if($collapsed)
                 <div
-                    class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-white bg-neutral-800 rounded-md opacity-0 peer-hover:opacity-100 transition-opacity">
+                    class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-white bg-neutral-800 rounded-md opacity-0 peer-hover:opacity-100 transition-opacity pointer-events-none">
                     Todos
                 </div>
             @endif
@@ -220,6 +202,15 @@
             </flux:menu.radio.group>
 
             <flux:menu.separator/>
+
+            @if(\App\Helper\Context::isOrganization())
+                <flux:menu.radio.group>
+                    <flux:menu.item href="{{route('personal.dashboard')}}" icon="home"
+                                    wire:navigate>{{ __('Personal') }}</flux:menu.item>
+                </flux:menu.radio.group>
+
+                <flux:menu.separator/>
+            @endif
 
             <form method="POST" action="{{ route('logout') }}" class="w-full">
                 @csrf
