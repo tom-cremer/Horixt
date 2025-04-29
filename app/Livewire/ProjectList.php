@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Helper\Context;
 use App\Models\Color;
 use App\Models\Priority;
 use App\Models\Project;
@@ -27,15 +28,37 @@ class ProjectList extends Component
 
     public function createProject()
     {
-        Project::create([
-            'name' => $this->name,
-            'description' => $this->description,
-            'user_id' => auth()->id(),
-            'status_id' => $this->status_id ?? Status::DEFAULT,
-            'priority_id' => $this->priority_id ?? Priority::DEFAULT,
-            'color_id' => $this->color_id ?? Color::DEFAULT,
-            'deadline' => $this->deadline,
+        $this->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'status_id' => 'nullable|exists:statuses,id',
+            'priority_id' => 'nullable|exists:priorities,id',
+            'color_id' => 'nullable|exists:colors,id',
+            'deadline' => 'nullable|date',
         ]);
+
+        if (Context::isOrganization()) {
+            Project::create([
+                'name' => $this->name,
+                'description' => $this->description,
+                'user_id' => auth()->id(),
+                'organization_id' => Context::getOrganizationId(),
+                'status_id' => $this->status_id ?? Status::DEFAULT,
+                'priority_id' => $this->priority_id ?? Priority::DEFAULT,
+                'color_id' => $this->color_id ?? Color::DEFAULT,
+                'deadline' => $this->deadline,
+            ]);
+        } else {
+            Project::create([
+                'name' => $this->name,
+                'description' => $this->description,
+                'user_id' => auth()->id(),
+                'status_id' => $this->status_id ?? Status::DEFAULT,
+                'priority_id' => $this->priority_id ?? Priority::DEFAULT,
+                'color_id' => $this->color_id ?? Color::DEFAULT,
+                'deadline' => $this->deadline,
+            ]);
+        }
 
         $this->reset();
         Flux::modal('add-project')->close();
@@ -77,7 +100,11 @@ class ProjectList extends Component
 
     public function toProject($projectId)
     {
-        return redirect()->route('personal.projects.show', [$projectId]);
+        if (Context::isOrganization()) {
+            return redirect()->route('organization.projects.show', ['projectid' => $projectId, 'id' => Context::getOrganizationId()]);
+        } else {
+            return redirect()->route('personal.projects.show', ['projectid' => $projectId]);
+        }
     }
 
     public function render()
@@ -86,10 +113,11 @@ class ProjectList extends Component
         $this->priorities = Priority::all();
         $this->colors = Color::all();
 
-        $projects = Project::with('status', 'priority')
-            ->where('user_id', auth()->id())
-            ->orderBy('created_at', 'desc')
-            ->get();
+        if (Context::isOrganization()) {
+            $projects = Project::where('organization_id', Context::getOrganizationId())->get();
+        } else {
+            $projects = Project::where('user_id', auth()->id())->where('organization_id', null)->get();
+        }
 
         return view('livewire.projects.index',
             [
