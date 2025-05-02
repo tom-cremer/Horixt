@@ -31,6 +31,7 @@ return new class extends Migration
             $table->foreign('status_id')->references('id')->on('statuses')->onDelete('cascade');
             $table->foreign('priority_id')->references('id')->on('priorities')->onDelete('cascade');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
+            $table->foreign('parent_id')->references('id')->on('todos')->onDelete('cascade');
         });
 
         Schema::table('tracks', function (Blueprint $table) {
@@ -71,6 +72,7 @@ return new class extends Migration
             $table->dropForeign(['status_id']);
             $table->dropForeign(['priority_id']);
             $table->dropForeign(['organization_id']);
+            $table->dropForeign(['parent_id']);
         });
 
         Schema::table('tracks', function (Blueprint $table) {
