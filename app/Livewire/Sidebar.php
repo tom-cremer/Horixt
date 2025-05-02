@@ -8,7 +8,7 @@ use Livewire\Component;
 
 class Sidebar extends Component
 {
-    #[Session]
+    #[Session(key: 'collapsed')]
     public $collapsed = false;
 
     public $organizations = [];
@@ -20,6 +20,7 @@ class Sidebar extends Component
 
     public function toggle()
     {
+        $this->dispatch('sidebar-toggle');
         return $this->collapsed = !$this->collapsed;
     }
 
