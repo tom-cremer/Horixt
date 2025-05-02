@@ -34,7 +34,7 @@
 
     <div class="mt-4 flex flex-col gap-2">
         @foreach($todos as $todo)
-            <div
+            {{--<div
                 class="flex items-center justify-between p-2 bg-white transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 rounded-xl dark:bg-neutral-700 dark:text-neutral-100">
 
                 <div class="flex items-center gap-2">
@@ -56,7 +56,8 @@
                     <span class="text-sm text-neutral-500">{{ $todo->priority->name }}</span>
                     <flux:button size="sm" icon="pencil" variant="ghost" inset/>
                 </div>
-            </div>
+            </div>--}}
+            <livewire:todos.line :todo="$todo" :key="$todo->id" />
         @endforeach
     </div>
 </div>

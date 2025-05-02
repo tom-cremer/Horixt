@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('user_id'); // Mode solo
             $table->unsignedBigInteger('project_id')->nullable();
             $table->unsignedBigInteger('organization_id')->nullable();
+            $table->unsignedBigInteger('parent_id')->nullable(); // For sub-tasks
             $table->timestamps();
         });
     }

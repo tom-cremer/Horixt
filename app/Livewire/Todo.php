@@ -34,7 +34,7 @@ class Todo extends Component
 
             Todos::create([
                 'name' => $this->name,
-                'description' => $this->description,
+                'description' => $this->description ?? '',
                 'is_done' => false,
                 'status_id' => $this->status_id ?? Status::DEFAULT,
                 'priority_id' => $this->priority ?? Priority::DEFAULT,
@@ -47,7 +47,7 @@ class Todo extends Component
         } else {
             Todos::create([
                 'name' => $this->name,
-                'description' => $this->description,
+                'description' => $this->description ?? '',
                 'is_done' => false,
                 'status_id' => $this->status_id ?? Status::DEFAULT,
                 'priority_id' => $this->priority ?? Priority::DEFAULT,
@@ -76,10 +76,10 @@ class Todo extends Component
         $this->colors = Color::all();
 
         if (Context::isOrganization()) {
-            $todos = Todos::where('user_id', auth()->id())->where('organization_id', Context::getOrganizationId())->with(['project', 'status', 'priority'])->get();
+            $todos = Todos::where('user_id', auth()->id())->where('parent_id', null)->where('organization_id', Context::getOrganizationId())->with(['project', 'status', 'priority'])->get();
             $this->completedTodos = Todos::where('user_id', auth()->id())->where('is_done', true)->where('organization_id', Context::getOrganizationId())->with(['project', 'status', 'priority'])->pluck('id')->toArray();
         } else {
-            $todos = Todos::where('user_id', auth()->id())->where('organization_id', null)->with(['project', 'status', 'priority'])->get();
+            $todos = Todos::where('user_id', auth()->id())->where('parent_id', null)->where('organization_id', null)->with(['project', 'status', 'priority'])->get();
             $this->completedTodos = Todos::where('user_id', auth()->id())->where('is_done', true)->where('organization_id', null)->with(['project', 'status', 'priority'])->pluck('id')->toArray();
         }
 

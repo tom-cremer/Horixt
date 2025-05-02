@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -18,6 +19,7 @@ class Todo extends Model
         'user_id',
         'project_id',
         'organization_id',
+        'parent_id',
     ];
 
     public function project() :HasOne
@@ -36,4 +38,16 @@ class Todo extends Model
     {
         return $this->hasMany(Track::class, 'todo_id', 'id');
     }
+
+    public function children() :HasMany
+    {
+        return $this->hasMany(Todo::class, 'parent_id');
+    }
+
+    public function parent() :BelongsTo
+    {
+        return $this->belongsTo(Todo::class, 'parent_id');
+    }
+
+
 }
