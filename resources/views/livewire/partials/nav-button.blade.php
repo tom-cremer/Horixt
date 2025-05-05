@@ -1,10 +1,10 @@
 <div class="relative group {{$collapsed ? 'w-fit' : ''}}">
     <button
-        class="{{$collapsed ? 'p-1' : 'px-2 py-1' }} peer flex items-center gap-2 text-left text-sm font-semibold w-full hover:bg-zinc-200 rounded-md transition-colors duration-200"
+        class="{{$collapsed ? 'p-1' : 'px-2 py-1' }} peer flex items-center gap-2 text-left text-sm font-semibold w-full hover:bg-zinc-200 dark:hover:bg-zinc-600  rounded-md transition-colors duration-200"
         wire:navigate
         href="{{$route}}">
                     <span
-                        class="flex items-center justify-center w-7 h-7  relative">
+                        class="flex items-center justify-center w-7 h-7 relative">
                         @if($logo)
                             <img src="{{$logo}}" alt="{{$text}}"/>
                         @else
