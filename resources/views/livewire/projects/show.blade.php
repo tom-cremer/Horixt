@@ -1,6 +1,6 @@
 <div>
     <div class="flex items-center mb-4">
-        <flux:button href="{{ \App\Helper\Context::isOrganization() ? route('organization.projects.index', \App\Helper\Context::getOrganizationId()): route('personal.projects.index') }}">
+        <flux:button href="{{ \App\Helper\Context::isOrganization() ? route('organization.projects.index', \App\Helper\Context::getOrganizationSlug()): route('personal.projects.index') }}">
             Retour
         </flux:button>
     </div>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Dashboard;
+use App\Livewire\FileManager;
 use App\Livewire\ProjectDetails;
 use App\Livewire\ProjectList;
 use App\Livewire\Todo;
@@ -31,11 +32,12 @@ Route::prefix('/personal')
         Route::get('/todos', Todo::class)->name('todos');
         Route::get('/projects', ProjectList::class)->name('projects.index');
         Route::get('/projects/{projectid}', ProjectDetails::class)->name('projects.show');
+        Route::get('/files', FileManager::class)->name('files');
 
     });
 
 
-Route::prefix('/organization/{id}')
+Route::prefix('/organization/{slug}')
     ->middleware(['organization'])
     ->name('organization.')
     ->group(function () {
@@ -49,4 +51,6 @@ Route::prefix('/organization/{id}')
         Route::get('/todos', Todo::class)->name('todos');
         Route::get('/projects', ProjectList::class)->name('projects.index');
         Route::get('/projects/{projectid}', ProjectDetails::class)->name('projects.show');
+        Route::get('/files', FileManager::class)->name('files');
+
     });

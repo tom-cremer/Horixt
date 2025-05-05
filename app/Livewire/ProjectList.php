@@ -101,7 +101,7 @@ class ProjectList extends Component
     public function toProject($projectId)
     {
         if (Context::isOrganization()) {
-            return redirect()->route('organization.projects.show', ['projectid' => $projectId, 'id' => Context::getOrganizationId()]);
+            return redirect()->route('organization.projects.show', ['projectid' => $projectId, 'slug' => Context::getOrganizationSlug()]);
         } else {
             return redirect()->route('personal.projects.show', ['projectid' => $projectId]);
         }

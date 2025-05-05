@@ -90,6 +90,11 @@ class Breadcrumb extends Component
                 'label' => __('Password'),
                 'url' => route('personal.settings.password'),
             ];
+        } elseif ($routeName === 'personal.files') {
+            $breadcrumbs[] = [
+                'label' => __('Files'),
+                'url' => route('personal.files'),
+            ];
         }
 
         $this->breadcrumbs = $breadcrumbs;
@@ -104,8 +109,12 @@ class Breadcrumb extends Component
         $breadcrumbs = [
             [
                 'label' => ucfirst(Context::getOrganizationSlug()),
-                'url' => route('organization.dashboard', ['id' => Context::getOrganizationId()]),
+                'url' => route('organization.dashboard', ['slug' => Context::getOrganizationSlug()]),
                 'icon' => 'building-office-2'
+            ],
+            [
+                'label' => Context::getOrganizationSlug(),
+                'url' => route('organization.dashboard', ['slug' => Context::getOrganizationSlug()]),
             ],
 
         ];
@@ -113,58 +122,63 @@ class Breadcrumb extends Component
         if ($routeName === 'organization.dashboard') {
             $breadcrumbs[] = [
                 'label' => __('Dashboard'),
-                'url' => route('organization.dashboard', ['id' => Context::getOrganizationId()]),
+                'url' => route('organization.dashboard', ['slug' => Context::getOrganizationSlug()]),
             ];
         } elseif ($routeName === 'organization.todos') {
             $breadcrumbs[] = [
                 'label' => __('Todos'),
-                'url' => route('organization.todos', ['id' => Context::getOrganizationId()]),
+                'url' => route('organization.todos', ['slug' => Context::getOrganizationSlug()]),
             ];
         } elseif ($routeName === 'organization.projects.index') {
             $breadcrumbs[] = [
                 'label' => __('Projects'),
-                'url' => route('organization.projects.index', ['id' => Context::getOrganizationId()]),
+                'url' => route('organization.projects.index', ['slug' => Context::getOrganizationSlug()]),
             ];
         } elseif ($routeName === 'organization.projects.show' && isset($routeParameters['projectid'])) {
             $breadcrumbs[] = [
                 'label' => __('Projects'),
-                'url' => route('organization.projects.index', ['id' => Context::getOrganizationId()]),
+                'url' => route('organization.projects.index', ['slug' => Context::getOrganizationSlug()]),
             ];
             $breadcrumbs[] = [
                 'label' => __('Project Details'),
-                'url' => route('organization.projects.show', ['projectid' => $routeParameters['projectid'], 'id' => Context::getOrganizationId()]),
+                'url' => route('organization.projects.show', ['projectid' => $routeParameters['projectid'], 'slug' => Context::getOrganizationSlug()]),
             ];
         } elseif ($routeName === 'organization.settings') {
             $breadcrumbs[] = [
                 'label' => __('Settings'),
-                'url' => route('organization.settings', ['id' => Context::getOrganizationId()]),
+                'url' => route('organization.settings', ['slug' => Context::getOrganizationSlug()]),
             ];
         } elseif ($routeName === 'organization.settings.profile') {
             $breadcrumbs[] = [
                 'label' => __('Settings'),
-                'url' => route('organization.settings', ['id' => Context::getOrganizationId()]),
+                'url' => route('organization.settings', ['slug' => Context::getOrganizationSlug()]),
             ];
             $breadcrumbs[] = [
                 'label' => __('Profile'),
-                'url' => route('organization.settings.profile', ['id' => Context::getOrganizationId()]),
+                'url' => route('organization.settings.profile', ['slug' => Context::getOrganizationSlug()]),
             ];
         } elseif ($routeName === 'organization.settings.appearance') {
             $breadcrumbs[] = [
                 'label' => __('Settings'),
-                'url' => route('organization.settings', ['id' => Context::getOrganizationId()]),
+                'url' => route('organization.settings', ['slug' => Context::getOrganizationSlug()]),
             ];
             $breadcrumbs[] = [
                 'label' => __('Appearance'),
-                'url' => route('organization.settings.appearance', ['id' => Context::getOrganizationId()]),
+                'url' => route('organization.settings.appearance', ['slug' => Context::getOrganizationSlug()]),
             ];
         } elseif ($routeName === 'organization.settings.password') {
             $breadcrumbs[] = [
                 'label' => __('Settings'),
-                'url' => route('organization.settings', ['id' => Context::getOrganizationId()]),
+                'url' => route('organization.settings', ['slug' => Context::getOrganizationSlug()]),
             ];
             $breadcrumbs[] = [
                 'label' => __('Password'),
-                'url' => route('organization.settings.password', ['id' => Context::getOrganizationId()]),
+                'url' => route('organization.settings.password', ['slug' => Context::getOrganizationSlug()]),
+            ];
+        } elseif ($routeName === 'organization.files') {
+            $breadcrumbs[] = [
+                'label' => __('Files'),
+                'url' => route('organization.files', ['slug' => Context::getOrganizationSlug()]),
             ];
         }
 

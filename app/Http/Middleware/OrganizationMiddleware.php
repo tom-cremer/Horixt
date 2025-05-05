@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Organization;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,9 +18,13 @@ class OrganizationMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $organizationId = $request->route('id');
+        $organizationSlug = $request->route('slug');
+        $organizationId = DB::table('organizations')->where('slug', $organizationSlug)
+            ->value('id');
+
 
         Log::info($organizationId);
+        Log::info($organizationSlug);
         if (!auth()->check()) {
             return redirect()->route('login');
         }

@@ -3,8 +3,8 @@
 
     <button type="button" wire:click="toggle()"
             wire:keydown.ctrl.o.window.prevent="toggle()"
-            class="absolute p-1 top-1/2 -right-3 bg-gray-200 dark:bg-zinc-300 rounded-md
-        hover:bg-gray-300 dark:hover:bg-zinc-400 ">
+            class="absolute p-1 top-1/2 -right-3 bg-gray-200 dark:bg-zinc-600 rounded-md
+        hover:bg-gray-300 dark:hover:bg-zinc-500 transition-all duration-200 ease-in-out">
         <flux:icon name="chevron-right" class="text-zinc-500 dark:text-white
         w-4.5 h-4.5 transition-all duration-200 ease-in-out
         {{ $collapsed ? 'rotate-180' : '' }}"/>
@@ -13,7 +13,7 @@
 
     {{-- Logo --}}
     <div class="flex items-center gap-2 p-3 cursor-pointer mr-auto {{ $collapsed ? 'justify-center' : '' }}"
-         href="{{ \App\Helper\Context::isPersonal() ? route('personal.dashboard') : route('organization.dashboard', \App\Helper\Context::getOrganizationId()) }}"
+         href="{{ \App\Helper\Context::isPersonal() ? route('personal.dashboard') : route('organization.dashboard', \App\Helper\Context::getOrganizationSlug()) }}"
          wire:navigate>
         {{-- Logo --}}
         <x-app-logo-icon/>
@@ -67,14 +67,16 @@
     <div class="flex flex-col gap-1 mt-2 {{$collapsed ? 'items-center' : ''}}">
         {{-- Home --}}
         <livewire:partials.nav-button :collapsed="$collapsed" icon="house" text="Dashboard"
-                                      route="{{ \App\Helper\Context::isPersonal() ? route('personal.dashboard') : route('organization.dashboard', \App\Helper\Context::getOrganizationId()) }}"/>
+                                      route="{{ \App\Helper\Context::isPersonal() ? route('personal.dashboard') : route('organization.dashboard', \App\Helper\Context::getOrganizationSlug()) }}"/>
         <livewire:partials.nav-button :collapsed="$collapsed" icon="envelope" text="Inbox" badge="3"
-                                      route="{{ \App\Helper\Context::isPersonal() ? route('personal.projects.index') : route('organization.projects.index', \App\Helper\Context::getOrganizationId()) }}"/>
-
+                                      route="{{ \App\Helper\Context::isPersonal() ? route('personal.projects.index') : route('organization.projects.index', \App\Helper\Context::getOrganizationSlug()) }}"/>
+        <livewire:partials.nav-button :collapsed="$collapsed" icon="folder" text="Files" beta="true"
+                                      route="{{ \App\Helper\Context::isPersonal() ? route('personal.files') : route('organization.files', \App\Helper\Context::getOrganizationSlug()) }}"/>
         <flux:separator />
 
         <livewire:partials.nav-button :collapsed="$collapsed" icon="layout-grid" text="Projects" beta="true"
-                                      route="{{ \App\Helper\Context::isPersonal() ? route('personal.projects.index') : route('organization.projects.index', \App\Helper\Context::getOrganizationId()) }}"/>
+                                      route="{{ \App\Helper\Context::isPersonal() ? route('personal.projects.index') : route('organization.projects.index', \App\Helper\Context::getOrganizationSlug()) }}"/>
+
     </div>
 
     {{--Spacer--}}
