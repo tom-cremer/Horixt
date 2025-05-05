@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             ColorSeeder::class,
             PrioritySeeder::class,
             StatusSeeder::class,
+            PermissionSeeder::class,
+            RoleSeeder::class,
         ]);
 
         User::factory()->create([
