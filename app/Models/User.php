@@ -80,18 +80,29 @@ class User extends Authenticatable
         return $this->hasMany(Project::class);
     }
 
+    public function organizations()
+    {
+        return $this->belongsToMany(Organization::class, 'organization_user')
+            ->withPivot('user_id', 'organization_id', 'is_active')
+            ->wherePivot('is_active', true)
+            ->withTimestamps();
+    }
+
     // Organizations owned by the user
     public function ownedOrganizations()
     {
         return $this->hasMany(Organization::class, 'owner_id');
     }
 
-    public function organizations()
+    // File manager
+    public function directories()
     {
-        return $this->belongsToMany(Organization::class, 'organization_user')
-            ->withPivot('user_id', 'organization_id')
-            ->withTimestamps()
-            ->where('organization_user.is_active', true);
+        return $this->hasMany(Directories::class);
     }
+    public function files()
+    {
+        return $this->hasMany(Files::class);
+    }
+
 
 }
