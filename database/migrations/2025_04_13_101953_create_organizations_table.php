@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
-            $table->uuid('uuid')->unique(); // Unique identifier for the organization directory of the file manager
+            $table->uuid()->unique(); // Unique identifier for the organization directory of the file manager
             $table->string('name');
             $table->string('slug')->unique(); // Slug for the organization, used in URLs
             $table->text('description')->nullable();

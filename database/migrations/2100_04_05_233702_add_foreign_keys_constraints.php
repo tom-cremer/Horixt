@@ -44,6 +44,24 @@ return new class extends Migration
             $table->foreign('assigned_by')->references('id')->on('users')->onDelete('cascade');
         });
 
+        Schema::table('directories', function (Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
+            $table->foreign('parent_id')->references('id')->on('directories')->onDelete('cascade');
+        });
+
+        Schema::table('files', function (Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
+            $table->foreign('directory_id')->references('id')->on('directories')->onDelete('cascade');
+        });
+
+        Schema::table('fileables', function (Blueprint $table) {
+            $table->foreign('file_id')->references('id')->on('files')->onDelete('cascade');
+
+        });
     }
 
     /**
@@ -85,5 +103,22 @@ return new class extends Migration
             $table->dropForeign(['assigned_by']);
         });
 
+        Schema::table('directories', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+            $table->dropForeign(['organization_id']);
+            $table->dropForeign(['project_id']);
+            $table->dropForeign(['parent_id']);
+        });
+
+        Schema::table('files', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+            $table->dropForeign(['organization_id']);
+            $table->dropForeign(['project_id']);
+            $table->dropForeign(['directory_id']);
+        });
+
+        Schema::table('fileables', function (Blueprint $table) {
+            $table->dropForeign(['file_id']);
+        });
     }
 };
