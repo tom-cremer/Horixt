@@ -95,6 +95,11 @@ class Breadcrumb extends Component
                 'label' => __('Files'),
                 'url' => route('personal.files'),
             ];
+        } elseif ($routeName === 'personal.organizations') {
+            $breadcrumbs[] = [
+                'label' => __('Organizations'),
+                'url' => route('personal.organizations'),
+            ];
         }
 
         $this->breadcrumbs = $breadcrumbs;
@@ -179,6 +184,11 @@ class Breadcrumb extends Component
             $breadcrumbs[] = [
                 'label' => __('Files'),
                 'url' => route('organization.files', ['slug' => Context::getOrganizationSlug()]),
+            ];
+        } elseif ($routeName === 'organization.members') {
+            $breadcrumbs[] = [
+                'label' => __('Members'),
+                'url' => route('organization.members', ['slug' => Context::getOrganizationSlug()]),
             ];
         }
 
