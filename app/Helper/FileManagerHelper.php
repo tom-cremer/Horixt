@@ -2,20 +2,79 @@
 
 namespace App\Helper;
 
+use App\Models\Directories;
+use App\Models\Organization;
+use App\Models\User;
+use App\Traits\HasUuid;
 use Illuminate\Support\Facades\Storage;
 
 class FileManagerHelper
 {
 
-    public static function createUserDirectory(string $uuid): void
+    // creates the directory structure for a user
+    public static function createUserDirectory(User $user): void
     {
-        $basePath = "personal/{$uuid}";
+        $basePath = "personal/{$user->uuid}";
         Storage::makeDirectory("{$basePath}/projects");
+
+        $root = Directories::create([
+            'name' => 'root',
+            'path' => $basePath,
+            'disk' => 'local',
+            'visibility' => null,
+            'locked' => false,
+            'protected' => true,
+            'user_id' => $user->id,
+            'organization_id' => null,
+            'project_id' => null,
+            'parent_id' => null,
+        ]);
+
+        Directories::create([
+            'name' => 'projects',
+            'path' => "{$basePath}/projects",
+            'disk' => 'local',
+            'visibility' => null,
+            'locked' => false,
+            'protected' => true,
+            'user_id' => $user->id,
+            'organization_id' => null,
+            'project_id' => null,
+            'parent_id' => $root->id,
+        ]);
     }
 
-    public static function createOrganizationDirectory(string $uuid): void
+    // creates the directory structure for an organization
+    public static function createOrganizationDirectory(Organization $organization, User $user): void
     {
-        $basePath = "organizations/{$uuid}";
+        $basePath = "organizations/{$organization->uuid}";
         Storage::makeDirectory("{$basePath}/projects");
+
+        $root = Directories::create([
+            'name' => 'root',
+            'path' => $basePath,
+            'disk' => 'local',
+            'visibility' => null,
+            'locked' => false,
+            'protected' => true,
+            'user_id' => $user->id,
+            'organization_id' => $organization->id,
+            'project_id' => null,
+            'parent_id' => null,
+        ]);
+
+        Directories::create([
+            'name' => 'projects',
+            'path' => "{$basePath}/projects",
+            'disk' => 'local',
+            'visibility' => null,
+            'locked' => false,
+            'protected' => true,
+            'user_id' => $user->id,
+            'organization_id' => $organization->id,
+            'project_id' => null,
+            'parent_id' => $root->id,
+        ]);
+
     }
 }
