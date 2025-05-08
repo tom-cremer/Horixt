@@ -9,9 +9,13 @@ trait HasUuid
     protected static function bootHasUuid(): void
     {
         static::creating(function ($model) {
-            if (empty($model->uuid)) {
-                $model->uuid = Str::uuid()->toString();
-            }
+            do {
+                $uuid = Str::uuid()->toString();
+            } while (
+                $model->newQuery()->where('uuid', $uuid)->exists()
+            );
+
+            $model->uuid = $uuid;
         });
     }
 }
