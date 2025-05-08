@@ -9,11 +9,15 @@
     <div
         class="flex flex-wrap gap-2  relative overflow-hidden rounded-xl">
         @if (\App\Helper\Context::isOrganization())
-                <h2 class="text-lg font-semibold">Organization</h2>
-
+            <h2 class="text-lg font-semibold">Organization</h2>
+            @role(\App\Enums\RoleEnum::ADMIN->value)
+            I'm admin
+            @else
+            I'm not admin
+            @endrole
         @else
 
-                <h2 class="text-lg font-semibold">Personnal</h2>
+            <h2 class="text-lg font-semibold">Personnal</h2>
         @endif
         {{--<x-placeholder-pattern class="relative size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />--}}
     </div>
