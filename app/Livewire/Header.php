@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Enums\RoleEnum;
 use App\Models\Organization;
 use Flux\Flux;
 use Livewire\Component;
@@ -21,14 +22,12 @@ class Header extends Component
     {
         $this->owner_id = auth()->user()->id;
     }
+
     public function createOrganization()
     {
-
         $this->slug = str($this->name)->slug();
 
-
-
-        $organization = Organization::create([
+        Organization::create([
             'name' => $this->name,
             'description' => $this->description,
             'website' => $this->website,
@@ -38,9 +37,6 @@ class Header extends Component
             'owner_id' => $this->owner_id,
             'slug' => $this->slug,
         ]);
-
-
-        auth()->user()->organizations()->attach($organization->id);
 
         Flux::modal('create-organization')->close();
 

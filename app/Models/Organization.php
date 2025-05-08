@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use App\Traits\HasUuid;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use App\Observers\OrganizationObserver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+#[ObservedBy(OrganizationObserver::class)]
 class Organization extends Model
 {
     use SoftDeletes, HasUuid;
@@ -17,13 +20,32 @@ class Organization extends Model
         'website',
         'email',
         'phone',
-/*        'logo',*/
+        /*'logo',*/
         'owner_id',
     ];
 
-    public function users()
+
+    public function members()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsToMany(User::class)
+            ->withPivot(['is_active'])
+            ->withTimestamps();
+    }
+
+    public function activeMembers()
+    {
+        return $this->belongsToMany(User::class)
+            ->withPivot(['is_active'])
+            ->wherePivot('is_active', true)
+            ->withTimestamps();
+    }
+
+    public function inactiveMembers()
+    {
+        return $this->belongsToMany(User::class)
+            ->withPivot(['is_active'])
+            ->wherePivot('is_active', false)
+            ->withTimestamps();
     }
 
     public function projects()
@@ -51,6 +73,16 @@ class Organization extends Model
         return $this->slug;
     }
 
+// File manager
 
+    public function directories()
+    {
+        return $this->hasMany(Directories::class);
+    }
+
+    public function files()
+    {
+        return $this->hasMany(Files::class);
+    }
 
 }
