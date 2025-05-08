@@ -23,56 +23,27 @@
             </h1>
         @endif
     </div>
-    {{-- @if(\App\Helper\Context::isPersonal())
-         <flux:separator/>
-         <div class="my-2 space-y-1">
-             <div class="px-2 text-xs font-semibold text-neutral-500 uppercase tracking-wide">
-                 @unless($collapsed)
-                     Organizations
-                 @endunless
-             </div>
-
-             @foreach($organizations as $organization)
-                 <div class="relative group {{ $collapsed ? 'w-fit' : '' }}">
-                     <a
-                         wire:navigate
-                         href="{{ route('organization.dashboard', $organization->id) }}"
-                         class="peer flex items-center gap-2 p-2 text-sm font-medium rounded-xl hover:bg-neutral-200 transition-all duration-200 w-full"
-                     >
-                 <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-neutral-100 dark:bg-neutral-800">
-                     <flux:icon name="building-office-2"/>
-                 </span>
-                         <span class="transition-all {{ $collapsed ? 'opacity-0 hidden' : '' }}">
-                     {{ $organization->name }}
-                 </span>
-                     </a>
-
-                     <!-- Tooltip -->
-                     @if($collapsed)
-                         <div
-                             class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-white bg-neutral-800 rounded-md opacity-0 peer-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none"
-                         >
-                             {{ $organization->name }}
-                         </div>
-                     @endif
-                 </div>
-             @endforeach
-
-         </div>
-     @endif--}}
 
     <flux:separator/>
-
 
     <div class="flex flex-col gap-1 mt-2 {{$collapsed ? 'items-center' : ''}}">
         {{-- Home --}}
         <livewire:partials.nav-button :collapsed="$collapsed" icon="house" text="Dashboard"
                                       route="{{ \App\Helper\Context::isPersonal() ? route('personal.dashboard') : route('organization.dashboard', \App\Helper\Context::getOrganizationSlug()) }}"/>
-        <livewire:partials.nav-button :collapsed="$collapsed" icon="envelope" text="Inbox" badge="3"
+        @if(\App\Helper\Context::isPersonal())
+
+            <livewire:partials.nav-button :collapsed="$collapsed" icon="building-office-2" text="Organizations"
+                                          route="{{route('personal.organizations')}}"/>
+        @endif
+        @if(\App\Helper\Context::isOrganization())
+            <livewire:partials.nav-button :collapsed="$collapsed" icon="users" text="Members"
+                                          route="{{route('organization.members', \App\Helper\Context::getOrganizationSlug())}}"/>
+        @endif
+        <livewire:partials.nav-button :collapsed="$collapsed" icon="envelope" text="Inbox"
                                       route="{{ \App\Helper\Context::isPersonal() ? route('personal.projects.index') : route('organization.projects.index', \App\Helper\Context::getOrganizationSlug()) }}"/>
         <livewire:partials.nav-button :collapsed="$collapsed" icon="folder" text="Files" beta="true"
                                       route="{{ \App\Helper\Context::isPersonal() ? route('personal.files') : route('organization.files', \App\Helper\Context::getOrganizationSlug()) }}"/>
-        <flux:separator />
+        <flux:separator/>
 
         <livewire:partials.nav-button :collapsed="$collapsed" icon="layout-grid" text="Projects" beta="true"
                                       route="{{ \App\Helper\Context::isPersonal() ? route('personal.projects.index') : route('organization.projects.index', \App\Helper\Context::getOrganizationSlug()) }}"/>
