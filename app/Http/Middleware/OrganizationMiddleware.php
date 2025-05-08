@@ -22,12 +22,18 @@ class OrganizationMiddleware
         $organizationId = DB::table('organizations')->where('slug', $organizationSlug)
             ->value('id');
 
+        session(['team_id' => $organizationId]);
 
         Log::info($organizationId);
         Log::info($organizationSlug);
+
+
         if (!auth()->check()) {
             return redirect()->route('login');
         }
+
+        setPermissionsTeamId(session('team_id'));
+        auth()->user()->unsetRelation('roles')->unsetRelation('permissions');
 
         $isMember = DB::table('organization_user')
             ->where('organization_id', $organizationId)
