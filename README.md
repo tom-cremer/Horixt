@@ -18,15 +18,12 @@ Cahiers des Charges Original ➡️ [Pfe_2024-2025](https://github.com/tom-creme
 
 ⬇️ Devient
 
-### Time Tracker
+### Time Tracker ou Tracks 
 
 - Un utilisateur peut ajouter ses différentes tâches accomplies au fur et à mesure de la journée
     * Exemple: "De 9h à 10h tel tâches ont été faites" ou encore "de 13h à 17h travail sur tel projet"
-- Possibilité de lier chaque entrée de temps à :
-    - Un projet
-    - Une tâche existante
-- Ajouter des **tags personnalisés** (exemple : "réunion", "développement", "formation", etc.)
-- Affichage sous forme de **timeline de la journée** et récap hebdomadaire
+- Ces tracks font partie intégrante des tâches d'un projet, l'utilisateur peut démarrer un track à tout moment et
+l'arrêter à tout moment, ce qui lui permet de suivre le temps passé sur chaque tâche !
 - Vue analytique pour chaque utilisateur et pour l’équipe entière (au niveau de l’organisation)
 
 ---
@@ -34,14 +31,16 @@ Cahiers des Charges Original ➡️ [Pfe_2024-2025](https://github.com/tom-creme
 ### Gestion de tâches et projets (ToDo et Projects)
 
 - Création de projets
-- Création de tâches avec statut (à faire, en cours, terminé)
+- Création de tâches 
 - Attribution des tâches à un ou plusieurs membres
-- Suivi des tâches avec historique des actions
-- Système de **tags personnalisés** pour classifier les tâches
+- Tâches Parentes et Enfants, autrement dit, on peut créer des sous-tâches dans une tâche
+- Gestion des priorités
+- Gestion des statuts
+
 
 ---
 
-### Messagerie interne
+### Messagerie interne [Bonus]
 
 - Messagerie directe entre membres d’une organisation
 - Conversations de groupe (personnalisé, par projet ou canal dédié)
@@ -51,17 +50,16 @@ Cahiers des Charges Original ➡️ [Pfe_2024-2025](https://github.com/tom-creme
 ### Gestionnaire de fichiers
 
 - Gestion centralisée des documents d’une organisation
-- Dossiers par projet/tâche
-- Versioning de chaque fichier
-- Historique des actions (ajout, suppression, téléchargement)
+- Dossiers par projet
+- Versioning de chaque fichier [Bonus]
 
 ---
 
-### Abonnements et rôles personnalisés
+### Abonnements et rôles personnalisés 
 
 - 3 formules d’abonnement prédéfinies (Starter, Pro, Entreprise)
 - Chaque organisation peut créer des **rôles personnalisés** avec des permissions sur chaque module (accès aux
-  documents, gestion des tâches, modification du calendrier, etc.)
+  documents, gestion des tâches, etc.)
 - Possibilité d’avoir des utilisateurs qui n’appartiennent à aucune organisation (mode solo)
 - Un utilisateur peut appartenir à plusieurs organisations, avec des rôles différents dans chaque.
 
@@ -78,18 +76,13 @@ Cahiers des Charges Original ➡️ [Pfe_2024-2025](https://github.com/tom-creme
 
 ---
 
-### Intégration Lemon Squeezy
-
-- Gestion des abonnements via LemonSqueezy
-- Facturation automatique
-- Historique des paiements
-
----
 
 ### Audit et logs (BONUS !)
 
 - Journalisation des actions importantes (création/modification/suppression de documents, tâches, projets, etc.)
 - Historique exportable pour chaque organisation
+- Gestionnaire de fichiers : Historique des actions (ajout, suppression, téléchargement)
+- Historique des actions sur les tâches 
 
 ---
 
@@ -106,3 +99,4 @@ Cahiers des Charges Original ➡️ [Pfe_2024-2025](https://github.com/tom-creme
 
 Avec cette extension des fonctionnalités, Horixt devient un **outil complet de gestion de travail collaboratif**, allant
 bien au-delà de la simple gestion d’horaires.
+
