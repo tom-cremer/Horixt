@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Todo extends Model
 {
@@ -49,5 +50,9 @@ class Todo extends Model
         return $this->belongsTo(Todo::class, 'parent_id');
     }
 
+    public function files():MorphToMany
+    {
+        return $this->morphToMany(Files::class, 'fileable');
+    }
 
 }
