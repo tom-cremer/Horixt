@@ -29,5 +29,10 @@ class Context
     {
         session()->forget('organization_id');
     }
+
+    public static function getOrganization()
+    {
+        return Organization::where('id', self::getOrganizationId())->first();
+    }
 }
 
