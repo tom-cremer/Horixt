@@ -28,7 +28,7 @@ class Organization extends Model
     public function members()
     {
         return $this->belongsToMany(User::class)
-            ->withPivot(['is_active'])
+            ->withPivot(['is_active', 'joined_at', 'last_active'])
             ->withTimestamps();
     }
 
