@@ -15,10 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('organization_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-/*          $table->string('role')->default('member');*/
-            $table->boolean('is_active')->default(true); // true = membre actif, false = membre inactif
+            $table->boolean('is_active')->default(true); // If the user is active in the organization, if false, he doesn't have access to the organization
+            $table->timestamp('joined_at')->nullable(); // Date when the user joined the organization
+            $table->timestamp('last_active')->nullable(); // Date when the user was last active in the organization
             $table->timestamps();
-            $table->unique(['organization_id', 'user_id']); // évite les doublons
+            $table->unique(['organization_id', 'user_id']); // Unique constraint to prevent duplicate entries
         });
 
     }
