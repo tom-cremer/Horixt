@@ -4,6 +4,7 @@ use App\Livewire\Dashboard;
 use App\Livewire\FileManager;
 use App\Livewire\Members;
 use App\Livewire\Organizations;
+use App\Livewire\OrgInvite;
 use App\Livewire\ProjectDetails;
 use App\Livewire\ProjectList;
 use App\Livewire\Todo;
@@ -54,5 +55,10 @@ Route::prefix('/organization/{slug}')
         Route::get('/projects', ProjectList::class)->name('projects.index');
         Route::get('/projects/{projectid}', ProjectDetails::class)->name('projects.show');
         Route::get('/files', FileManager::class)->name('files');
-
     });
+
+
+Route::get('organization-invite/{token}', OrgInvite::class)
+    ->middleware(['check.invite.token'])
+    ->name('organization-invite');;
+
