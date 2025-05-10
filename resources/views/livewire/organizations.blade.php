@@ -1,16 +1,16 @@
 <div>
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 ">
+    <div class="grid grid-cols-1 gap-5 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2">
 
         @foreach($organizations as $organization)
             <div
-                class="min-w-80 w-full min-h-36 p-4 bg-gray-100 rounded-2xl shadow
+                class="min-w-60 w-full min-h-36 p-4 bg-gray-100 rounded-2xl shadow
                 hover:bg-gray-200 dark:bg-zinc-600 dark:hover:bg-zinc-700 transition duration-300
                 ease-in-out cursor-pointer flex flex-col justify-between gap-2.5"
                 wire:click="toOrganization({{ $organization->id }})"
                 wire:navigate>
                 <div class="grid grid-cols-[auto_1fr] items-center gap-4">
                     <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center">
-
+                        {{substr($organization->name, 0, 1)}}
                     </div>
                     <div class="flex flex-col">
                         <flux:heading size="lg" class="mb-0! font-lexend">{{$organization->name}}</flux:heading>
