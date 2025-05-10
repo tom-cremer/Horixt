@@ -14,6 +14,10 @@ new #[Layout('components.layouts.auth')] class extends Component {
     public string $password = '';
     public string $password_confirmation = '';
 
+    public function mount(): void
+    {
+        $this->email = request('email', '');
+    }
     /**
      * Handle an incoming registration request.
      */
