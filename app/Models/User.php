@@ -8,7 +8,9 @@ use App\Traits\HasUuid;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -94,14 +96,33 @@ class User extends Authenticatable
         return $this->hasMany(Organization::class, 'owner_id');
     }
 
+    // Check if the user is the owner of an organization
+    public function isOwner($organizationId): bool
+    {
+        $organization = Organization::find($organizationId);
+        if (!$organization) {
+            return false;
+        }
+        return $this->id === $organization->owner_id;
+    }
+
     // File manager
     public function directories()
     {
         return $this->hasMany(Directories::class);
     }
+
     public function files()
     {
         return $this->hasMany(Files::class);
+    }
+
+
+
+    // Super-Admin Feature
+    public function administrator(): HasOne
+    {
+        return $this->hasOne(Administrators::class);
     }
 
 
