@@ -11,6 +11,17 @@ enum RoleEnum: string
     case GUEST = 'guest';
 
 
+    // Role Colors
+    public function color(): string
+    {
+        return match ($this) {
+            self::ADMIN => 'amber',
+            self::MEMBER => 'blue',
+            self::REVIEWER => 'teal',
+            self::INTERN => 'purple',
+            self::GUEST => 'zinc',
+        };
+    }
 
 
     public static function values(): array
