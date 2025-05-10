@@ -14,6 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'personal' => \App\Http\Middleware\PersonalMiddleware::class,
             'organization' => \App\Http\Middleware\OrganizationMiddleware::class,
+            'check.invite.token' => \App\Http\Middleware\CheckInviteTokenMiddleware::class,
+            'superadmin' => \App\Http\Middleware\SuperAdminMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
