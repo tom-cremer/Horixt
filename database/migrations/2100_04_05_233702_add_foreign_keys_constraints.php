@@ -62,6 +62,12 @@ return new class extends Migration
             $table->foreign('file_id')->references('id')->on('files')->onDelete('cascade');
 
         });
+
+
+        Schema::table('organization_invites', function (Blueprint $table) {
+            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
+            $table->foreign('invited_by')->references('id')->on('users')->onDelete('cascade');
+        });
     }
 
     /**
@@ -120,5 +126,11 @@ return new class extends Migration
         Schema::table('fileables', function (Blueprint $table) {
             $table->dropForeign(['file_id']);
         });
+
+        Schema::table('organization_invites', function (Blueprint $table) {
+            $table->dropForeign(['organization_id']);
+            $table->dropForeign(['invited_by']);
+        });
+
     }
 };
