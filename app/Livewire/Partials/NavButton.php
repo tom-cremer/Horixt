@@ -2,10 +2,11 @@
 
 namespace App\Livewire\Partials;
 
+use App\Livewire\Component\HorixtComponent;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class NavButton extends Component
+class NavButton extends HorixtComponent
 {
 
     public string $text;

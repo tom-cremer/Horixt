@@ -2,9 +2,10 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Component\HorixtComponent;
 use Livewire\Component;
 
-class Dashboard extends Component
+class Dashboard extends HorixtComponent
 {
 
 

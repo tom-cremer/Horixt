@@ -2,10 +2,11 @@
 
 namespace App\Livewire\Partials;
 
+use App\Livewire\Component\HorixtComponent;
 use App\Models\Organization;
 use Livewire\Component;
 
-class TeamBubble extends Component
+class TeamBubble extends HorixtComponent
 {
 
     public Organization $organization;

@@ -3,12 +3,13 @@
 namespace App\Livewire;
 
 use App\Enums\RoleEnum;
+use App\Livewire\Component\HorixtComponent;
 use App\Models\OrganizationInvites;
 use App\Models\User;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
-class OrgInvite extends Component
+class OrgInvite extends HorixtComponent
 {
 
     public $token;

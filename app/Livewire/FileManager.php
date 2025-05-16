@@ -2,11 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Component\HorixtComponent;
 use App\Models\Directories;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
-class FileManager extends Component
+class FileManager extends HorixtComponent
 {
     public ?Directories $currentDirectory = null;
     public $breadcrumbs = [];
