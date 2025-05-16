@@ -8,7 +8,6 @@ use App\Traits\HasUuid;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -74,7 +73,14 @@ class User extends Authenticatable
 
     public function todos(): HasMany
     {
-        return $this->hasMany(Todo::class);
+        return $this->hasMany(Todo::class, 'user_id');
+    }
+
+    public function assignedTodos()
+    {
+        return $this->belongsToMany(Todo::class, 'assigned_todo')
+            ->withPivot('assigned_by')
+            ->withTimestamps();
     }
 
     public function projects(): HasMany
