@@ -24,6 +24,8 @@
         @endif
     </div>
 
+    <livewire:partials.organization-select :collapsed="$collapsed" wire:key="organization-select" />
+
     <flux:separator/>
 
     <div class="flex flex-col gap-1 mt-2 {{$collapsed ? 'items-center' : ''}}">
@@ -115,20 +117,13 @@
             <flux:menu.separator/>
 
             <flux:menu.radio.group>
-                <flux:menu.item href="{{route('personal.settings')}}" icon="cog"
+                <flux:menu.item href="{{(\App\Helper\Context::isOrganization())? route('organization.settings', ['slug' => \App\Helper\Context::getOrganizationSlug()]) : route('personal.settings')}}" icon="cog"
                                 wire:navigate>{{ __('Settings') }}</flux:menu.item>
             </flux:menu.radio.group>
 
             <flux:menu.separator/>
 
-            @if(\App\Helper\Context::isOrganization())
-                <flux:menu.radio.group>
-                    <flux:menu.item href="{{route('personal.dashboard')}}" icon="home"
-                                    wire:navigate>{{ __('Personal') }}</flux:menu.item>
-                </flux:menu.radio.group>
 
-                <flux:menu.separator/>
-            @endif
 
             <form method="POST" action="{{ route('logout') }}" class="w-full">
                 @csrf
