@@ -5,7 +5,7 @@
         @foreach($members->take(5) as $member)
             <flux:tooltip content="{{$member->name}}" position="bottom">
                 <div
-                    class="peer w-8 h-8 rounded-full border-1 bg-zinc-600 border-white flex items-center justify-center -m-0.5">
+                    class="peer w-8 h-8 rounded-full border-1 bg-neutral-200 dark:bg-zinc-600  border-white flex items-center justify-center -m-0.5">
                     <span class="text-xs font-bold font-lexend ">
                         {{$member->initials()}}
                     </span>
@@ -22,7 +22,7 @@
 
     @else
         <flux:tooltip content="{{$owner->name}}" position="bottom">
-            <div class="w-8 h-8 rounded-full border-1 border-white flex items-center justify-center ">
+            <div class="w-8 h-8 rounded-full border-1 bg-neutral-200 dark:bg-zinc-600 border-white flex items-center justify-center ">
                 <span class="text-xs font-bold font-lexend">
                     {{$owner->initials()}}
                 </span>
