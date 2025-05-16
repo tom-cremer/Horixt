@@ -29,6 +29,8 @@ class Organization extends Model
     {
         return $this->belongsToMany(User::class)
             ->withPivot(['is_active', 'joined_at', 'last_active'])
+            ->wherePivot('is_active', true)
+            ->with(['roles'])
             ->withTimestamps();
     }
 
