@@ -3,23 +3,33 @@
 namespace App\Livewire;
 
 use App\Helper\Context;
-use App\Models\Organization;
-use Flux\Concerns\InteractsWithComponents;
+use App\Livewire\Component\HorixtComponent;
+use App\Models\User;
 use Flux\Flux;
-use Livewire\Component;
+use Livewire\Attributes\On;
 
-class Members extends Component
+class Members extends HorixtComponent
 {
 
-    public $members;
+    private $members = [];
+    public $memberToEdit;
 
-    public function mount()
+    #[On('edit-member-done')]
+    public function loadMembers()
     {
-        $this->members = Organization::find(Context::getOrganizationId())->members()->withPivot('is_active')->get();
+        $this->members = Context::getOrganization()->members;
+    }
+
+    public function editMember($id)
+    {
+        $this->memberToEdit = User::find($id);
+        Flux::modal('edit-member')->show();
     }
 
     public function render()
     {
+
+        $this->members = Context::getOrganization()->members;
         return view('livewire.members');
     }
 }

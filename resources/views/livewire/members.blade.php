@@ -1,4 +1,4 @@
-<div class="overflow-hidden">
+<div class="overflow-hidden font-lexend">
     <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-semibold">Members</h2>
         <livewire:partials.add-members/>
@@ -18,7 +18,7 @@
             </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 text-sm">
-            @forelse ($members as $member)
+            @forelse ($this->members as $member)
                 <tr class="border-b border-zinc-300 dark:border-zinc-600">
                     <td class=" px-4 py-3  border-r border-zinc-300 dark:border-zinc-600">
                         <div class="flex flex-nowrap items-center gap-2">
@@ -59,18 +59,14 @@
                     </td>
                     <td class="px-4 py-3 text-right ">
                         <div class="flex justify-end gap-2">
-                            <button wire:click="edit({{ $member->id }})"
-                                    class="text-blue-600 hover:underline text-sm">Edit
-                            </button>
-                            @if ($member->pivot->is_active)
-                                <button wire:click="deactivate({{ $member->id }})"
-                                        class="text-red-600 hover:underline text-sm">Deactivate
-                                </button>
-                            @else
-                                <button wire:click="reactivate({{ $member->id }})"
-                                        class="text-green-600 hover:underline text-sm">Reactivate
-                                </button>
-                            @endif
+                            @can(\App\Enums\PermissionEnum::ORG_MANAGE->value)
+                                {{--<livewire:partials.edit-member :member="$member" :key="$member->id"/>--}}
+                                <flux:button
+                                    wire:click="editMember({{ $member->id }})"
+                                    variant="primary" size="sm">
+                                    Edit
+                                </flux:button>
+                                @endcan
                         </div>
                     </td>
                 </tr>
@@ -83,6 +79,13 @@
             @endforelse
             </tbody>
         </table>
-
     </div>
+
+    <flux:modal name="edit-member">
+        <div>
+            hola
+            {{$memberToEdit}}
+        </div>
+    </flux:modal>
+
 </div>
