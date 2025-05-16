@@ -1,18 +1,20 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/livewire-starter-kit",
+    "name": "Horixt",
     "type": "project",
-    "description": "The official Laravel starter kit for Livewire.",
+    "description": "The best project manager you will ever use :)",
     "keywords": [
         "laravel",
-        "framework"
+        "framework",
+        "project manager",
+        "todo"
     ],
     "license": "MIT",
     "require": {
         "php": "^8.2",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
-        "livewire/flux": "2.0.4",
+        "livewire/flux": "^2.1",
         "livewire/volt": "^1.6.7",
         "spatie/laravel-permission": "^6.17"
     },
