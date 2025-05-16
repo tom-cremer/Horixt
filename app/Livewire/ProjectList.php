@@ -3,14 +3,15 @@
 namespace App\Livewire;
 
 use App\Helper\Context;
+use App\Livewire\Component\HorixtComponent;
 use App\Models\Color;
 use App\Models\Priority;
 use App\Models\Project;
 use App\Models\Status;
 use Flux\Flux;
-use Livewire\Component;
 
-class ProjectList extends Component
+
+class ProjectList extends HorixtComponent
 {
 
     public $name;
@@ -25,6 +26,13 @@ class ProjectList extends Component
     public $statuses;
     public $priorities;
     public $colors;
+
+    public function mount()
+    {
+        $this->statuses = Status::all();
+        $this->priorities = Priority::all();
+        $this->colors = Color::all();
+    }
 
     public function createProject()
     {
@@ -60,22 +68,16 @@ class ProjectList extends Component
             ]);
         }
 
-        $this->reset();
+        $this->resetExcept(['statuses', 'priorities', 'colors']);
         Flux::modal('add-project')->close();
     }
 
-    public function editProject($projectId)
+    public function openAddProjectModal()
     {
-        $project = Project::find($projectId);
-        $this->name = $project->name;
-        $this->description = $project->description;
-        $this->status_id = $project->status_id;
-        $this->priority_id = $project->priority_id;
-        $this->color_id = $project->color_id;
-        $this->deadline = $project->deadline;
-        $this->projectId = $project->id;
-        Flux::modal('edit-project')->show();
+
+        Flux::modal('add-project')->show();
     }
+
 
     public function updateProject($projectId)
     {
@@ -109,9 +111,6 @@ class ProjectList extends Component
 
     public function render()
     {
-        $this->statuses = Status::all();
-        $this->priorities = Priority::all();
-        $this->colors = Color::all();
 
         if (Context::isOrganization()) {
             $projects = Project::where('organization_id', Context::getOrganizationId())->get();
