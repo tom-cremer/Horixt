@@ -4,12 +4,13 @@ namespace App\Livewire\Partials;
 
 use App\Helper\Context;
 use App\Jobs\SendInvites;
+use App\Livewire\Component\HorixtComponent;
 use App\Models\Organization;
 use Flux\Flux;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
-class AddMembers extends Component
+class AddMembers extends HorixtComponent
 {
 
     public $email;
