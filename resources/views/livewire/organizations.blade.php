@@ -38,6 +38,37 @@
             </div>
         @endforeach
 
-
+            <div wire:click="openAddOrganizationModal" wire:key="add-organization"
+                 class="cursor-pointer flex flex-col items-center justify-center gap-1.5 border-dashed border-2 border-gray-300 dark:border-zinc-500 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-all duration-300 rounded-xl p-4">
+                <div class="bg-[#7F76FF] rounded-md p-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-icon lucide-plus"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                </div>
+                <flux:text variant='subtle' class="font-medium">
+                    Add Organization
+                </flux:text>
+            </div>
     </div>
+
+    <flux:modal name="add-organization" class="md:w-96">
+        <div class="space-y-6">
+            <div>
+                <flux:heading size="lg">Add Organization</flux:heading>
+            </div>
+            <flux:input label="Name" placeholder="Org Name" wire:model="name" />
+            <flux:input label="Slug" placeholder="Slug" wire:model="slug" />
+
+
+            <flux:input label="Description" placeholder="Description" wire:model="description" />
+            <flux:input label="Email" placeholder="Email" wire:model="email" />
+            <flux:input label="Website" placeholder="Website" wire:model="website" />
+            <flux:input label="Phone" placeholder="Phone" wire:model="phone" />
+
+
+            <div class="flex">
+                <flux:spacer />
+                <flux:button type="submit" variant="primary" wire:click="createOrganization">Create Organization</flux:button>
+            </div>
+        </div>
+    </flux:modal>
+
 </div>
