@@ -3,10 +3,12 @@
 namespace App\Livewire\Partials;
 
 use App\Helper\Context;
+use App\Livewire\Component\HorixtComponent;
+use App\Models\Project;
 use Illuminate\Support\Facades\Route;
 use Livewire\Component;
 
-class Breadcrumb extends Component
+class Breadcrumb extends HorixtComponent
 {
     public $breadcrumbs = [];
 
@@ -55,7 +57,7 @@ class Breadcrumb extends Component
                 'url' => route('personal.projects.index'),
             ];
             $breadcrumbs[] = [
-                'label' => __('Project Details'),
+                'label' => Project::find($routeParameters['projectid'])->name,
                 'url' => route('personal.projects.show', ['projectid' => $routeParameters['projectid']]),
             ];
         } elseif ($routeName === 'personal.settings') {
@@ -145,7 +147,7 @@ class Breadcrumb extends Component
                 'url' => route('organization.projects.index', ['slug' => Context::getOrganizationSlug()]),
             ];
             $breadcrumbs[] = [
-                'label' => __('Project Details'),
+                'label' => Project::find($routeParameters['projectid'])->name,
                 'url' => route('organization.projects.show', ['projectid' => $routeParameters['projectid'], 'slug' => Context::getOrganizationSlug()]),
             ];
         } elseif ($routeName === 'organization.settings') {
