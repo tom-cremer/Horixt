@@ -2,11 +2,11 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Component\HorixtComponent;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Session;
-use Livewire\Component;
 
-class Sidebar extends Component
+class Sidebar extends HorixtComponent
 {
     #[Session(key: 'collapsed')]
     public $collapsed = false;
