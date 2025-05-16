@@ -3,15 +3,15 @@
 namespace App\Livewire\Todos;
 
 use App\Helper\Context;
+use App\Livewire\Component\HorixtComponent;
 use App\Models\Color;
 use App\Models\Priority;
 use App\Models\Status;
 use App\Models\Todo;
 use App\Traits\CreateTodo;
-use Illuminate\Support\Facades\Log;
-use Livewire\Component;
+use Livewire\Attributes\On;
 
-class Line extends Component
+class Line extends HorixtComponent
 {
     use CreateTodo;
 
@@ -35,11 +35,24 @@ class Line extends Component
         $this->todo->is_done = !$this->todo->is_done;
         $this->todo->save();
 
-        if ($this->todo->is_done) {
-            // Mark all children done
-            foreach ($this->todo->children as $child) {
-                $child->update(['is_done' => true]);
-            }
+        $this->updateChildrenRecursively($this->todo, $this->todo->is_done);
+    }
+
+    public function updateChildrenRecursively($todo, $isDone)
+    {
+        foreach ($todo->children as $child) {
+            $child->update(['is_done' => $isDone]);
+            $this->dispatch('todoUpdated', $child->id);
+            $this->updateChildrenRecursively($child, $isDone);
+        }
+    }
+
+
+    #[On('todoUpdated')]
+    public function refreshTodo($todoId)
+    {
+        if ($this->todo->id == $todoId) {
+            $this->todo = Todo::find($todoId);
         }
     }
 
@@ -50,10 +63,6 @@ class Line extends Component
 
     public function addSubTodo()
     {
-        Log::info('Adding sub-todo', [
-            'name' => $this->newSubTodoTitle,
-            'parent_id' => $this->todo->id,
-        ]);
         Todo::create([
             'name' => $this->newSubTodoTitle,
             'description' => '',
@@ -64,6 +73,7 @@ class Line extends Component
             'organization_id' => Context::isOrganization() ? Context::getOrganizationId() : null,
             'user_id' => auth()->id(),
             'parent_id' => $this->todo->id,
+            'project_id' => $this->todo->project_id,
         ]);
 
         $this->newSubTodoTitle = '';
