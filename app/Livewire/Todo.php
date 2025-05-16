@@ -3,22 +3,18 @@
 namespace App\Livewire;
 
 use App\Helper\Context;
+use App\Livewire\Component\HorixtComponent;
 use App\Models\Color;
 use App\Models\Priority;
+use App\Models\Project;
 use App\Models\Status;
 use App\Models\Todo as Todos;
 use Livewire\Component;
 
-class Todo extends Component
+class Todo extends HorixtComponent
 {
 
     public $name;
-    public $description;
-    public $is_done;
-    public $priority_id;
-    public $status_id;
-    public $color_id;
-
     public $todoId;
 
     public $completedTodos = [];
@@ -27,6 +23,14 @@ class Todo extends Component
     public $statuses;
     public $colors;
 
+    public $projectId;
+    public $project;
+
+    public function mount($projectId)
+    {
+        $this->projectId = $projectId;
+        $this->project = Project::find($projectId);
+    }
 
     public function createTodo()
     {
@@ -40,7 +44,7 @@ class Todo extends Component
                 'priority_id' => $this->priority ?? Priority::DEFAULT,
                 'color_id' => $this->color_id ?? Color::DEFAULT,
                 'user_id' => auth()->id(),
-                'project_id' => $this->project_id ?? null,
+                'project_id' => $this->projectId ?? null,
                 'organization_id' => Context::getOrganizationId(),
             ]);
 
@@ -53,12 +57,34 @@ class Todo extends Component
                 'priority_id' => $this->priority ?? Priority::DEFAULT,
                 'color_id' => $this->color_id ?? Color::DEFAULT,
                 'user_id' => auth()->id(),
-                'project_id' => $this->project_id ?? null,
+                'project_id' => $this->projectId ?? null,
                 'organization_id' => null,
             ]);
+
         }
-        $this->reset();
+        $this->dispatch('todoCreated');
+        $this->resetExcept('projectId', 'project');
     }
+
+    public function addTodo()
+    {
+        if (empty($this->name) ){
+            return;
+        }
+        Todos::create([
+            'name' => $this->name,
+            'description' => '',
+            'is_done' => false,
+            'status_id' => Status::DEFAULT,
+            'priority_id' => Priority::DEFAULT,
+            'color_id' => Color::DEFAULT,
+            'organization_id' => Context::isOrganization() ? Context::getOrganizationId() : null,
+            'user_id' => auth()->id(),
+            'project_id' => $this->projectId,
+        ]);
+        $this->reset(['name']);
+    }
+
 
     public function updateStatus($todoId)
     {
@@ -76,10 +102,10 @@ class Todo extends Component
         $this->colors = Color::all();
 
         if (Context::isOrganization()) {
-            $todos = Todos::where('user_id', auth()->id())->where('parent_id', null)->where('organization_id', Context::getOrganizationId())->with(['project', 'status', 'priority'])->get();
+            $todos = Todos::where('project_id', $this->projectId)->where('parent_id', null)->where('organization_id', Context::getOrganizationId())->with(['project', 'status', 'priority'])->get();
             $this->completedTodos = Todos::where('user_id', auth()->id())->where('is_done', true)->where('organization_id', Context::getOrganizationId())->with(['project', 'status', 'priority'])->pluck('id')->toArray();
         } else {
-            $todos = Todos::where('user_id', auth()->id())->where('parent_id', null)->where('organization_id', null)->with(['project', 'status', 'priority'])->get();
+            $todos = Todos::where('user_id', auth()->id())->where('project_id', $this->projectId)->where('parent_id', null)->where('organization_id', null)->with(['project', 'status', 'priority'])->get();
             $this->completedTodos = Todos::where('user_id', auth()->id())->where('is_done', true)->where('organization_id', null)->with(['project', 'status', 'priority'])->pluck('id')->toArray();
         }
 

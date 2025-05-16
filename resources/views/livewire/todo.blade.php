@@ -1,63 +1,42 @@
-<div>
-    <flux:modal.trigger name="add-todo" class="md:w-96">
-        <flux:button variant="primary">Add Todo</flux:button>
-    </flux:modal.trigger>
+<div class="overflow-scroll h-full w-full font-lexend">
 
-    <flux:modal name="add-todo" class="md:w-96" variant="flyout">
-        <div class="space-y-6">
-            <div>
-                <flux:heading size="lg">Add a Todo</flux:heading>
-                <flux:subheading>Here you can add a todo!</flux:subheading>
-            </div>
-
-            <flux:input label="Title" placeholder="Todo 101" wire:model.defer="name"/>
-            <flux:input label="Description" placeholder="Todo 101" wire:model.defer="description"/>
-
-            <flux:select wire:model.defer="priority_id" placeholder="Choose Priority...">
-                @foreach($priorities as $priority)
-                    <flux:select.option value="{{$priority->id}}">{{$priority->name}}</flux:select.option>
-                @endforeach
-            </flux:select>
-
-            <flux:select wire:model.defer="status_id" placeholder="Choose Priority...">
-                @foreach($statuses as $status)
-                    <flux:select.option value="{{$status->id}}">{{$status->name}}</flux:select.option>
-                @endforeach
-            </flux:select>
-
-            <div class="flex">
-                <flux:spacer/>
-                <flux:button type="submit" wire:click="createTodo" variant="primary">Add Todo</flux:button>
-            </div>
+    <div class=" grid grid-cols-6 gap-2 min-w-[1024px]">
+        <div class="flex items-center gap-2.5">
+            <flux:text variant="subtle" class="font-medium">Aa</flux:text>
+            <flux:text variant="subtle" size="lg">Todo name</flux:text>
         </div>
-    </flux:modal>
+        <div class="flex items-center gap-2.5">
+            <flux:text variant="subtle" size="lg">Tracks</flux:text>
+        </div>
+        <div class="flex items-center gap-2.5">
+            <flux:text variant="subtle" size="lg">Assignees</flux:text>
+        </div>
+        <div class="flex items-center gap-2.5">
+            <flux:text variant="subtle" size="lg">Status</flux:text>
+        </div>
+        <div class="flex items-center gap-2.5">
+            <flux:text variant="subtle" size="lg">Priority</flux:text>
+        </div>
+        <div class="flex items-center gap-2.5">
+            <flux:text variant="subtle" size="lg">Actions</flux:text>
+        </div>
 
-    <div class="mt-4 flex flex-col gap-2">
+    </div>
+
+    <div class="mt-4 mb-14 flex flex-col gap-1.5 min-w-[1024px]">
+
         @foreach($todos as $todo)
-            {{--<div
-                class="flex items-center justify-between p-2 bg-white transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 rounded-xl dark:bg-neutral-700 dark:text-neutral-100">
-
-                <div class="flex items-center gap-2">
-                    <flux:checkbox
-                        value="{{ $todo->id }}"
-                        wire:model="completedTodos"
-                        wire:click="updateStatus({{ $todo->id }})"></flux:checkbox>
-                    <div>
-                        <h3 class="text-lg font-semibold {{ $todo->status->id === \App\Models\Status::COMPLETED ? 'line-through text-gray-400' : '' }}">
-                            {{ $todo->name }}
-                        </h3>
-                        <p class="text-sm text-neutral-500">{{ $todo->description }}</p>
-                    </div>
-                </div>
-
-                <livewire:track :todo="$todo->id" :key="'track-'.$todo->id" />
-                <div class="flex gap-2 items-center">
-                    <span class="text-sm text-neutral-500">{{ $todo->status->name }}</span>
-                    <span class="text-sm text-neutral-500">{{ $todo->priority->name }}</span>
-                    <flux:button size="sm" icon="pencil" variant="ghost" inset/>
-                </div>
-            </div>--}}
-            <livewire:todos.line :todo="$todo" :key="$todo->id" />
+            <livewire:todos.line :todo="$todo" :key="$todo->id"/>
         @endforeach
+            <div class="mt-2 h-8 flex items-center space-x-2">
+                <input
+                    type="text"
+                    wire:model="name"
+                    wire:keydown.enter="addTodo"
+                    class="w-full px-2 py-1 text-sm border rounded"
+                    placeholder="New Todo"
+                >
+            </div>
     </div>
 </div>
+
