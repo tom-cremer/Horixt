@@ -3,7 +3,7 @@
 <head>
     @include('partials.head')
 </head>
-<body class="min-h-screen bg-white dark:bg-zinc-800 grid grid-cols-[auto_1fr] grid-rows-1" style="overflow-x: hidden;">
+<body class="relative min-h-screen bg-white dark:bg-zinc-800 grid grid-cols-[auto_1fr] grid-rows-1" style="overflow-x: hidden;">
 @livewire('sidebar')
 <main class="p-5 pt-0 h-screen flex flex-col w-full overflow-hidden">
     @livewire('header')
@@ -11,6 +11,7 @@
         {{ $slot }}
     </div>
 </main>
+<livewire:partials.feedback.toast/>
 @fluxScripts
 </body>
 </html>
