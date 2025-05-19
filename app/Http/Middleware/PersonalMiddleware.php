@@ -22,7 +22,7 @@ class PersonalMiddleware
         }
         Log::info("PersonalMiddleware: User is authenticated");
         // Clear any active org session
-        session()->forget('organization_id');
+        session()->forget(['organization_id', 'team_id']);
         return $next($request);
     }
 
