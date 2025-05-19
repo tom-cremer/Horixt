@@ -2,7 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Enums\RoleEnum;
 use App\Livewire\Component\HorixtComponent;
+use App\Models\Track as TrackModel;
 use Carbon\Carbon;
 
 class Track extends HorixtComponent
@@ -14,12 +16,18 @@ class Track extends HorixtComponent
     public $showTrackHistory = false;
     public $timer;
 
+    public $trackToEdit;
+
+    public $started_at;
+    public $ended_at;
+    public $durations;
+
     public function mount($todo)
     {
         $this->todo = \App\Models\Todo::with('tracks')->findOrFail($todo);
         $this->tracks = $this->todo->tracks()->orderBy('started_at', 'desc')->get();
         $this->activeTrack = $this->todo->tracks()->whereNull('ended_at')->first();
-        $this->timer = $this->totalDuration();
+
     }
 
     public function totalDuration()
@@ -31,16 +39,16 @@ class Track extends HorixtComponent
         return $this->timer;
     }
 
-    public function incrementTimer()
+  /*  public function incrementTimer()
     {
         if ($this->activeTrack) {
             $this->timer++;
         }
-    }
+    }*/
 
     public function start()
     {
-        $this->activeTrack = \App\Models\Track::create([
+        $this->activeTrack = TrackModel::create([
             'todo_id' => $this->todo->id,
             'started_at' => now(),
             'user_id' => auth()->id(),
@@ -71,10 +79,36 @@ class Track extends HorixtComponent
         return $start->diffInSeconds($end);
     }
 
+    public function edit($id)
+    {
+        $track = TrackModel::find($id);
+        if ($track->user_id != auth()->id() && !auth()->user()->hasRole(RoleEnum::ADMIN->value)) {
+            return;
+        }
+        $this->trackToEdit = $id;
+        $this->started_at = Carbon::parse($track->started_at)->format('H:i:s');
+        $this->ended_at = Carbon::parse($track->ended_at)->format('H:i:s');
+        $this->durations = $track->durations;
+    }
+
+    public function update($id)
+    {
+        $validatedAttribute = $this->validate([
+            'started_at' => 'required|date_format:H:i:s',
+            'ended_at' => 'required|date_format:H:i:s|after_or_equal:started_at',
+        ]);
+        $track = TrackModel::find($id);
+        $track->started_at = Carbon::parse($validatedAttribute['started_at'])->format('Y-m-d H:i:s');
+        $track->ended_at = Carbon::parse($validatedAttribute['ended_at'])->format('Y-m-d H:i:s');
+        $track->durations = $this->calculateDuration($track->started_at, $track->ended_at);
+        $track->save();
+        $this->trackToEdit = null;
+    }
     public function deleteTrack($trackId)
     {
-        $track = \App\Models\Track::findOrFail($trackId);
+        $track = TrackModel::findOrFail($trackId);
         $track->delete();
+        $this->timer = $this->totalDuration();
     }
 
     public function toggleTrackHistory()
@@ -85,6 +119,7 @@ class Track extends HorixtComponent
     public function render()
     {
         $this->tracks = $this->todo->tracks()->orderBy('started_at', 'desc')->get();
+        $this->timer = $this->totalDuration();
         return view('livewire.track');
     }
 }
