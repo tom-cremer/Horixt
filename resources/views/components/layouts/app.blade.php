@@ -7,7 +7,7 @@
 @livewire('sidebar')
 <main class="p-5 pt-0 h-screen flex flex-col w-full overflow-hidden">
     @livewire('header')
-    <div class="flex flex-col gap-4 mt-4 overflow-y-auto row-start-2 row-end-3">
+    <div class="flex flex-col gap-4 mt-2 overflow-y-auto row-start-2 row-end-3 h-full">
         {{ $slot }}
     </div>
 </main>
