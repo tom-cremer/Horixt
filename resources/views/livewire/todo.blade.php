@@ -1,4 +1,4 @@
-<div class="overflow-scroll h-full w-full font-lexend">
+<div class="overflow-auto h-full w-full font-lexend">
 
     <div class=" grid grid-cols-6 gap-2 min-w-[1024px]">
         <div class="flex items-center gap-2.5">
@@ -28,15 +28,16 @@
         @foreach($todos as $todo)
             <livewire:todos.line :todo="$todo" :key="$todo->id"/>
         @endforeach
-            <div class="mt-2 h-8 flex items-center space-x-2">
-                <input
-                    type="text"
-                    wire:model="name"
-                    wire:keydown.enter="addTodo"
-                    class="w-full px-2 py-1 text-sm border rounded"
-                    placeholder="New Todo"
-                >
-            </div>
+        <div class="px-1 mt-2 h-8 flex items-center space-x-2">
+            <flux:input
+                type="text"
+                size="sm"
+                kbd="Enter"
+                placeholder="New Todo"
+                wire:model="name"
+                wire:keydown.enter="addTodo"
+                clearable/>
+        </div>
     </div>
 </div>
 
