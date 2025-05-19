@@ -1,7 +1,6 @@
-<div class="font-lexend">
+<div class="font-lexend h-full">
     <div class="space-y-6">
 
-        @if($projects->count())
             <div class=" grid grid-cols-1 gap-5 xl:grid-cols-4 lg:grid-cols-2 sm:grid-cols-2 space-y-6">
                 @foreach($projects as $project)
                     <div wire:click="toProject({{$project->id}})" wire:navigate
@@ -25,10 +24,10 @@
                             </div>
                         </div>
                         <div class="ml-auto flex gap-2">
-                            @if(!\App\Helper\Context::isOrganization() || auth()->user()->can(\App\Enums\PermissionEnum::PROJECT_UPDATE))
+                            @if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::PROJECT_UPDATE))
                                 <flux:button wire:click.stop="editProject({{$project->id}})">Edit</flux:button>
                             @endif
-                            @if(!App\Helper\Context::isOrganization() || auth()->user()->can(\App\Enums\PermissionEnum::PROJECT_DELETE))
+                            @if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::PROJECT_DELETE))
                                 <flux:button wire:click.stop="deleteProject({{$project->id}})" variant="danger">
                                     Delete
                                 </flux:button>
@@ -37,7 +36,7 @@
                     </div>
                 @endforeach
 
-                @if(!\App\Helper\Context::isOrganization() || auth()->user()->can(\App\Enums\PermissionEnum::PROJECT_CREATE))
+                @if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::PROJECT_CREATE))
                     <div wire:click="openAddProjectModal" wire:key="add-project"
                         class="cursor-pointer  flex flex-col items-center justify-center gap-1.5 border-dashed border-2 border-gray-300 dark:border-zinc-500 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-all duration-300 rounded-xl p-4">
                         <div class="bg-[#7F76FF] rounded-md p-1">
@@ -49,7 +48,6 @@
                     </div>
                 @endif
             </div>
-        @endif
 
 
     </div>
