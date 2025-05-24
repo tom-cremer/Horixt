@@ -23,10 +23,14 @@ class Todo extends HorixtComponent
     public $projectId;
     public $project;
 
-    public function mount($projectId)
+    // If this is true, it will show the todos assigned to the current user
+    public $assignedToMe = false;
+
+    public function mount($projectId, $assignedToMe = false)
     {
         $this->projectId = $projectId;
         $this->project = Project::find($projectId);
+
     }
 
     public function addTodo()
@@ -51,18 +55,38 @@ class Todo extends HorixtComponent
     #[On('todo-deleted')]
     public function render()
     {
-
         if (Context::isOrganization()) {
-            $todos = Todos::where('project_id', $this->projectId)->where('parent_id', null)->where('organization_id', Context::getOrganizationId())->with(['project', 'status', 'priority'])->get();
-            $this->completedTodos = Todos::where('user_id', auth()->id())->where('is_done', true)->where('organization_id', Context::getOrganizationId())->with(['project', 'status', 'priority'])->pluck('id')->toArray();
+            if ($this->assignedToMe) {
+                $todos = Todos::where('user_id', auth()->id())
+                    ->where('project_id', $this->projectId)
+                    ->where('parent_id', null)
+                    ->where('organization_id', Context::getOrganizationId())
+                    ->with(['project', 'status', 'priority'])
+                    ->whereHas('assignees', function ($query) {
+                        $query->where('user_id', auth()->id());
+                    })
+                    ->get();
+
+            } else {
+            $todos = Todos::where('project_id', $this->projectId)
+                ->where('parent_id', null)
+                ->where('organization_id', Context::getOrganizationId())
+                ->with(['project', 'status', 'priority'])
+                ->get();
+            }
+            /*$this->completedTodos = Todos::where('user_id', auth()->id())->where('is_done', true)->where('organization_id', Context::getOrganizationId())->with(['project', 'status', 'priority'])->pluck('id')->toArray();*/
         } else {
-            $todos = Todos::where('user_id', auth()->id())->where('project_id', $this->projectId)->where('parent_id', null)->where('organization_id', null)->with(['project', 'status', 'priority'])->get();
-            $this->completedTodos = Todos::where('user_id', auth()->id())->where('is_done', true)->where('organization_id', null)->with(['project', 'status', 'priority'])->pluck('id')->toArray();
+            $todos = Todos::where('user_id', auth()->id())
+                ->where('project_id', $this->projectId)
+                ->where('parent_id', null)
+                ->where('organization_id', null)
+                ->with(['project', 'status', 'priority'])
+                ->get();
+            /*$this->completedTodos = Todos::where('user_id', auth()->id())->where('is_done', true)->where('organization_id', null)->with(['project', 'status', 'priority'])->pluck('id')->toArray();*/
         }
 
         return view('livewire.todo', [
             'todos' => $todos,
-
         ]);
     }
 }

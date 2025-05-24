@@ -1,6 +1,6 @@
 <div class="ml-{{ $todo->parent_id ? '6' : '0' }} mb-1">
     <div
-        class="grid grid-cols-6 items-center gap-4 p-1 shadow-sm hover:shadow-md transition {{ $todo->parent_id ? '' : 'border-t ' }} border-b border-gray-200/20 dark:text-neutral-100">
+        class="grid {{(\App\Helper\Context::isOrganization())? 'grid-cols-6' : 'grid-cols-5'}} items-center gap-4 p-1 shadow-sm hover:shadow-md transition {{ $todo->parent_id ? '' : 'border-t ' }} border-b border-gray-200/20 dark:text-neutral-100">
         <div class="flex items-center space-x-2">
 
             <button wire:click="toggleExpanded"
@@ -20,12 +20,6 @@
                 @endif
             </button>
 
-            <input
-                type="checkbox"
-                wire:click="toggleDone"
-                @checked($todo->is_done)
-                class="h-4 w-4"
-            >
             <flux:tooltip position="bottom" content="{{ $todo->name }}" class="truncate">
                 <p class="w-full truncate! font-medium font-lexend @if($todo->is_done) line-through text-gray-400 @endif">
                     {{ $todo->name }}
@@ -35,117 +29,121 @@
         <div>
             <livewire:track :todo="$todo->id" :key="'track-'.$todo->id"/>
         </div>
-        <div x-data="{ assigneeModal: false }"
+        @if(\App\Helper\Context::isOrganization())
+            <div x-data="{ assigneeModal: false }"
 
-             class="relative w-full h-full cursor-pointer
+                 class="relative w-full h-full cursor-pointer
                 grid grid-cols-[1fr_auto] gap-1.5 items-center"
-        >
+            >
 
-            <flux:avatar.group>
-                @forelse($todo->assignees as $assignee)
-                    <flux:tooltip content="{{$assignee->name}}" position="bottom"
-                                  class="w-8 h-8 text-xs">
-                        <div class="p-1">
-                            <flux:avatar size="xs" name="{{$assignee->name}}" initials:single/>
-                        </div>
-                    </flux:tooltip>
-                @empty
-                    <flux:text>No assignee yet</flux:text>
-                @endforelse
-            </flux:avatar.group>
+                <flux:avatar.group>
+                    @forelse($todo->assignees as $assignee)
+                        <flux:tooltip content="{{$assignee->name}}" position="bottom"
+                                      class="w-8 h-8 text-xs">
+                            <div class="p-1">
+                                <flux:avatar size="xs" name="{{$assignee->name}}" initials:single color="auto" color:seed="{{ $assignee->id }}"/>
+                            </div>
+                        </flux:tooltip>
+                    @empty
+                        <flux:text>No assignee yet</flux:text>
+                    @endforelse
+                </flux:avatar.group>
 
-            @if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::TODOS_ASSIGN->value))
-                <flux:button square icon="user-round-cog" size="xs" variant="subtle"
-                             x-on:click="assigneeModal = true"
-                />
-                {{--Modal--}}
-                <div x-show="assigneeModal" x-on:click.away="assigneeModal = false"
-                     class="absolute bg-white dark:bg-zinc-700 top-10 right-0 rounded-lg shadow-md border border-zinc-200 dark:border-zinc-500
+                @if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::TODOS_ASSIGN->value))
+
+                    <flux:button square icon="user-round-cog" size="xs" variant="subtle"
+                                 x-on:click="assigneeModal = true"
+                    />
+                    {{--Modal--}}
+                    <div x-show="assigneeModal" x-on:click.away="assigneeModal = false"
+                         class="absolute bg-white dark:bg-zinc-700 top-10 right-0 rounded-lg shadow-md border border-zinc-200 dark:border-zinc-500
                 grid grid-cols-1 grid-rows-[repeat(4,minmax(auto,1fr)] gap-1.5 p-2.5 min-w-64 max-w-72 min-h-56  z-50"
-                >
-                    <div>
-                        <flux:input
-                            wire:model.live="search"
-                            wire:keydown.enter.prevent="searchMember"
-                            icon="magnifying-glass"
-                            placeholder="Search"
-                            clearable
-                            size="sm"
-                        />
+                    >
+                        <div>
+                            <flux:input
+                                wire:model.live="search"
+                                wire:keydown.enter.prevent="searchMember"
+                                icon="magnifying-glass"
+                                placeholder="Search"
+                                clearable
+                                size="sm"
+                            />
 
-                        <div class="overflow-y-auto max-h-36 my-2">
-                            @foreach($searchResults as $result)
-                                <div class="">
+                            <div class="overflow-y-auto max-h-36 my-2">
+                                @foreach($searchResults as $result)
+                                    <div class="">
+                                        <div
+                                            class="flex items-center gap-2 sm:gap-4 hover:bg-gray-100 dark:hover:bg-zinc-800 p-2 rounded-lg cursor-pointer"
+                                            wire:click="addAssignee({{$result->id}})">
+                                            <flux:avatar size="xs" name="{{$result->name}}" initials:single/>
+                                            <flux:heading
+                                                class="flex gap-0.5 items-center"
+                                            >
+                                                {{$result->name}}
+                                                @if($result->id === auth()->id())
+                                                    <flux:badge size="sm" color="amber" class="ml-1">You</flux:badge>
+                                                @endif
+                                            </flux:heading>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <flux:separator/>
+                        </div>
+                        <div class="flex flex-col gap-1.5">
+                            <flux:heading level="3" size="lg">Assignees</flux:heading>
+                            <div class="flex flex-col min-h-28 max-h-36 overflow-y-auto gap-1">
+                                @forelse($todo->assignees as $assignee)
                                     <div
                                         class="flex items-center gap-2 sm:gap-4 hover:bg-gray-100 dark:hover:bg-zinc-800 p-2 rounded-lg cursor-pointer"
-                                        wire:click="addAssignee({{$result->id}})">
-                                        <flux:avatar size="xs" name="{{$result->name}}" initials:single/>
+                                        wire:key="Assign-member-{{ $assignee->id }}-modal"
+                                        wire:click="removeAssignee({{$assignee->id}})">
+                                        <flux:avatar size="xs" name="{{$assignee->name}}" initials:single/>
                                         <flux:heading
                                             class="flex gap-0.5 items-center"
                                         >
-                                            {{$result->name}}
-                                            @if($result->id === auth()->id())
+                                            {{$assignee->name}}
+                                            @if($assignee->id === auth()->id())
+                                                <flux:badge size="sm" color="amber" class="ml-1">You</flux:badge>
+                                            @endif
+                                        </flux:heading>
+                                        <flux:button square icon="x" size="xs" variant="subtle" class="ml-auto!"/>
+                                    </div>
+                                @empty
+                                    <flux:text class="text-sm">No assignee yet</flux:text>
+                                @endforelse
+                            </div>
+                        </div>
+                        <flux:separator/>
+                        <div class="flex flex-col gap-1.5">
+                            <flux:heading level="3" size="lg">Members</flux:heading>
+                            <div class="flex flex-col min-h-28 max-h-36 overflow-y-auto gap-1">
+                                @foreach($members->reject(
+                                    fn($member) => $todo->assignees->contains($member->id)
+                                ) as $member)
+                                    <div
+                                        class="flex items-center gap-2 sm:gap-4 hover:bg-gray-100 dark:hover:bg-zinc-800 p-2 rounded-lg cursor-pointer"
+                                        wire:key="Assign-member-{{ $member->id }}-modal"
+                                        wire:click="addAssignee({{$member->id}})">
+                                        <flux:avatar size="xs" name="{{$member->name}}" initials:single/>
+                                        <flux:heading
+                                            class="flex gap-0.5 items-center"
+                                        >
+                                            {{$member->name}}
+                                            @if($member->id === auth()->id())
                                                 <flux:badge size="sm" color="amber" class="ml-1">You</flux:badge>
                                             @endif
                                         </flux:heading>
                                     </div>
-                                </div>
-                            @endforeach
+                                @endforeach
+                            </div>
                         </div>
+                    </div>
+                @endif
+            </div>
+        @endif
 
-                        <flux:separator/>
-                    </div>
-                    <div class="flex flex-col gap-1.5">
-                        <flux:heading level="3" size="lg">Assignees</flux:heading>
-                        <div class="flex flex-col min-h-28 max-h-36 overflow-y-auto gap-1">
-                            @forelse($todo->assignees as $assignee)
-                                <div
-                                    class="flex items-center gap-2 sm:gap-4 hover:bg-gray-100 dark:hover:bg-zinc-800 p-2 rounded-lg cursor-pointer"
-                                    wire:key="Assign-member-{{ $assignee->id }}-modal"
-                                    wire:click="removeAssignee({{$assignee->id}})">
-                                    <flux:avatar size="xs" name="{{$assignee->name}}" initials:single/>
-                                    <flux:heading
-                                        class="flex gap-0.5 items-center"
-                                    >
-                                        {{$assignee->name}}
-                                        @if($assignee->id === auth()->id())
-                                            <flux:badge size="sm" color="amber" class="ml-1">You</flux:badge>
-                                        @endif
-                                    </flux:heading>
-                                    <flux:button square icon="x" size="xs" variant="subtle" class="ml-auto!"/>
-                                </div>
-                            @empty
-                                <flux:text class="text-sm">No assignee yet</flux:text>
-                            @endforelse
-                        </div>
-                    </div>
-                    <flux:separator/>
-                    <div class="flex flex-col gap-1.5">
-                        <flux:heading level="3" size="lg">Members</flux:heading>
-                        <div class="flex flex-col min-h-28 max-h-36 overflow-y-auto gap-1">
-                            @foreach($members->reject(
-                                fn($member) => $todo->assignees->contains($member->id)
-                            ) as $member)
-                                <div
-                                    class="flex items-center gap-2 sm:gap-4 hover:bg-gray-100 dark:hover:bg-zinc-800 p-2 rounded-lg cursor-pointer"
-                                    wire:key="Assign-member-{{ $member->id }}-modal"
-                                    wire:click="addAssignee({{$member->id}})">
-                                    <flux:avatar size="xs" name="{{$member->name}}" initials:single/>
-                                    <flux:heading
-                                        class="flex gap-0.5 items-center"
-                                    >
-                                        {{$member->name}}
-                                        @if($member->id === auth()->id())
-                                            <flux:badge size="sm" color="amber" class="ml-1">You</flux:badge>
-                                        @endif
-                                    </flux:heading>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-            @endif
-        </div>
         <div x-data="{ statusModal: false }"
              class="relative"
         >
@@ -184,7 +182,7 @@
                 @endforeach
             </div>
         </div>
-        <div>
+        <div> {{--Actions--}}
             @if(\App\Helper\Context::isPersonal() ||  auth()->user()->can(\App\Enums\PermissionEnum::TODOS_DELETE))
                 <flux:button :loading="false" :square="true" size="xs" icon="trash-2" variant="subtle"
                              wire:click="deleteTodo"
@@ -208,6 +206,7 @@
                     wire:model="newSubTodoTitle"
                     wire:keydown.enter="addSubTodo"
                     clearable/>
+                <flux:checkbox wire:model="trackable" label="Trackable" size="sm"/>
                 <input type="hidden" wire:model="parent_id" value="{{ $todo->id }}">
             </div>
         </div>

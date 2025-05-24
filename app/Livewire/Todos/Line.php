@@ -19,6 +19,8 @@ class Line extends HorixtComponent
     public Todo $todo;
     public bool $expanded = false;
     public string $newSubTodoTitle = '';
+    public $trackable = true;
+
     public $members;
 
     public $priorities;
@@ -27,42 +29,21 @@ class Line extends HorixtComponent
     public $search = '';
     public $searchResults = [];
 
-    public function mount(Todo $todo)
+    public $assignedToMe = false;
+
+    public function mount(Todo $todo, $assignedToMe = false)
     {
+        $this->assignedToMe = $assignedToMe;
         $this->todo = $todo;
-        $this->members = Context::getOrganization()->members;
+        if (Context::isOrganization()) {
+            $this->members = Context::getOrganization()->members;
+        }
     }
 
 
     public function toggleExpanded()
     {
         $this->expanded = !$this->expanded;
-    }
-
-    public function toggleDone()
-    {
-        $this->todo->is_done = !$this->todo->is_done;
-        $this->todo->save();
-
-        $this->updateChildrenRecursively($this->todo, $this->todo->is_done);
-    }
-
-    public function updateChildrenRecursively($todo, $isDone)
-    {
-        foreach ($todo->children as $child) {
-            $child->update(['is_done' => $isDone]);
-            $this->dispatch('todoUpdated', $child->id);
-            $this->updateChildrenRecursively($child, $isDone);
-        }
-    }
-
-
-    #[On('todoUpdated')]
-    public function refreshTodo($todoId)
-    {
-        if ($this->todo->id == $todoId) {
-            $this->todo = Todo::find($todoId);
-        }
     }
 
     public function showSubForm()
@@ -76,6 +57,7 @@ class Line extends HorixtComponent
             'name' => $this->newSubTodoTitle,
             'description' => '',
             'is_done' => false,
+            'is_trackable' => $this->trackable,
             'status_id' => Status::DEFAULT,
             'priority_id' => Priority::DEFAULT,
             'color_id' => Color::DEFAULT,
@@ -123,9 +105,8 @@ class Line extends HorixtComponent
             return;
         }
 
-        $this->searchResults = $this->members->filter(fn(User $member) =>
-            (stripos($member->name, $this->search) !== false) &&
-            !($this->todo->assignees->contains($member->id) )
+        $this->searchResults = $this->members->filter(fn(User $member) => (stripos($member->name, $this->search) !== false) &&
+            !($this->todo->assignees->contains($member->id))
         );
 
     }

@@ -1,6 +1,6 @@
 <div class="overflow-auto h-full w-full font-lexend">
 
-    <div class=" grid grid-cols-6 gap-2 min-w-[1024px]">
+    <div class=" grid {{(\App\Helper\Context::isOrganization())? 'grid-cols-6' : 'grid-cols-5'}} gap-2 min-w-[1024px]">
         <div class="flex items-center gap-2.5">
             <flux:text variant="subtle" class="font-medium">Aa</flux:text>
             <flux:text variant="subtle" size="lg">Todo name</flux:text>
@@ -8,9 +8,11 @@
         <div class="flex items-center gap-2.5">
             <flux:text variant="subtle" size="lg">Tracks</flux:text>
         </div>
-        <div class="flex items-center gap-2.5">
-            <flux:text variant="subtle" size="lg">Assignees</flux:text>
-        </div>
+        @if(\App\Helper\Context::isOrganization())
+            <div class="flex items-center gap-2.5">
+                <flux:text variant="subtle" size="lg">Assignees</flux:text>
+            </div>
+        @endif
         <div class="flex items-center gap-2.5">
             <flux:text variant="subtle" size="lg">Status</flux:text>
         </div>
