@@ -87,8 +87,8 @@
                 <flux:subheading>Here you can edit a project!</flux:subheading>
             </div>
 
-            <flux:input label="Title" placeholder="Project 101" wire:model.defer="name"/>
-            <flux:input label="Description" placeholder="Project 101" wire:model.defer="description"/>
+            <flux:input type="text" label="Title" placeholder="Project 101" wire:model="name"/>
+            <flux:input type="text" label="Description" placeholder="Project 101" wire:model="description"/>
 
             <flux:select wire:model="status_id" placeholder="Choose status...">
                 @foreach($statuses as $status)
@@ -100,12 +100,12 @@
                     <flux:select.option value="{{$priority->id}}">{{$priority->name}}</flux:select.option>
                 @endforeach
             </flux:select>
-
             <input type="hidden" wire:model="projectId">
 
             <div class="flex">
                 <flux:spacer/>
-                <flux:button type="submit" wire:click="updateProject({{$projectId}})" variant="primary">Edit Project
+                <flux:button type="submit" wire:click="updateProject" variant="primary">
+                    Edit Project
                 </flux:button>
             </div>
         </div>

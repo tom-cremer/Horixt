@@ -21,6 +21,7 @@ class ProjectList extends HorixtComponent
     public $color_id;
     public $deadline;
     public $projectId;
+    public $projectToEdit;
 
 
     public $statuses;
@@ -78,22 +79,32 @@ class ProjectList extends HorixtComponent
         Flux::modal('add-project')->show();
     }
 
-
-    public function updateProject($projectId)
+    public function editProject($projectId)
     {
-        $project = Project::find($projectId);
-        $project->update([
+        $this->projectToEdit = Project::find($projectId);
+        $this->name = $this->projectToEdit->name;
+        $this->description = $this->projectToEdit->description;
+        $this->status_id = $this->projectToEdit->status_id;
+        $this->priority_id = $this->projectToEdit->priority_id;
+        $this->color_id = $this->projectToEdit->color_id;
+        $this->deadline = $this->projectToEdit->deadline;
+        Flux::modal('edit-project')->show();
+    }
+
+    public function updateProject()
+    {
+
+        $this->projectToEdit->update([
             'name' => $this->name,
             'description' => $this->description,
             'status_id' => $this->status_id ?? $project->status_id ?? Status::DEFAULT,
             'priority_id' => $this->priority_id ?? $project->priority_id ?? Priority::DEFAULT,
-            'color_id' => $this->color_id ?? $project->color_id ?? Color::DEFAULT,
-            'deadline' => $this->deadline,
         ]);
 
-        $this->reset();
+        $this->resetExcept(['statuses', 'priorities', 'colors']);
         Flux::modal('edit-project')->close();
     }
+
 
     public function deleteProject($projectId)
     {
