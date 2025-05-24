@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Directories extends Model
 {
@@ -21,17 +23,17 @@ class Directories extends Model
         'parent_id'
     ];
 
-    public function files()
+    public function files(): HasMany
     {
         return $this->hasMany(Files::class, 'directory_id');
     }
 
-    public function parent()
+    public function parent() :BelongsTo
     {
         return $this->belongsTo(Directories::class, 'parent_id');
     }
 
-    public function children()
+    public function children() :HasMany
     {
         return $this->hasMany(Directories::class, 'parent_id');
     }
