@@ -53,6 +53,8 @@
                                         x-ref="endedAt"/>
                             <flux:button :loading="false" :square="true" size="xs" icon="check"
                                          wire:click="update({{ $track->id }})"/>
+                            <flux:button :loading="false" :square="true" size="xs" icon="x"
+                                         wire:click="cancelEdit"/>
                         </div>
                     @else
                         <div class="flex gap-1.5">
@@ -73,10 +75,14 @@
                         </div>
                     @endif
                     <div class="flex grow gap-1.5 justify-end">
+                        @if(!(isset($this->trackToEdit) && $this->trackToEdit == $track->id))
 
-                    <flux:button :loading="false" :square="true" size="xs" icon="trash-2" variant="danger"
-                                 wire:click="deleteTrack({{ $track->id }})"
-                                 />
+                            <flux:button :loading="false" :square="true" size="xs" icon="square-pen"
+                                         wire:click="edit({{ $track->id }})"/>
+                        @endif
+                        <flux:button :loading="false" :square="true" size="xs" icon="trash-2" variant="danger"
+                                     wire:click="deleteTrack({{ $track->id }})"
+                        />
                     </div>
 
                 </div>

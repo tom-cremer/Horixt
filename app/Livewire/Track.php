@@ -36,16 +36,11 @@ class Track extends HorixtComponent
         foreach ($this->tracks as $track) {
             $this->timer = $this->timer + $track->durations;
         }
+        if ($this->activeTrack) {
+            $this->timer = $this->timer + $this->calculateDuration($this->activeTrack->started_at, now());
+        }
         return $this->timer;
     }
-
-  /*  public function incrementTimer()
-    {
-        if ($this->activeTrack) {
-            $this->timer++;
-        }
-    }*/
-
     public function start()
     {
         $this->activeTrack = TrackModel::create([
@@ -55,7 +50,6 @@ class Track extends HorixtComponent
         ]);
         $this->dispatch('track-started');
     }
-
 
     public function stop()
     {
@@ -70,7 +64,6 @@ class Track extends HorixtComponent
         $this->tracks = $this->todo->tracks()->orderBy('started_at', 'desc')->get();
         $this->timer = $this->totalDuration();
     }
-
 
     public function calculateDuration($started_at, $ended_at)
     {
@@ -89,6 +82,10 @@ class Track extends HorixtComponent
         $this->started_at = Carbon::parse($track->started_at)->format('H:i:s');
         $this->ended_at = Carbon::parse($track->ended_at)->format('H:i:s');
         $this->durations = $track->durations;
+    }
+    public function cancelEdit()
+    {
+        $this->reset(['trackToEdit', 'started_at', 'ended_at', 'durations']);
     }
 
     public function update($id)
