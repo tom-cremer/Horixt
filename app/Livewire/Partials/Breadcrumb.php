@@ -192,6 +192,11 @@ class Breadcrumb extends HorixtComponent
                 'label' => __('Members'),
                 'url' => route('organization.members', ['slug' => Context::getOrganizationSlug()]),
             ];
+        } elseif ($routeName === 'organization.assigned-to-me') {
+            $breadcrumbs[] = [
+                'label' => __('Assigned to me'),
+                'url' => route('organization.assigned-to-me', ['slug' => Context::getOrganizationSlug()]),
+            ];
         }
 
         $this->breadcrumbs = $breadcrumbs;
