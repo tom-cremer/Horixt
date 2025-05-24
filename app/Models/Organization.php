@@ -25,6 +25,15 @@ class Organization extends Model
     ];
 
 
+    public function activeMembers()
+    {
+        return $this->belongsToMany(User::class)
+            ->withPivot(['is_active', 'joined_at', 'last_active'])
+            ->wherePivot('is_active', true)
+            ->with(['roles'])
+            ->withTimestamps();
+    }
+
     public function members()
     {
         return $this->belongsToMany(User::class)
@@ -34,19 +43,21 @@ class Organization extends Model
             ->withTimestamps();
     }
 
-    public function activeMembers()
+
+    public function allMembers()
     {
         return $this->belongsToMany(User::class)
-            ->withPivot(['is_active'])
-            ->wherePivot('is_active', true)
+            ->withPivot(['is_active', 'joined_at', 'last_active'])
+            ->with(['roles'])
             ->withTimestamps();
     }
 
     public function inactiveMembers()
     {
         return $this->belongsToMany(User::class)
-            ->withPivot(['is_active'])
-            ->wherePivot('is_active', false)
+            ->withPivot(['is_active', 'joined_at', 'last_active'])
+            ->wherePivot('is_active', true)
+            ->with(['roles'])
             ->withTimestamps();
     }
 
