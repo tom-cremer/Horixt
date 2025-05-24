@@ -40,9 +40,12 @@
         @if(\App\Helper\Context::isOrganization())
             <livewire:partials.nav-button :collapsed="$collapsed" icon="users" text="Members"
                                           route="{{route('organization.members', \App\Helper\Context::getOrganizationSlug())}}"/>
+            <livewire:partials.nav-button :collapsed="$collapsed" icon="target" text="Assigned To Me"
+                                          route="{{route('organization.assigned-to-me', \App\Helper\Context::getOrganizationSlug())}}"/>
         @endif
-        <livewire:partials.nav-button :collapsed="$collapsed" icon="envelope" text="Inbox"
+        {{--<livewire:partials.nav-button :collapsed="$collapsed" icon="envelope" text="Inbox"
                                       route="{{ \App\Helper\Context::isPersonal() ? route('personal.projects.index') : route('organization.projects.index', \App\Helper\Context::getOrganizationSlug()) }}"/>
+        --}}
         <livewire:partials.nav-button :collapsed="$collapsed" icon="folder" text="Files" beta="true"
                                       route="{{ \App\Helper\Context::isPersonal() ? route('personal.files') : route('organization.files', \App\Helper\Context::getOrganizationSlug()) }}"/>
         <flux:separator/>
