@@ -26,6 +26,9 @@ class FileManager extends HorixtComponent
     public $x = 0;
     public $y = 0;
 
+    public $newFileName;
+    public $renameFileId;
+
     public $selectedFile;
 
     public function mount()
@@ -94,6 +97,10 @@ class FileManager extends HorixtComponent
             'parent_id' => $this->currentDirectory->id,
         ]);
 
+    }
+
+    public function renameDirectory($id)
+    {
 
     }
 
@@ -104,27 +111,51 @@ class FileManager extends HorixtComponent
 
     public function uploadFile()
     {
+        $this->validate([
+            'upload' => 'required|file|max:10240',
+        ]);
 
         $file = $this->upload;
 
         $storagePath = $this->currentDirectory->path;
-        $fileName = $file->getClientOriginalName();
+        $originalName = $file->getClientOriginalName();
 
-        $storedPath = $file->storeAs(
-            "{$storagePath}",
-            $fileName
-        );
+        $baseName = pathinfo($originalName, PATHINFO_FILENAME); // sans extension
+        $extension = $file->getClientOriginalExtension(); // extension seule
 
+        // Préparer nom de fichier cible
+        $fileName = $baseName . '.' . $extension;
+
+        // Vérifier les doublons dans la DB (dans ce dossier uniquement)
+        $existingNames = $this->currentDirectory->files()
+            ->where('name', 'LIKE', "{$baseName}%")
+            ->where('extension', $extension)
+            ->pluck('name')
+            ->toArray();
+
+        if (in_array($baseName, $existingNames)) {
+            $i = 1;
+            while (in_array("{$baseName} ({$i})", $existingNames)) {
+                $i++;
+            }
+            $baseName = "{$baseName} ({$i})";
+            $fileName = $baseName . '.' . $extension;
+        }
+
+        // Stocker le fichier
+        $storedPath = $file->storeAs($storagePath, $fileName);
+
+        // Créer l’entrée en base
         Files::create([
-            'name' => pathinfo($fileName, PATHINFO_FILENAME),
+            'name' => $baseName,
             'alt' => null,
             'path' => $storagePath . '/' . $fileName,
             'size' => $file->getSize(),
-            'extension' => $file->getClientOriginalExtension(),
+            'extension' => $extension,
             'disk' => 'local',
             'mime_type' => $file->getMimeType(),
             'visibility' => 'private',
-            'checksum' => null, // tu peux ajouter plus tard
+            'checksum' => null,
             'locked' => false,
             'user_id' => auth()->id(),
             'organization_id' => $this->currentDirectory->organization_id,
@@ -134,6 +165,81 @@ class FileManager extends HorixtComponent
 
         $this->reset('upload');
         Flux::modal('upload-file')->close();
+        $this->dispatch('toast', [
+            'title' => 'File Uploaded',
+            'message' => 'The file has been uploaded successfully.',
+            'type' => 'success',
+         ]);
+    }
+
+    public function renameFile($id)
+    {
+        $file = Files::find($id);
+        $this->renameFileId = $file->id;
+        $this->newFileName = $file->name;
+    }
+
+    public function submitRenameFile()
+    {
+        $this->validate([
+            'newFileName' => 'required|string|max:255',
+        ]);
+
+        $file = Files::find($this->renameFileId);
+
+        $baseName = $this->newFileName;
+        $extension = $file->extension; // extension seule
+
+        // Préparer nom de fichier cible
+        $fileName = $baseName;
+
+        // Vérifier les doublons dans la DB (dans ce dossier uniquement)
+        $existingNames = $this->currentDirectory->files()
+            ->where('name', 'LIKE', "{$baseName}%")
+            ->where('extension', $extension)
+            ->where('id', '!=', $file->id)
+            ->pluck('name')
+            ->toArray();
+
+        if (in_array($baseName, $existingNames)) {
+            $i = 1;
+            while (in_array("{$baseName} ({$i})", $existingNames)) {
+                $i++;
+            }
+            $baseName = "{$baseName} ({$i})";
+            $fileName = $baseName;
+        }
+        // Get the old and new paths
+        $oldPath = $file->path;
+        $newPath = str_replace($file->name, $fileName, $file->path);
+
+        // Move the file in storage
+        if (Storage::disk('local')->exists($oldPath)) {
+
+            Storage::disk('local')->move($oldPath, $newPath);
+
+
+
+            // Update database record
+            $file->name = $fileName;
+            $file->path = $newPath;
+            $file->save();
+
+            $this->reset('newFileName', 'renameFileId');
+        }
+    }
+    public function deleteFile($id)
+    {
+        $file = Files::find($id);
+        Storage::disk('local')->delete($file->path);
+        $file->delete();
+    }
+
+    public function deleteSelectedFile()
+    {
+        Storage::disk('local')->delete($this->selectedFile->path);
+        $this->selectedFile->delete();
+        Flux::modal('file-modal')->close();
     }
 
     public function download()
