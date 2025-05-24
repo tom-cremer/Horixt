@@ -18,6 +18,12 @@ class Toast extends HorixtComponent
              'duration' => duration you want default 5000ms,
          ]);
 
+        The type can be one of the following:
+        - success
+        - info
+        - warning
+        - error
+
     (cause I might forget^^)
     */
 
