@@ -18,8 +18,7 @@ class OrganizationObserver
         setPermissionsTeamId(session('team_id'));
         auth()->user()->assignRole(RoleEnum::ADMIN->value);
 
-        //TODO: Uncomment this line to create a directory for the organization
-        /*FileManagerHelper::createOrganizationDirectory($organization, auth()->user());*/
+        FileManagerHelper::createOrganizationDirectory($organization, auth()->user());
     }
 
     /**
