@@ -44,7 +44,7 @@ class OrgInvite extends HorixtComponent
             // Set Member Role to Invited_user
             session(['team_id' => $this->organization->id]);
             setPermissionsTeamId(session('team_id'));
-            auth()->user()->assignRole(RoleEnum::MEMBER->value);
+            $this->invited_user->assignRole(RoleEnum::MEMBER->value);
         }
     }
 
