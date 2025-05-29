@@ -21,7 +21,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('status_id');
             $table->unsignedBigInteger('priority_id');
             $table->unsignedBigInteger('color_id');
-            $table->date('deadline')->nullable();
+            $table->dateTime('due_at')->nullable();
             $table->timestamps();
         });
     }
