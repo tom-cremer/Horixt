@@ -68,6 +68,12 @@ return new class extends Migration
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
             $table->foreign('invited_by')->references('id')->on('users')->onDelete('cascade');
         });
+
+        Schema::table('avatars', function (Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
+        });
+
     }
 
     /**
@@ -130,6 +136,11 @@ return new class extends Migration
         Schema::table('organization_invites', function (Blueprint $table) {
             $table->dropForeign(['organization_id']);
             $table->dropForeign(['invited_by']);
+        });
+
+        Schema::table('avatars', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+            $table->dropForeign(['organization_id']);
         });
 
     }
