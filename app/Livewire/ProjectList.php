@@ -19,7 +19,7 @@ class ProjectList extends HorixtComponent
     public $status_id;
     public $priority_id;
     public $color_id;
-    public $deadline;
+    public $due_at;
     public $projectId;
     public $projectToEdit;
 
@@ -43,7 +43,7 @@ class ProjectList extends HorixtComponent
             'status_id' => 'nullable|exists:statuses,id',
             'priority_id' => 'nullable|exists:priorities,id',
             'color_id' => 'nullable|exists:colors,id',
-            'deadline' => 'nullable|date',
+            'due_at' => 'nullable|date',
         ]);
 
         if (Context::isOrganization()) {
@@ -55,7 +55,7 @@ class ProjectList extends HorixtComponent
                 'status_id' => $this->status_id ?? Status::DEFAULT,
                 'priority_id' => $this->priority_id ?? Priority::DEFAULT,
                 'color_id' => $this->color_id ?? Color::DEFAULT,
-                'deadline' => $this->deadline,
+                'due_at' => $this->due_at,
             ]);
         } else {
             Project::create([
@@ -65,7 +65,7 @@ class ProjectList extends HorixtComponent
                 'status_id' => $this->status_id ?? Status::DEFAULT,
                 'priority_id' => $this->priority_id ?? Priority::DEFAULT,
                 'color_id' => $this->color_id ?? Color::DEFAULT,
-                'deadline' => $this->deadline,
+                'due_at' => $this->due_at,
             ]);
         }
 
@@ -87,7 +87,7 @@ class ProjectList extends HorixtComponent
         $this->status_id = $this->projectToEdit->status_id;
         $this->priority_id = $this->projectToEdit->priority_id;
         $this->color_id = $this->projectToEdit->color_id;
-        $this->deadline = $this->projectToEdit->deadline;
+        $this->due_at = $this->projectToEdit->due_at;
         Flux::modal('edit-project')->show();
     }
 
