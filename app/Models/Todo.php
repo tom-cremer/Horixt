@@ -15,6 +15,7 @@ class Todo extends Model
         'name',
         'description',
         'is_done',
+        'is_trackable',
         'status_id',
         'priority_id',
         'color_id',
