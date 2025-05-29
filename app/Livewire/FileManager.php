@@ -6,6 +6,7 @@ use App\Livewire\Component\HorixtComponent;
 use App\Models\Directories;
 use App\Models\Files;
 use Flux\Flux;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Validate;
@@ -28,8 +29,10 @@ class FileManager extends HorixtComponent
 
     public $newFileName;
     public $renameFileId;
-
     public $selectedFile;
+
+    public $renameDirectoryName;
+    public $renameDirectoryId;
 
     public function mount()
     {
@@ -38,16 +41,6 @@ class FileManager extends HorixtComponent
             ->where('user_id', auth()->id())
             ->whereNull('parent_id')
             ->first();
-        $this->buildBreadcrumbs();
-    }
-
-    public function navigateToDirectory($id)
-    {
-        $dir = Directories::where('id', $id)
-            ->where('user_id', auth()->id())
-            ->firstOrFail();
-
-        $this->currentDirectory = $dir;
         $this->buildBreadcrumbs();
     }
 
@@ -64,6 +57,25 @@ class FileManager extends HorixtComponent
         $this->breadcrumbs = array_reverse($breadcrumbs);
     }
 
+    public function toggleContextMenu(?int $x, ?int $y)
+    {
+        $this->x = $x ?? 0;
+        $this->y = $y ?? 0;
+        $this->contextMenu = !$this->contextMenu;
+    }
+
+    /**
+     * Directory section
+     * */
+    public function navigateToDirectory($id)
+    {
+        $dir = Directories::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        $this->currentDirectory = $dir;
+        $this->buildBreadcrumbs();
+    }
 
     public function createDirectory()
     {
@@ -101,9 +113,66 @@ class FileManager extends HorixtComponent
 
     public function renameDirectory($id)
     {
-
+        $directory = Directories::find($id);
+        $this->renameDirectoryId = $directory->id;
+        $this->renameDirectoryName = $directory->name;
     }
 
+    public function cancelRenameDirectory()
+    {
+        $this->reset('renameDirectoryId', 'renameDirectoryName');
+    }
+
+    public function submitRenameDirectory()
+    {
+        $this->validate([
+            'renameDirectoryName' => 'required|string|max:255',
+        ]);
+
+        $directory = Directories::find($this->renameDirectoryId);
+
+        $baseName = $this->renameDirectoryName;
+
+        // Préparer nom de dossier cible
+        $dirName = Str::slug($baseName);
+
+        // Vérifier les doublons dans la DB (dans ce dossier uniquement)
+        $existingNames = $this->currentDirectory->children()
+            ->where('name', 'LIKE', "{$baseName}%")
+            ->where('id', '!=', $directory->id)
+            ->pluck('name')
+            ->toArray();
+
+        if (in_array($baseName, $existingNames)) {
+            $i = 1;
+            while (in_array("{$baseName} ({$i})", $existingNames)) {
+                $i++;
+            }
+            $baseName = "{$baseName} ({$i})";
+            $dirName = Str::slug($baseName);
+        }
+
+        // Mettre à jour le nom du dossier
+        Storage::disk('local')->move($directory->path, "{$directory->parent->path}/{$dirName}");
+
+        // Mettre à jour l'entrée en base
+        $directory->name = $baseName;
+        $directory->path = "{$directory->parent->path}/{$dirName}";
+        $directory->save();
+
+        $this->reset('renameDirectoryId', 'renameDirectoryName');
+    }
+
+    public function deleteDirectory($id)
+    {
+        $directory = Directories::find($id);
+        Storage::disk('local')->deleteDirectory($directory->path);
+        $directory->delete();
+    }
+
+    /**
+     * File Section
+     */
     public function fileUploadModal()
     {
         Flux::modal('upload-file')->show();
@@ -169,7 +238,7 @@ class FileManager extends HorixtComponent
             'title' => 'File Uploaded',
             'message' => 'The file has been uploaded successfully.',
             'type' => 'success',
-         ]);
+        ]);
     }
 
     public function renameFile($id)
@@ -219,7 +288,6 @@ class FileManager extends HorixtComponent
             Storage::disk('local')->move($oldPath, $newPath);
 
 
-
             // Update database record
             $file->name = $fileName;
             $file->path = $newPath;
@@ -228,6 +296,12 @@ class FileManager extends HorixtComponent
             $this->reset('newFileName', 'renameFileId');
         }
     }
+
+    public function cancelRenameFile()
+    {
+        $this->reset('newFileName', 'renameFileId');
+    }
+
     public function deleteFile($id)
     {
         $file = Files::find($id);
@@ -247,12 +321,7 @@ class FileManager extends HorixtComponent
         return Storage::disk('local')->download($this->selectedFile->path);
     }
 
-    public function toggleContextMenu(?int $x, ?int $y)
-    {
-        $this->x = $x ?? 0;
-        $this->y = $y ?? 0;
-        $this->contextMenu = !$this->contextMenu;
-    }
+
 
     public function fileModal($id)
     {
@@ -260,6 +329,18 @@ class FileManager extends HorixtComponent
         Flux::modal('file-modal')->show();
     }
 
+    public function toggleFileLock($id)
+    {
+        $file = Files::find($id);
+        $file->locked = !$file->locked;
+        $file->save();
+
+        $this->dispatch('toast', [
+            'title' => 'Lock Status Updated',
+            'message' => $file->locked ? 'The item has been locked.' : 'The item has been unlocked.',
+            'type' => 'success',
+        ]);
+    }
     public function render()
     {
 

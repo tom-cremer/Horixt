@@ -30,9 +30,33 @@
             @foreach ($directories as $directory)
                 <div
                     wire:key="directory-{{$directory->id}}"
-                    class="p-1 bg-zinc-100 rounded shadow cursor-pointer hover:bg-zinc-200 dark:bg-zinc-700 dark:hover:bg-zinc-600"
-                    wire:click="navigateToDirectory({{ $directory->id }})">
-                    📁 {{ $directory->name }}
+                    class=" p-1 bg-zinc-100 rounded shadow cursor-pointer hover:bg-zinc-200 dark:bg-zinc-700 dark:hover:bg-zinc-600
+                     flex flex-row justify-between items-center gap-2">
+                    @if($renameDirectoryId === $directory->id)
+
+                        <flux:input clearable type="text" size="xs" wire:model.live="renameDirectoryName"
+                                    placeholder="Rename File"/>
+                        <flux:button icon="check" variant="subtle" size="xs" wire:click="submitRenameDirectory"/>
+                        <flux:button icon="x" variant="subtle" size="xs" wire:click="cancelRenameDirectory"/>
+                    @else
+                        <div class="flex flex-row gap-2 items-center w-full"
+                             wire:click="navigateToDirectory({{ $directory->id }})"
+                        >
+                            📁 {{ $directory->name }}
+                        </div>
+                        @if((!$directory->protected && !$directory->locked) &&
+                            (\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::FILES_RENAME)))
+                            <flux:button icon="square-pen" variant="subtle" size="xs"
+                                         wire:click="renameDirectory({{ $directory->id }})"/>
+                        @endif
+                    @endif
+                    @if((!$directory->protected && !$directory->locked) &&
+                        (\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::FILES_DELETE)))
+                        <flux:button icon="trash-2" variant="subtle" size="xs"
+                                     wire:click="deleteDirectory({{ $directory->id }})"/>
+                    @endif
+
+
                 </div>
             @endforeach
         </div>
@@ -46,18 +70,37 @@
                      flex flex-row justify-between items-center gap-2">
                     @if($renameFileId === $file->id)
 
-                        <flux:input clearable type="text" size="xs" wire:model.live="newFileName" placeholder="Rename File"/>
-                    <flux:button icon="check" variant="subtle" size="xs" wire:click="submitRenameFile"/>
+                        <flux:input clearable type="text" size="xs" wire:model.live="newFileName"
+                                    placeholder="Rename File"/>
+                        <flux:button icon="check" variant="subtle" size="xs" wire:click="submitRenameFile"/>
+                        <flux:button icon="x" variant="subtle" size="xs" wire:click="cancelRenameFile"/>
                     @else
                         <div class="flex flex-row gap-2 items-center w-full"
-                             wire:click="fileModal({{$file->id}})"
-                        >
+                             wire:click="fileModal({{$file->id}})">
 
                             📄 {{ $file->name .'.'. $file->extension }}
+
                         </div>
-                    <flux:button icon="square-pen" variant="subtle" size="xs" wire:click="renameFile({{ $file->id }})"/>
                     @endif
-                    <flux:button icon="trash-2" variant="subtle" size="xs" wire:click="deleteFile({{ $file->id }})"/>
+                    @if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::FILES_LOCK))
+                        @if($file->locked)
+                            <flux:button icon="lock-open" variant="subtle" size="xs"
+                                         wire:click="toggleFileLock({{ $file->id }})"/>
+                        @else
+                            <flux:button icon="lock" variant="subtle" size="xs"
+                                         wire:click="toggleFileLock({{ $file->id }})"/>
+                        @endif
+                    @endif
+
+                    @if(($renameFileId === $file->id || \App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::FILES_RENAME)) && !$file->locked)
+                        <flux:button icon="square-pen" variant="subtle" size="xs"
+                                     wire:click="renameFile({{ $file->id }})"/>
+                    @endif
+                    @if((\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::FILES_DELETE) ) &&
+                            !$file->locked)
+                        <flux:button icon="trash-2" variant="subtle" size="xs"
+                                     wire:click="deleteFile({{ $file->id }})"/>
+                    @endif
                 </div>
             @endforeach
         </div>
