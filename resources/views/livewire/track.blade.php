@@ -26,8 +26,15 @@
     {{-- Pop-up for Track History --}}
 
     <flux:button variant="filled" :loading="false" size="sm" wire:click="toggleTrackHistory">
-        <span class="text-center min-w-14!" x-text="new Date(timer * 1000).toISOString().substr(11, 8)"></span>
+    <span class="text-center min-w-14!" x-text="(() => {
+        const seconds = timer;
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const remainingSeconds = seconds % 60;
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    })()"></span>
     </flux:button>
+
     <div wire:click.outside="toggleTrackHistory"
          class="absolute min-w-md min-h-56 top-0 left-1/2 transform  bg-gray-50 dark:bg-zinc-700  shadow-lg rounded-lg p-4 z-[800] {{ $showTrackHistory ? '' : 'hidden' }}">
         <flux:heading size="lg">Track History</flux:heading>
@@ -38,19 +45,23 @@
                     class="flex gap-1.5 w-full"
                     wire:key="{{ $track->id }}"
                 >
-                    <flux:tooltip :content="$track->user->name" placement="top">
-                        <flux:avatar :name="$track->user->name" size="xs" initials:single/>
-                    </flux:tooltip>
+                    @if($track->user->avatar)
+                        <flux:avatar tooltip="{{$track->user->name}}" size="xs" class="ring-0! ring-transparent!"
+                                     src="{{\Illuminate\Support\Facades\Storage::url($track->user->avatar->path)}}"/>
+                    @else
+                        <flux:avatar tooltip="{{$track->user->name}}" size="xs" name="{{$track->user->name}}"
+                                     class="ring-0! ring-transparent!"/>
+                    @endif
 
                     @if(isset($this->trackToEdit) && $this->trackToEdit == $track->id)
                         <div class="flex gap-1.5">
-
-                            <flux:input type="time" size="xs" wire:model.live="started_at"
-                                        value="{{ $track->started_at->format('H:i:s') }}" step="2" class="w-32!"
+                            <flux:input type="datetime-local" size="xs" wire:model.live="started_at"
+                                        value="{{ $track->started_at->format('Y-m-d\TH:i:s') }}" step="2" class="w-36!"
                                         x-on:change="$nextTick(() => { $refs.endedAt.min = $event.target.value })"/>
-                            <flux:input type="time" size="xs" wire:model.defer="ended_at"
-                                        value="{{ $track->ended_at->format('H:i:s') }}" step="2" class="w-32!"
+                            <flux:input type="datetime-local" size="xs" wire:model.defer="ended_at"
+                                        value="{{ $track->ended_at->format('Y-m-d\TH:i:s') }}" step="2" class="w-36!"
                                         x-ref="endedAt"/>
+
                             <flux:button :loading="false" :square="true" size="xs" icon="check"
                                          wire:click="update({{ $track->id }})"/>
                             <flux:button :loading="false" :square="true" size="xs" icon="x"
@@ -64,8 +75,8 @@
                                 @contextmenu.prevent="$wire.edit({{ $track->id }})"
                                 class="whitespace-nowrap"
                             >
-                                {{ $track->started_at->format('H:i:s') }}
-                                - {{ $track->ended_at ? $track->ended_at->format('H:i:s') : 'Ongoing' }}
+                                {{ $track->started_at->format('d/m/y H:i:s') }}
+                                - {{ $track->ended_at ? $track->ended_at->format('d/m/y H:i:s') : 'Ongoing' }}
                             </flux:text>
                             @if ($track->ended_at)
                                 <flux:text class="whitespace-nowrap">
