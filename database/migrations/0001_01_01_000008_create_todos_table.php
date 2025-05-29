@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->string('name');
             $table->text('description');
             $table->boolean('is_done')->default(false);
+            $table->boolean('is_trackable')->default(true);
             $table->unsignedBigInteger('status_id');
             $table->unsignedBigInteger('priority_id');
             $table->unsignedBigInteger('color_id');
