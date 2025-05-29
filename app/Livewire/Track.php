@@ -43,6 +43,8 @@ class Track extends HorixtComponent
     }
     public function start()
     {
+        self::timezone();
+
         $this->activeTrack = TrackModel::create([
             'todo_id' => $this->todo->id,
             'started_at' => now(),
@@ -53,6 +55,8 @@ class Track extends HorixtComponent
 
     public function stop()
     {
+        self::timezone();
+
         if ($this->activeTrack) {
             $this->activeTrack->ended_at = now();
             $this->activeTrack->durations = $this->calculateDuration($this->activeTrack->started_at, $this->activeTrack->ended_at);
@@ -67,20 +71,23 @@ class Track extends HorixtComponent
 
     public function calculateDuration($started_at, $ended_at)
     {
-        $start = Carbon::parse($started_at);
-        $end = Carbon::parse($ended_at);
+        self::timezone();
+        $start = Carbon::createFromFormat('Y-m-d H:i:s', $started_at);
+        $end = Carbon::createFromFormat('Y-m-d H:i:s', $ended_at);
         return $start->diffInSeconds($end);
     }
 
     public function edit($id)
     {
+        self::timezone();
+
         $track = TrackModel::find($id);
         if ($track->user_id != auth()->id() && !auth()->user()->hasRole(RoleEnum::ADMIN->value)) {
             return;
         }
         $this->trackToEdit = $id;
-        $this->started_at = Carbon::parse($track->started_at)->format('H:i:s');
-        $this->ended_at = Carbon::parse($track->ended_at)->format('H:i:s');
+        $this->started_at = Carbon::parse($track->started_at)->format('Y-m-d\TH:i:s');
+        $this->ended_at = Carbon::parse($track->ended_at)->format('Y-m-d\TH:i:s');
         $this->durations = $track->durations;
     }
     public function cancelEdit()
@@ -90,9 +97,10 @@ class Track extends HorixtComponent
 
     public function update($id)
     {
+        self::timezone();
         $validatedAttribute = $this->validate([
-            'started_at' => 'required|date_format:H:i:s',
-            'ended_at' => 'required|date_format:H:i:s|after_or_equal:started_at',
+            'started_at' => 'required|date_format:Y-m-d\TH:i:s|before_or_equal:ended_at',
+            'ended_at' => 'required|date_format:Y-m-d\TH:i:s|after_or_equal:started_at',
         ]);
         $track = TrackModel::find($id);
         $track->started_at = Carbon::parse($validatedAttribute['started_at'])->format('Y-m-d H:i:s');
@@ -118,6 +126,11 @@ class Track extends HorixtComponent
         $this->tracks = $this->todo->tracks()->orderBy('started_at', 'desc')->get();
         $this->timer = $this->totalDuration();
         return view('livewire.track');
+    }
+
+    public function timezone()
+    {
+        date_default_timezone_set(session('timezone', 'UTC'));
     }
 }
 
