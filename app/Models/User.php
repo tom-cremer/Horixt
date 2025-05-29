@@ -8,6 +8,7 @@ use App\Traits\HasUuid;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -76,7 +77,7 @@ class User extends Authenticatable
         return $this->hasMany(Todo::class, 'user_id');
     }
 
-    public function assignedTodos()
+    public function assignedTodos(): BelongsToMany
     {
         return $this->belongsToMany(Todo::class, 'assigned_todo')
             ->withPivot('assigned_by')
@@ -88,7 +89,7 @@ class User extends Authenticatable
         return $this->hasMany(Project::class);
     }
 
-    public function organizations()
+    public function organizations(): BelongsToMany
     {
         return $this->belongsToMany(Organization::class, 'organization_user')
             ->withPivot('user_id', 'organization_id', 'is_active')
@@ -123,7 +124,10 @@ class User extends Authenticatable
         return $this->hasMany(Files::class);
     }
 
-
+    public function avatar(): HasOne
+    {
+        return $this->hasOne(Avatar::class);
+    }
 
     // Super-Admin Feature
     public function administrator(): HasOne

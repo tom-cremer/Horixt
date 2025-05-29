@@ -6,6 +6,7 @@ use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use App\Observers\OrganizationObserver;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[ObservedBy(OrganizationObserver::class)]
@@ -98,4 +99,8 @@ class Organization extends Model
         return $this->hasMany(Files::class);
     }
 
+    public function avatar(): HasOne
+    {
+        return $this->hasOne(Avatar::class);
+    }
 }
