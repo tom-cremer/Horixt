@@ -111,6 +111,11 @@ class Line extends HorixtComponent
 
     }
 
+    public function toggleTracks()
+    {
+        $this->todo->update(['is_trackable' => !$this->todo->is_trackable]);
+    }
+
     public function render()
     {
         if ($this->search !== '') {

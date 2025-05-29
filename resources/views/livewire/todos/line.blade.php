@@ -2,23 +2,26 @@
     <div
         class="grid {{(\App\Helper\Context::isOrganization())? 'grid-cols-6' : 'grid-cols-5'}} items-center gap-4 p-1 shadow-sm hover:shadow-md transition {{ $todo->parent_id ? '' : 'border-t ' }} border-b border-gray-200/20 dark:text-neutral-100">
         <div class="flex items-center space-x-2">
-
-            <button wire:click="toggleExpanded"
-                    class="text-gray-400  {{ $expanded ? 'rotate-180' : '' }} {{ $todo->children->count() > 0 ? 'opacity-100' : 'opacity-40 hover:opacity-100 ' }} transition-all duration-200">
-                @if($expanded)
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                         class="lucide lucide-chevron-down-icon lucide-chevron-down">
-                        <path d="m6 9 6 6 6-6"/>
-                    </svg>
-                @else
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                         class="lucide lucide-chevron-down-icon lucide-chevron-down">
-                        <path d="m6 9 6 6 6-6"/>
-                    </svg>
-                @endif
-            </button>
+            @if(!$assignedToMe)
+                <button wire:click="toggleExpanded"
+                        class="text-gray-400  {{ $expanded ? 'rotate-180' : '' }} {{ $todo->children->count() > 0 ? 'opacity-100' : 'opacity-40 hover:opacity-100 ' }} transition-all duration-200">
+                    @if($expanded)
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="lucide lucide-chevron-down-icon lucide-chevron-down">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    @else
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="lucide lucide-chevron-down-icon lucide-chevron-down">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    @endif
+                </button>
+            @else
+                <div class="w-2.5 h-4"> </div>
+            @endif
 
             <flux:tooltip position="bottom" content="{{ $todo->name }}" class="truncate">
                 <p class="w-full truncate! font-medium font-lexend @if($todo->is_done) line-through text-gray-400 @endif">
@@ -27,7 +30,9 @@
             </flux:tooltip>
         </div>
         <div>
-            <livewire:track :todo="$todo->id" :key="'track-'.$todo->id"/>
+            @if($todo->is_trackable)
+                <livewire:track :todo="$todo->id" :key="'track-'.$todo->id"/>
+            @endif
         </div>
         @if(\App\Helper\Context::isOrganization())
             <div x-data="{ assigneeModal: false }"
@@ -41,7 +46,8 @@
                         <flux:tooltip content="{{$assignee->name}}" position="bottom"
                                       class="w-8 h-8 text-xs">
                             <div class="p-1">
-                                <flux:avatar size="xs" name="{{$assignee->name}}" initials:single color="auto" color:seed="{{ $assignee->id }}"/>
+                                <flux:avatar size="xs" name="{{$assignee->name}}" initials:single color="auto"
+                                             color:seed="{{ $assignee->id }}"/>
                             </div>
                         </flux:tooltip>
                     @empty
@@ -147,7 +153,7 @@
         <div x-data="{ statusModal: false }"
              class="relative"
         >
-            <flux:badge x-on:click="statusModal = true" color="zinc" class="cursor-pointer">
+            <flux:badge x-on:click="statusModal = true" color="zinc" class="cursor-pointer" aria-role="button" aria-pressed="false">
                 {{$todo->status->name}}
             </flux:badge>
             <div x-show="statusModal" x-on:click.away="statusModal = false"
@@ -155,9 +161,7 @@
                 flex flex-wrap gap-2 p-2.5 w-full max-w-24 z-50"
             >
                 @foreach($statuses->reject(fn($status) =>
-                $status->id === $todo->status->id ||
-                ($status->id === \App\Models\Status::COMPLETED && \App\Helper\Context::isOrganization() && !auth()->user()->can(\App\Enums\PermissionEnum::TODOS_REVIEW))
-                ) as $status)
+                $status->id === $todo->status->id) as $status)
                     <flux:badge size="sm" wire:click="updateStatus({{$status->id}})" class="cursor-pointer"
                                 wire:key="status-{{ $status->id }}">{{$status->name}}</flux:badge>
                 @endforeach
@@ -188,27 +192,49 @@
                              wire:click="deleteTodo"
                 />
             @endif
+
+            {{--TODO: Add the condition for the TODOS_TRACK !--}}
+            @if($todo->is_trackable)
+                <flux:tooltip content="Deactivate Tracks">
+                    <flux:button :loading="false" :square="true" size="xs" icon="timer-off"
+                                 variant="subtle"
+                                 wire:click="toggleTracks"
+                    />
+                </flux:tooltip>
+            @else
+                <flux:tooltip content="Activate Tracks">
+                    <flux:button :loading="false" :square="true" size="xs" icon="timer"
+                                 variant="subtle"
+                                 wire:click="toggleTracks"
+                    />
+                </flux:tooltip>
+
+            @endif
         </div>
     </div>
 
     @if($expanded)
         <div class="ml-4 space-y-2">
-            @foreach($todo->children as $child)
-                <livewire:todos.line :todo="$child" :key="$child->id"/>
-            @endforeach
-            {{--Add a blank line to add a todo --}}
-            <div class="mt-2 px-1 flex items-center space-x-2">
-                <flux:input
-                    type="text"
-                    size="sm"
-                    kbd="Enter"
-                    placeholder="New sub-todo"
-                    wire:model="newSubTodoTitle"
-                    wire:keydown.enter="addSubTodo"
-                    clearable/>
-                <flux:checkbox wire:model="trackable" label="Trackable" size="sm"/>
-                <input type="hidden" wire:model="parent_id" value="{{ $todo->id }}">
-            </div>
+            @if(!$assignedToMe)
+                @foreach($todo->children as $child)
+                    <livewire:todos.line :todo="$child" :assignedToMe="$assignedToMe" :key="$child->id"/>
+                @endforeach
+            @endif
+
+            @if(!$assignedToMe)
+                <div class="mt-2 px-1 flex items-center space-x-2">
+                    <flux:input
+                        type="text"
+                        size="sm"
+                        kbd="Enter"
+                        placeholder="New sub-todo"
+                        wire:model="newSubTodoTitle"
+                        wire:keydown.enter="addSubTodo"
+                        clearable/>
+                    <flux:switch wire:model="trackable" align="left" label="Trackable" size="sm"/>
+                    <input type="hidden" wire:model="parent_id" value="{{ $todo->id }}">
+                </div>
+            @endif
         </div>
     @endif
 </div>
