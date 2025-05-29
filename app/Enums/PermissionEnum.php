@@ -10,7 +10,7 @@ enum PermissionEnum: string
     case TODOS_UPDATE = 'todos.update';
     case TODOS_DELETE = 'todos.delete';
     case TODOS_ASSIGN = 'todos.assign';
-    case TODOS_REVIEW = 'todos.review';
+    case TODOS_TRACK = 'todos.track';
     case TODOS_COMMENT = 'todos.comment';
 
     // Tracks
@@ -56,7 +56,6 @@ enum PermissionEnum: string
                 self::TODOS_UPDATE,
                 self::TODOS_DELETE,
                 self::TODOS_ASSIGN,
-                self::TODOS_REVIEW,
                 self::TODOS_COMMENT,
             ],
             'files' => [

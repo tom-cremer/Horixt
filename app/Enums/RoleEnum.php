@@ -6,7 +6,6 @@ enum RoleEnum: string
 {
     case ADMIN = 'admin';
     case MEMBER = 'member';
-    case REVIEWER = 'reviewer';
     case INTERN = 'intern';
     case GUEST = 'guest';
 
@@ -17,7 +16,6 @@ enum RoleEnum: string
         return match ($this) {
             self::ADMIN => 'amber',
             self::MEMBER => 'blue',
-            self::REVIEWER => 'teal',
             self::INTERN => 'purple',
             self::GUEST => 'zinc',
         };

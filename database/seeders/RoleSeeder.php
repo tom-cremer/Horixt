@@ -38,11 +38,6 @@ class RoleSeeder extends Seeder
                 PermissionEnum::PROJECT_CREATE->value,
             ],
 
-            RoleEnum::REVIEWER->value => [
-                PermissionEnum::TODOS_COMMENT->value,
-                PermissionEnum::TODOS_REVIEW->value,
-            ],
-
             RoleEnum::INTERN->value => [
                 PermissionEnum::FILES_VIEW->value,
                 PermissionEnum::FILES_UPLOAD->value,
