@@ -3,7 +3,6 @@
 namespace App\Livewire;
 
 use App\Livewire\Component\HorixtComponent;
-use Livewire\Component;
 
 class Dashboard extends HorixtComponent
 {
@@ -11,6 +10,11 @@ class Dashboard extends HorixtComponent
 
     public function mount()
     {
+    }
+
+    public function setTimezone($timezone)
+    {
+        session()->put('timezone', $timezone);
     }
 
     public function render()

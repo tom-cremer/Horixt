@@ -1,4 +1,7 @@
-<div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
+<div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl"
+     x-data="{ timezone: Intl.DateTimeFormat().resolvedOptions().timeZone }"
+     x-init="$wire.setTimezone(timezone)">
+
     <div
         class="flex flex-wrap gap-2  relative overflow-hidden">
         @if (\App\Helper\Context::isOrganization())
