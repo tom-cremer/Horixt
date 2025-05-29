@@ -55,11 +55,8 @@ l'arrêter à tout moment, ce qui lui permet de suivre le temps passé sur chaqu
 
 ---
 
-### Abonnements et rôles personnalisés 
+### Mode Personnel / Organisation 
 
-- 3 formules d’abonnement prédéfinies (Starter, Pro, Entreprise)
-- Chaque organisation peut créer des **rôles personnalisés** avec des permissions sur chaque module (accès aux
-  documents, gestion des tâches, etc.)
 - Possibilité d’avoir des utilisateurs qui n’appartiennent à aucune organisation (mode solo)
 - Un utilisateur peut appartenir à plusieurs organisations, avec des rôles différents dans chaque.
 
