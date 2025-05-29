@@ -1,7 +1,9 @@
 <div class="font-lexend h-full flex flex-col ">
     <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-semibold">Members</h2>
-        <livewire:partials.add-members/>
+        @can(\App\Enums\PermissionEnum::ORG_MANAGE->value)
+            <livewire:partials.add-members/>
+        @endcan
     </div>
 
 
