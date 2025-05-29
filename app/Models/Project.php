@@ -18,11 +18,11 @@ class Project extends Model
         'status_id',
         'priority_id',
         'color_id',
-        'deadline',
+        'due_at',
     ];
 
     protected $casts = [
-        'deadline' => 'date',
+        'due_at' => 'date',
     ];
 
     public function todos(): HasMany
