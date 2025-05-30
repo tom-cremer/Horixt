@@ -1,34 +1,49 @@
 <div class="ml-{{ $todo->parent_id ? '6' : '0' }} mb-1">
     <div
-        class="grid {{(\App\Helper\Context::isOrganization())? 'grid-cols-6' : 'grid-cols-5'}} items-center gap-4 p-1 shadow-sm hover:shadow-md transition {{ $todo->parent_id ? '' : 'border-t ' }} border-b border-gray-200/20 dark:text-neutral-100">
-        <div class="flex items-center space-x-2">
+        class="grid {{(\App\Helper\Context::isOrganization())? 'grid-cols-[minmax(260px,2fr)_repeat(6,minmax(150px,1fr))]' : 'grid-cols-[minmax(260px,2fr)_repeat(5,minmax(150px,1fr))]'}} min-w-[1024px] items-center gap-4 p-1 shadow-sm hover:shadow-md transition {{ $todo->parent_id ? '' : 'border-t ' }} border-b border-gray-200/20 dark:text-neutral-100">
+        <div class="flex items-center space-x-2 w-full">
             @if(!$assignedToMe)
                 <button wire:click="toggleExpanded"
                         class="text-gray-400  {{ $expanded ? 'rotate-180' : '' }} {{ $todo->children->count() > 0 ? 'opacity-100' : 'opacity-40 hover:opacity-100 ' }} transition-all duration-200">
-                    @if($expanded)
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                             class="lucide lucide-chevron-down-icon lucide-chevron-down">
-                            <path d="m6 9 6 6 6-6"/>
-                        </svg>
-                    @else
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                             class="lucide lucide-chevron-down-icon lucide-chevron-down">
-                            <path d="m6 9 6 6 6-6"/>
-                        </svg>
-                    @endif
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="lucide lucide-chevron-down-icon lucide-chevron-down">
+                        <path d="m6 9 6 6 6-6"/>
+                    </svg>
                 </button>
             @else
-                <div class="w-2.5 h-4"> </div>
+                <div class="w-2.5 h-4"></div>
             @endif
 
-            <flux:tooltip position="bottom" content="{{ $todo->name }}" class="truncate">
-                <p class="w-full truncate! font-medium font-lexend @if($todo->is_done) line-through text-gray-400 @endif">
-                    {{ $todo->name }}
-                </p>
-            </flux:tooltip>
+            <div
+                class="relative group grid {{ $editingTodo ? 'grid-cols-[1fr_auto_auto]' : 'grid-cols-[1fr_auto]' }} items-center gap-2 w-full">
+                @if($editingTodo)
+                    <flux:input clearable type="text" size="xs" wire:model="newTodoTitle" placeholder="Todo Title"/>
+                    <flux:button icon="check" variant="subtle" size="xs" wire:click="updateTodo"/>
+                    <flux:button icon="x" variant="subtle" size="xs" wire:click="cancelEdit"/>
+                @else
+
+                    <p class="w-full truncate! font-medium font-lexend @if($todo->is_done) line-through text-gray-400 @endif">
+                        {{ $todo->name }}
+                    </p>
+                    @if(strlen($todo->name) >= 20)
+                        <span class="flex items-center justify-center w-fit whitespace-nowrap break-keep opacity-0 absolute z-50 -top-10 left-0 py-1 px-1.5
+                         bg-zinc-100 border border-zinc-300 dark:bg-zinc-700 dark:border-zinc-600
+                         rounded-lg group-hover:opacity-100 transition-opacity duration-200
+                         text-sm text-zinc-800 dark:text-zinc-200">
+                            {{ $todo->name }}
+                        </span>
+                    @endif
+                    @if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::TODOS_UPDATE))
+                        <flux:button icon="square-pen" size="xs" variant="subtle"
+                                     wire:click="editTodo"
+                                     class="opacity-30 group-hover:opacity-100 transition-opacity duration-200"/>
+                    @endif
+                @endif
+            </div>
+
         </div>
+
         <div>
             @if($todo->is_trackable)
                 <livewire:track :todo="$todo->id" :key="'track-'.$todo->id"/>
@@ -153,7 +168,8 @@
         <div x-data="{ statusModal: false }"
              class="relative"
         >
-            <flux:badge x-on:click="statusModal = true" color="zinc" class="cursor-pointer" aria-role="button" aria-pressed="false">
+            <flux:badge x-on:click="statusModal = true" color="{{\App\Helper\Context::isOrganization() ? $todo->status->organizationStatusColor->color->alias : $todo->status->userStatusColor->color->alias}}" class="cursor-pointer" aria-role="button"
+                        aria-pressed="false">
                 {{$todo->status->name}}
             </flux:badge>
             <div x-show="statusModal" x-on:click.away="statusModal = false"
@@ -162,7 +178,8 @@
             >
                 @foreach($statuses->reject(fn($status) =>
                 $status->id === $todo->status->id) as $status)
-                    <flux:badge size="sm" wire:click="updateStatus({{$status->id}})" class="cursor-pointer"
+
+                    <flux:badge size="sm" color="{{\App\Helper\Context::isOrganization() ? $status->organizationStatusColor->color->alias : $status->userStatusColor->color->alias}}" wire:click="updateStatus({{$status->id}})" class="cursor-pointer"
                                 wire:key="status-{{ $status->id }}">{{$status->name}}</flux:badge>
                 @endforeach
             </div>
@@ -170,7 +187,7 @@
         <div x-data="{ priorityModal: false }"
              class="relative"
         >
-            <flux:badge x-on:click="priorityModal = true" color="zinc" class="cursor-pointer">
+            <flux:badge x-on:click="priorityModal = true" color="{{\App\Helper\Context::isOrganization() ? $todo->priority->organizationPriorityColor->color->alias : $todo->priority->userPriorityColor->color->alias}}" class="cursor-pointer">
                 {{$todo->priority->name}}
             </flux:badge>
             <div x-show="priorityModal" x-on:click.away="priorityModal = false"
@@ -181,10 +198,13 @@
                     @if($priority->id === $todo->priority->id)
                         @continue
                     @endif
-                    <flux:badge size="sm" wire:click="updatePriority({{$priority->id}})"
+                    <flux:badge size="sm" color="{{\App\Helper\Context::isOrganization() ? $priority->organizationPriorityColor->color->alias : $priority->userPriorityColor->color->alias}}" wire:click="updatePriority({{$priority->id}})"
                                 class="cursor-pointer">{{$priority->name}}</flux:badge>
                 @endforeach
             </div>
+        </div>
+        <div>
+            Comments
         </div>
         <div> {{--Actions--}}
             @if(\App\Helper\Context::isPersonal() ||  auth()->user()->can(\App\Enums\PermissionEnum::TODOS_DELETE))
