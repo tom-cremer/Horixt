@@ -15,7 +15,6 @@ return new class extends Migration
             $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');
         });
 
-
         Schema::table('projects', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
@@ -38,6 +37,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('todo_id')->references('id')->on('todos')->onDelete('cascade');
         });
+
         Schema::table('assigned_todo', function (Blueprint $table) {
             $table->foreign('todo_id')->references('id')->on('todos')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
@@ -60,9 +60,7 @@ return new class extends Migration
 
         Schema::table('fileables', function (Blueprint $table) {
             $table->foreign('file_id')->references('id')->on('files')->onDelete('cascade');
-
         });
-
 
         Schema::table('organization_invites', function (Blueprint $table) {
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
@@ -74,6 +72,31 @@ return new class extends Migration
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
         });
 
+        Schema::table('todo_comments', function (Blueprint $table) {
+            $table->foreign('todo_id')->references('id')->on('todos')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('parent_id')->references('id')->on('todo_comments')->onDelete('cascade');
+        });
+
+        Schema::table('favorite_projects', function (Blueprint $table) {
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
+        });
+
+        Schema::table('status_colors', function (Blueprint $table) {
+            $table->foreign('status_id')->references('id')->on('statuses')->onDelete('cascade');
+            $table->foreign('color_id')->references('id')->on('colors')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
+        });
+
+        Schema::table('priority_colors', function (Blueprint $table) {
+            $table->foreign('priority_id')->references('id')->on('priorities')->onDelete('cascade');
+            $table->foreign('color_id')->references('id')->on('colors')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
+        });
     }
 
     /**
@@ -85,7 +108,6 @@ return new class extends Migration
         Schema::table('organizations', function (Blueprint $table) {
             $table->dropForeign(['owner_id']);
         });
-
 
         Schema::table('projects', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
@@ -109,6 +131,7 @@ return new class extends Migration
             $table->dropForeign(['user_id']);
             $table->dropForeign(['todo_id']);
         });
+
         Schema::table('assigned_todo', function (Blueprint $table) {
             $table->dropForeign(['todo_id']);
             $table->dropForeign(['user_id']);
@@ -143,5 +166,31 @@ return new class extends Migration
             $table->dropForeign(['organization_id']);
         });
 
+        Schema::table('todo_comments', function (Blueprint $table) {
+            $table->dropForeign(['todo_id']);
+            $table->dropForeign(['user_id']);
+            $table->dropForeign(['parent_id']);
+        });
+
+        Schema::table('favorite_projects', function (Blueprint $table) {
+            $table->dropForeign(['project_id']);
+            $table->dropForeign(['user_id']);
+            $table->dropForeign(['organization_id']);
+        });
+
+        Schema::table('status_colors', function (Blueprint $table) {
+            $table->dropForeign(['status_id']);
+            $table->dropForeign(['color_id']);
+            $table->dropForeign(['user_id']);
+            $table->dropForeign(['organization_id']);
+        });
+
+        Schema::table('priority_colors', function (Blueprint $table) {
+            $table->dropForeign(['priority_id']);
+            $table->dropForeign(['color_id']);
+            $table->dropForeign(['user_id']);
+            $table->dropForeign(['organization_id']);
+        });
+        
     }
 };
