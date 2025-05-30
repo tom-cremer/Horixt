@@ -71,6 +71,12 @@ class Todo extends Model
         return $this->morphToMany(Files::class, 'fileable');
     }
 
+    /*-------------COMMENTS RELATIONSHIPS--------------*/
+    public function comments(): HasMany
+    {
+        return $this->hasMany(TodoComment::class, 'todo_id');
+    }
+
 
 
 }
