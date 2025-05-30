@@ -1,4 +1,4 @@
-<div class="h-full flex flex-col justify-between gap-5">
+<div class="h-full flex flex-col justify-between gap-4">
     @if(!$assignedToMe)
         <flux:fieldset>
             <div class="px-1 mt-2 h-8 grid grid-cols-[1fr_auto] items-center gap-1.5 space-x-2">
@@ -19,7 +19,7 @@
     <div class="overflow-auto h-full w-full font-lexend">
 
         <div
-            class=" grid {{(\App\Helper\Context::isOrganization())? 'grid-cols-6' : 'grid-cols-5'}} gap-2 min-w-[1024px]">
+            class="grid {{(\App\Helper\Context::isOrganization())? 'grid-cols-[minmax(260px,2fr)_repeat(6,minmax(150px,1fr))]' : 'grid-cols-[minmax(260px,2fr)_repeat(5,minmax(150px,1fr))]'}} gap-2 min-w-[1024px]">
             <div class="flex items-center gap-2.5">
                 <flux:text variant="subtle" class="font-medium">Aa</flux:text>
                 <flux:text variant="subtle" size="lg">Todo name</flux:text>
@@ -41,6 +41,10 @@
             <div class="flex items-center gap-2.5">
                 <flux:icon.circle-alert variant="micro" class="text-neutral-400 dark:text-neutral-500"/>
                 <flux:text variant="subtle" size="lg">Priority</flux:text>
+            </div>
+            <div class="flex items-center gap-2.5">
+                <flux:icon.message-circle-dashed variant="micro" class="text-neutral-400 dark:text-neutral-500"/>
+                <flux:text variant="subtle" size="lg">Comments</flux:text>
             </div>
             <div class="flex items-center gap-2.5">
                 <flux:icon.settings-2 variant="micro" class="text-neutral-400 dark:text-neutral-500"/>
