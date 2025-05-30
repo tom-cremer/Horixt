@@ -37,7 +37,7 @@
                         {{ $organization->name }}
                     </flux:menu.item>
                 @empty
-                    <flux:text>No Organizations</flux:text>
+                    <flux:text class="ml-2 mb-1.5">No Organizations</flux:text>
                 @endforelse
             </flux:menu.group>
         </flux:menu>
