@@ -113,7 +113,7 @@ class User extends Authenticatable
         return $this->id === $organization->owner_id;
     }
 
-    // File manager
+    /*-------------File manager RELATIONSHIPS--------------*/
     public function directories()
     {
         return $this->hasMany(Directories::class);
@@ -124,16 +124,23 @@ class User extends Authenticatable
         return $this->hasMany(Files::class);
     }
 
+    /*-------------Avatar--------------*/
     public function avatar(): HasOne
     {
         return $this->hasOne(Avatar::class);
     }
 
-    // Super-Admin Feature
+    /*-------------Super Admin--------------*/
     public function administrator(): HasOne
     {
         return $this->hasOne(Administrators::class);
     }
 
+    /*-------------COMMENTS RELATIONSHIPS--------------*/
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(TodoComment::class, 'user_id');
+    }
 
 }
