@@ -23,7 +23,7 @@ class StatusSeeder extends Seeder
         ]);
 
         Status::factory()->create([
-            'name' => 'In Review',
+            'name' => 'Stuck',
         ]);
 
         Status::factory()->create([
