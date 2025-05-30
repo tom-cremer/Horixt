@@ -3,6 +3,8 @@
 namespace App\Observers;
 
 use App\Helper\FileManagerHelper;
+use App\Helper\PriorityColorHelper;
+use App\Helper\StatusColorHelper;
 use App\Models\User;
 
 class UserObserver
@@ -13,6 +15,8 @@ class UserObserver
     public function created(User $user): void
     {
         FileManagerHelper::createUserDirectory($user);
+        PriorityColorHelper::seedUserPriorityColor($user);
+        StatusColorHelper::seedUserStatusColor($user);
     }
 
     /**

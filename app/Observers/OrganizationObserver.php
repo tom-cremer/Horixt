@@ -4,6 +4,8 @@ namespace App\Observers;
 
 use App\Enums\RoleEnum;
 use App\Helper\FileManagerHelper;
+use App\Helper\PriorityColorHelper;
+use App\Helper\StatusColorHelper;
 use App\Models\Organization;
 
 class OrganizationObserver
@@ -19,6 +21,8 @@ class OrganizationObserver
         auth()->user()->assignRole(RoleEnum::ADMIN->value);
 
         FileManagerHelper::createOrganizationDirectory($organization, auth()->user());
+        StatusColorHelper::seedOrganizationStatusColor($organization);
+        PriorityColorHelper::seedOrganizationPriorityColor($organization);
     }
 
     /**
