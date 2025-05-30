@@ -10,7 +10,6 @@ use App\Models\Status;
 use App\Models\Todo;
 use App\Models\User;
 use App\Traits\CreateTodo;
-use Livewire\Attributes\On;
 
 class Line extends HorixtComponent
 {
@@ -29,6 +28,9 @@ class Line extends HorixtComponent
     public $search = '';
     public $searchResults = [];
 
+    public $newTodoTitle;
+    public $editingTodo = false;
+
     public $assignedToMe = false;
 
     public function mount(Todo $todo, $assignedToMe = false)
@@ -40,6 +42,28 @@ class Line extends HorixtComponent
         }
     }
 
+    public function editTodo()
+    {
+        $this->editingTodo = true;
+        $this->newTodoTitle = $this->todo->name;
+
+    }
+
+    public function updateTodo()
+    {
+        $this->validate([
+            'newTodoTitle' => 'required|string|max:50',
+        ]);
+        $this->todo->update(['name' => $this->newTodoTitle]);
+        $this->editingTodo = false;
+        $this->reset('newTodoTitle');
+    }
+
+    public function cancelEdit()
+    {
+        $this->editingTodo = false;
+        $this->reset('newTodoTitle');
+    }
 
     public function toggleExpanded()
     {
@@ -53,6 +77,9 @@ class Line extends HorixtComponent
 
     public function addSubTodo()
     {
+        $this->validate([
+            'newSubTodoTitle' => 'required|string|max:50',
+        ]);
         Todo::create([
             'name' => $this->newSubTodoTitle,
             'description' => '',
