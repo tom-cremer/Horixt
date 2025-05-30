@@ -30,7 +30,8 @@
     <!-- Tooltip -->
     @if($collapsed)
         <div
-            class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-white bg-neutral-800 rounded-md opacity-0 peer-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+            class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs font-medium rounded-md opacity-0 peer-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap
+            dark:text-white dark:bg-zinc-700 bg-white text-zinc-800 border border-zinc-300 dark:border-zinc-600 shadow-sm">
             {{$text}}
         </div>
     @endif
