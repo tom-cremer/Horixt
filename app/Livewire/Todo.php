@@ -41,6 +41,9 @@ class Todo extends HorixtComponent
         if (empty($this->name) || empty(trim($this->name)) || (strlen($this->name) > 255) || (strlen(trim($this->name)) > 255)) {
             return;
         }
+        $this->validate([
+            'name' => 'required|string|max:50',
+        ]);
         Todos::create([
             'name' => $this->name,
             'description' => '',
