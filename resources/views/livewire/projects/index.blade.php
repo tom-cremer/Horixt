@@ -15,10 +15,10 @@
                                 <flux:subheading>{{$project->description}}</flux:subheading>
                             </div>
                             <div class="flex gap-2 mt-2">
-                                <flux:badge color="yellow">
+                                <flux:badge color="{{\App\Helper\Context::isOrganization() ? $project->status->organizationStatusColor->color->alias : $project->status->userStatusColor->color->alias}}">
                                     {{$project->status->name}}
                                 </flux:badge>
-                                <flux:badge color="blue">
+                                <flux:badge color="{{\App\Helper\Context::isOrganization() ? $project->priority->organizationPriorityColor->color->alias : $project->priority->userPriorityColor->color->alias}}">
                                     {{$project->priority->name}}
                                 </flux:badge>
                             </div>
