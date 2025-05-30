@@ -15,6 +15,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call([
+            ColorSeeder::class,
+            PrioritySeeder::class,
+            StatusSeeder::class,
+            PermissionSeeder::class,
+            RoleSeeder::class,
+        ]);
+
         // User::factory(10)->create();
         User::factory()->create([
             'name' => 'Tom Cremer',
@@ -52,17 +60,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-            ColorSeeder::class,
-            PrioritySeeder::class,
-            StatusSeeder::class,
-            PermissionSeeder::class,
-            RoleSeeder::class,
             AdministratorSeeder::class,
         ]);
-
-
-
-
-
     }
 }
