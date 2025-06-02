@@ -21,6 +21,22 @@ class NavButton extends HorixtComponent
 
     public bool $beta = false;
 
+    public function mount(string $text, string $route, ?string $icon = null, ?string $logo = null, ?int $badge = null, bool $beta = false)
+    {
+        $this->text = $text;
+        $this->route = $route;
+        $this->icon = $icon;
+        $this->logo = $logo;
+        $this->badge = $badge;
+        $this->beta = $beta;
+
+        // Initialize collapsed state from session
+        if (session()->has('collapsed')) {
+            $this->collapsed = session('collapsed');
+        } else {
+            $this->collapsed = false; // Default value
+        }
+    }
     #[On('sidebar-toggle')]
     public function toggle()
     {

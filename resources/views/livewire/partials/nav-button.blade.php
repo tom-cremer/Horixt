@@ -11,7 +11,7 @@
                             <flux:icon name="{{$icon}}"/>
                         @endif
                     </span>
-        <span class="transition-all delay-300 ease-in-out {{$collapsed ? 'opacity-0 hidden' : ''}}">{{$text}}</span>
+        <span class="transition-all delay-300 ease-in-out {{$collapsed ? 'opacity-0 hidden' : ''}}" wire:key="navbutton-name-{{$text}}">{{$text}}</span>
         @if($badge)
             @if(!$collapsed)
                 <flux:spacer/>
