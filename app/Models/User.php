@@ -89,6 +89,11 @@ class User extends Authenticatable
         return $this->hasMany(Project::class);
     }
 
+    public function favoriteProjects()
+    {
+        return $this->hasMany(FavoriteProject::class);
+    }
+
     public function organizations(): BelongsToMany
     {
         return $this->belongsToMany(Organization::class, 'organization_user')
