@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Helper\Context;
 use App\Livewire\Component\HorixtComponent;
 use App\Models\Color;
+use App\Models\FavoriteProject;
 use App\Models\Priority;
 use App\Models\Project;
 use App\Models\Status;
@@ -38,8 +39,8 @@ class ProjectList extends HorixtComponent
     public function createProject()
     {
         $this->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string|max:1000',
+            'name' => 'required|string|max:30',
+            'description' => 'nullable|string|max:100',
             'status_id' => 'nullable|exists:statuses,id',
             'priority_id' => 'nullable|exists:priorities,id',
             'color_id' => 'nullable|exists:colors,id',
@@ -71,6 +72,7 @@ class ProjectList extends HorixtComponent
 
         $this->resetExcept(['statuses', 'priorities', 'colors']);
         Flux::modal('add-project')->close();
+        $this->dispatch('refresh-projects');
     }
 
     public function openAddProjectModal()
@@ -103,6 +105,7 @@ class ProjectList extends HorixtComponent
 
         $this->resetExcept(['statuses', 'priorities', 'colors']);
         Flux::modal('edit-project')->close();
+        $this->dispatch('refresh-projects');
     }
 
 
@@ -118,6 +121,61 @@ class ProjectList extends HorixtComponent
         } else {
             return redirect()->route('personal.projects.show', ['projectid' => $projectId]);
         }
+    }
+
+    public function addToFavorites($projectId)
+    {
+        try {
+
+            if (Context::isOrganization()) {
+                $favorite = FavoriteProject::create([
+                    'project_id' => $projectId,
+                    'user_id' => auth()->id(),
+                    'organization_id' => Context::getOrganizationId(),
+                ]);
+            } else {
+                $favorite = FavoriteProject::create([
+                    'project_id' => $projectId,
+                    'user_id' => auth()->id(),
+                    'organization_id' => null,
+                ]);
+            }
+            $this->dispatch('toast', [
+                'title' => 'Favorite added',
+                'message' => 'Your project has been added to your favorites.',
+                'type' => 'success', // success, warning, error, info
+                //'duration' => Default 5000ms,
+            ]);
+            $this->dispatch('add-favorites', favorite: $favorite);
+        } catch (\Exception $e) {
+            $this->dispatch('toast', [
+                'title' => 'Error',
+                'message' => 'There was an error adding the project to favorites: ' . $e->getMessage(),
+                'type' => 'error', // success, warning, error, info
+            ]);
+        }
+    }
+
+    public function removeFromFavorites($projectId)
+    {
+        if (Context::isOrganization()) {
+            FavoriteProject::where('project_id', $projectId)
+                ->where('organization_id', Context::getOrganizationId())
+                ->where('user_id', auth()->id())
+                ->delete();
+        } else {
+            FavoriteProject::where('project_id', $projectId)
+                ->where('user_id', auth()->id())
+                ->whereNull('organization_id')
+                ->delete();
+        }
+        $this->dispatch('toast', [
+            'title' => 'Favorite removed',
+            'message' => 'Your project has been removed from your favorites.',
+            'type' => 'success', // success, warning, error, info
+            //'duration' => Default 5000ms,
+        ]);
+        $this->dispatch('remove-favorites');
     }
 
     public function render()

@@ -1,59 +1,76 @@
 <div class="font-lexend h-full">
     <div class="space-y-6">
 
-            <div class=" grid grid-cols-1 gap-5 xl:grid-cols-4 lg:grid-cols-2 sm:grid-cols-2 space-y-6">
-                @foreach($projects as $project)
-                    <div wire:click="toProject({{$project->id}})" wire:navigate
-                         wire:key="project-{{$project->id}}"
-                         class="flex flex-col justify-between
+        <div class=" grid grid-cols-1 gap-5 xl:grid-cols-4 lg:grid-cols-2 sm:grid-cols-2 space-y-6">
+            @foreach($projects as $project)
+                <div wire:click="toProject({{$project->id}})" wire:navigate
+                     wire:key="project-{{$project->id}}"
+                     class="flex flex-col justify-between
                         bg-gray-50 hover:bg-gray-100 border border-gray-200
                         dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-600
                         transition-colors duration-300 ease-in-out rounded-2xl p-4 h-full cursor-pointer">
+                    <div>
                         <div>
-                            <div>
-                                <flux:heading>{{$project->name}}</flux:heading>
-                                <flux:subheading>{{$project->description}}</flux:subheading>
-                            </div>
-                            <div class="flex gap-2 mt-2">
-                                <flux:badge color="{{\App\Helper\Context::isOrganization() ? $project->status->organizationStatusColor->color->alias : $project->status->userStatusColor->color->alias}}">
-                                    {{$project->status->name}}
-                                </flux:badge>
-                                <flux:badge color="{{\App\Helper\Context::isOrganization() ? $project->priority->organizationPriorityColor->color->alias : $project->priority->userPriorityColor->color->alias}}">
-                                    {{$project->priority->name}}
-                                </flux:badge>
-                            </div>
+                            <flux:heading>{{$project->name}}</flux:heading>
+                            <flux:subheading>{{$project->description}}</flux:subheading>
                         </div>
-                        <div class="ml-auto flex gap-2">
-                            @if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::PROJECT_UPDATE))
-                                <flux:button wire:click.stop="editProject({{$project->id}})">Edit</flux:button>
-                            @endif
-                            @if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::PROJECT_DELETE))
-                                <flux:button wire:click.stop="deleteProject({{$project->id}})" variant="danger">
-                                    Delete
-                                </flux:button>
-                            @endif
+                        <div class="flex gap-2 mt-2">
+                            <flux:badge
+                                color="{{\App\Helper\Context::isOrganization() ? $project->status->organizationStatusColor->color->alias : $project->status->userStatusColor->color->alias}}">
+                                {{$project->status->name}}
+                            </flux:badge>
+                            <flux:badge
+                                color="{{\App\Helper\Context::isOrganization() ? $project->priority->organizationPriorityColor->color->alias : $project->priority->userPriorityColor->color->alias}}">
+                                {{$project->priority->name}}
+                            </flux:badge>
                         </div>
                     </div>
-                @endforeach
+                    <div class="ml-auto flex gap-2">
+                        @if($project->favorite)
+                            <flux:button square :loading="false" size="sm" wire:click.stop="removeFromFavorites({{$project->id}})">
+                                <flux:icon.star variant="solid" class="size-5 text-amber-400 dark:text-amber-300"/>
+                            </flux:button>
+                        @else
+                            <flux:button square :loading="false" size="sm" wire:click.stop="addToFavorites({{$project->id}})">
+                                <flux:icon.star class="size-5 "/>
+                            </flux:button>
+                        @endif
 
-                @if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::PROJECT_CREATE))
-                    <div wire:click="openAddProjectModal" wire:key="add-project"
-                        class="cursor-pointer  flex flex-col items-center justify-center gap-1.5 border-dashed border-2 border-gray-300 dark:border-zinc-500 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-all duration-300 rounded-xl p-4">
-                        <div class="bg-[#7F76FF] rounded-md p-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-icon lucide-plus"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-                        </div>
-                        <flux:text variant='subtle' class="font-medium">
-                            Add Project
-                        </flux:text>
+                        @if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::PROJECT_UPDATE))
+                            <flux:button wire:click.stop="editProject({{$project->id}})" size="sm">Edit</flux:button>
+                        @endif
+                        @if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::PROJECT_DELETE))
+                            <flux:button wire:click.stop="deleteProject({{$project->id}})" size="sm" variant="danger">
+                                Delete
+                            </flux:button>
+                        @endif
                     </div>
-                @endif
-            </div>
+                </div>
+            @endforeach
+
+            @if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::PROJECT_CREATE))
+                <div wire:click="openAddProjectModal" wire:key="add-project"
+                     class="cursor-pointer  flex flex-col items-center justify-center gap-1.5 border-dashed border-2 border-gray-300 dark:border-zinc-500 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-all duration-300 rounded-xl p-4">
+                    <div class="bg-[#7F76FF] rounded-md p-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                             stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"
+                             class="lucide lucide-plus-icon lucide-plus">
+                            <path d="M5 12h14"/>
+                            <path d="M12 5v14"/>
+                        </svg>
+                    </div>
+                    <flux:text variant='subtle' class="font-medium">
+                        Add Project
+                    </flux:text>
+                </div>
+            @endif
+        </div>
 
 
     </div>
 
     {{--Modals--}}
-    <flux:modal name="add-project" class="md:w-96" >
+    <flux:modal name="add-project" class="md:w-96">
         <div class="space-y-6">
             <div>
                 <flux:heading size="lg">Add a Project</flux:heading>
@@ -80,7 +97,7 @@
             </div>
         </div>
     </flux:modal>
-    <flux:modal name="edit-project" class="md:w-96" >
+    <flux:modal name="edit-project" class="md:w-96">
         <div class="space-y-6">
             <div>
                 <flux:heading size="lg">Edit a Project</flux:heading>
