@@ -24,7 +24,7 @@
         @endif
     </div>
 
-    <livewire:partials.organization-select :collapsed="$collapsed" wire:key="organization-select" />
+    <livewire:partials.organization-select :collapsed="$collapsed" wire:key="organization-select"/>
 
     <flux:separator/>
 
@@ -50,52 +50,155 @@
                                       route="{{ \App\Helper\Context::isPersonal() ? route('personal.files') : route('organization.files', \App\Helper\Context::getOrganizationSlug()) }}"/>
         <flux:separator/>
 
-        <livewire:partials.nav-button :collapsed="$collapsed" icon="layout-grid" text="Projects" beta="true"
-                                      route="{{ \App\Helper\Context::isPersonal() ? route('personal.projects.index') : route('organization.projects.index', \App\Helper\Context::getOrganizationSlug()) }}"/>
+        {{-- Trays --}}
 
+        {{--Project Tray--}}
+        <div class="relative group {{$collapsed ? 'w-fit' : ''}}">
+            <div
+                class=" peer grid grid-cols-[1fr_auto] items-center gap-2 text-left text-sm font-semibold w-full "
+            >
+
+                <button
+                    class="{{$collapsed ? 'p-1' : 'px-2 py-1' }} w-full flex items-center gap-2 hover:bg-zinc-200 dark:hover:bg-zinc-600  rounded-md transition-colors duration-200 cursor-pointer"
+                    href="{{ \App\Helper\Context::isPersonal() ? route('personal.projects.index') : route('organization.projects.index', \App\Helper\Context::getOrganizationSlug()) }}"
+                    wire:navigate>
+                <span
+                    class="flex items-center justify-center w-7 h-7 relative">
+                            <flux:icon name="layout-grid"/>
+                    </span>
+                    <span class="transition-all delay-300 ease-in-out {{$collapsed ? 'opacity-0 hidden' : ''}}">
+                        Projects
+                    </span>
+                </button>
+                @unless($collapsed)
+                    <flux:button square :icon="$projectTray ? 'chevron-down': 'chevron-right'" variant="subtle"
+                                 size="xs"
+                                 class="ml-auto" :loading="false"
+                                 wire:click.stop="toggleTray"
+                                 wire:keydown.alt.g.window.prevent="toggleTray"
+                    />
+                @endunless
+            </div>
+            <!-- Tooltip -->
+            @if($collapsed)
+                <div
+                    class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs font-medium rounded-md opacity-0 peer-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap
+            dark:text-white dark:bg-zinc-700 bg-white text-zinc-800 border border-zinc-300 dark:border-zinc-600 shadow-sm">
+                    Projects
+                </div>
+            @endif
+        </div>
+        <div x-data="{projectTray: $wire.entangle('projectTray')}" x-show="projectTray"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 transform scale-95"
+             x-transition:enter-end="opacity-100 transform scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 transform scale-100"
+             x-transition:leave-end="opacity-0 transform scale-95"
+             class="{{ $collapsed ? 'm-auto' : 'ml-4' }} transition-all duration-150 flex flex-col gap-1">
+            @foreach($this->projects as $project)
+                <livewire:partials.nav-button :collapsed="$collapsed" icon="panels-top-left"
+                                              :text="$project->name"
+                                              wire:key="project-{{ $project->id }}-{{ $project->updated_at->timestamp }}"
+                                              route="{{ \App\Helper\Context::isPersonal()
+                             ? route('personal.projects.show', ['projectid' => $project->id])
+                             : route('organization.projects.show', ['slug' => \App\Helper\Context::getOrganizationSlug(), 'projectid' => $project->id]) }}"/>
+            @endforeach
+        </div>
+
+        <flux:separator/>
+        {{--Favorite Tray--}}
+
+            <div class="relative group {{$collapsed ? 'w-fit' : ''}}">
+                <div
+                    class=" peer flex items-center gap-2 text-left text-sm font-semibold w-full "
+                >
+
+                    <button
+                        class="{{$collapsed ? 'p-1' : 'px-2 py-1' }} flex items-center gap-2  transition-colors duration-200 cursor-pointer"
+                        href="{{ \App\Helper\Context::isPersonal() ? route('personal.projects.index') : route('organization.projects.index', \App\Helper\Context::getOrganizationSlug()) }}"
+                        wire:navigate>
+                <span
+                    class="flex items-center justify-center w-7 h-7 relative">
+                            <flux:icon name="star"/>
+                    </span>
+                        <span class="transition-all delay-300 ease-in-out {{$collapsed ? 'opacity-0 hidden' : ''}}">
+                        Favorites
+                    </span>
+                    </button>
+                    @unless($collapsed)
+                        <flux:button square :icon="$favTray ? 'chevron-down': 'chevron-right'" variant="subtle"
+                                     size="xs"
+                                     class="ml-auto" :loading="false"
+                                     wire:click.stop="toggleFavTray"
+                                     wire:keydown.alt.f.window.prevent="toggleFavTray"
+                        />
+                    @endunless
+                </div>
+                <!-- Tooltip -->
+                @if($collapsed)
+                    <div
+                        class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs font-medium rounded-md opacity-0 peer-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap
+                        dark:text-white dark:bg-zinc-700 bg-white text-zinc-800 border border-zinc-300 dark:border-zinc-600 shadow-sm">
+                        Favorites
+                    </div>
+                @endif
+            </div>
+            <div x-data="{FavTray: $wire.entangle('favTray')}" x-show="FavTray"
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 transform scale-95"
+                 x-transition:enter-end="opacity-100 transform scale-100"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100 transform scale-100"
+                 x-transition:leave-end="opacity-0 transform scale-95"
+                 class="{{ $collapsed ? 'm-auto' : 'ml-4' }} transition-all duration-150 flex flex-col gap-1">
+                @foreach($this->favProjects as $favorite)
+                    <livewire:partials.nav-button :collapsed="$collapsed" icon="panels-top-left"
+                                                  :text="$favorite->project->name"
+                                                  wire:key="fav-{{ $favorite->project->id }}-{{ $favorite->project->updated_at }}"
+                                                  route="{{ \App\Helper\Context::isPersonal()
+                             ? route('personal.projects.show', ['projectid' => $favorite->project->id])
+                             : route('organization.projects.show', ['slug' => \App\Helper\Context::getOrganizationSlug(), 'projectid' => $favorite->project->id]) }}"/>
+                @endforeach
+            </div>
     </div>
+
 
     {{--Spacer--}}
     <div class="flex-grow"></div>
-    {{-- Theme Switcher --}}
-    @if ($collapsed)
-        <flux:dropdown x-data align="end" class="mb-4 {{ $collapsed ? 'ml-auto mr-auto' : '' }}">
-            <flux:button variant="subtle" square class="group" aria-label="Preferred color scheme">
-                <flux:icon.sun x-show="$flux.appearance === 'light'" variant="mini"
-                               class="text-zinc-500 dark:text-white"/>
-                <flux:icon.moon x-show="$flux.appearance === 'dark'" variant="mini"
-                                class="text-zinc-500 dark:text-white"/>
-                <flux:icon.moon x-show="$flux.appearance === 'system' && $flux.dark" variant="mini"/>
-                <flux:icon.sun x-show="$flux.appearance === 'system' && ! $flux.dark" variant="mini"/>
-            </flux:button>
-
-            <flux:menu>
-                <flux:menu.item icon="sun" x-on:click="$flux.appearance = 'light'">Light</flux:menu.item>
-                <flux:menu.item icon="moon" x-on:click="$flux.appearance = 'dark'">Dark</flux:menu.item>
-                <flux:menu.item icon="computer-desktop" x-on:click="$flux.appearance = 'system'">System</flux:menu.item>
-            </flux:menu>
-        </flux:dropdown>
-    @else
-        <flux:radio.group x-data variant="segmented" x-model="$flux.appearance" class="mb-4">
-            <flux:radio value="light" icon="sun"/>
-            <flux:radio value="dark" icon="moon"/>
-            <flux:radio value="system" icon="computer-desktop"/>
-        </flux:radio.group>
-    @endif
 
     {{-- Avatar Menu --}}
     <flux:dropdown position="bottom" align="start" class="{{ $collapsed ? 'ml-auto mr-auto w-fit' : '' }}">
-        @if($collapsed)
-            <flux:profile
-                :chevron="false"
-                :initials="auth()->user()->initials()"
-            />
-        @else
 
-            <flux:profile
-                :name="auth()->user()->name"
-                :initials="auth()->user()->initials()"
-            />
+        @if($collapsed)
+
+            @if(auth()->user()->avatar)
+
+                <flux:profile
+                    :chevron="false"
+                    :initials="auth()->user()->initials()"
+                    avatar="{{config('app.url')}}/{{ auth()->user()->avatar->path }}"
+                />
+            @else
+                <flux:profile
+                    :chevron="false"
+                    :initials="auth()->user()->initials()"
+                />
+            @endif
+        @else
+            @if(auth()->user()->avatar)
+
+                <flux:profile
+                    :name="auth()->user()->name"
+                    :initials="auth()->user()->initials()"
+                    avatar="{{config('app.url')}}/{{ auth()->user()->avatar->path }}"
+                />
+            @else
+                <flux:profile
+                    :name="auth()->user()->name"
+                    :initials="auth()->user()->initials()"
+                />
+            @endif
         @endif
 
         <flux:menu class="w-[220px]">
@@ -120,13 +223,13 @@
             <flux:menu.separator/>
 
             <flux:menu.radio.group>
-                <flux:menu.item href="{{(\App\Helper\Context::isOrganization())? route('organization.settings', ['slug' => \App\Helper\Context::getOrganizationSlug()]) : route('personal.settings')}}" icon="cog"
-                                wire:navigate>{{ __('Settings') }}</flux:menu.item>
+                <flux:menu.item
+                    href="{{(\App\Helper\Context::isOrganization())? route('organization.settings', ['slug' => \App\Helper\Context::getOrganizationSlug()]) : route('personal.settings')}}"
+                    icon="cog"
+                    wire:navigate>{{ __('Settings') }}</flux:menu.item>
             </flux:menu.radio.group>
 
             <flux:menu.separator/>
-
-
 
             <form method="POST" action="{{ route('logout') }}" class="w-full">
                 @csrf
