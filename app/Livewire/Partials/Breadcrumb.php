@@ -6,6 +6,7 @@ use App\Helper\Context;
 use App\Livewire\Component\HorixtComponent;
 use App\Models\Project;
 use Illuminate\Support\Facades\Route;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class Breadcrumb extends HorixtComponent
@@ -201,6 +202,18 @@ class Breadcrumb extends HorixtComponent
 
         $this->breadcrumbs = $breadcrumbs;
     }
+
+    #[On('project-updated')]
+    public function handleProjectUpdated($name)
+    {
+        // Just replace the last breadcrumb label with the updated project name
+        if (!empty($this->breadcrumbs)) {
+            $lastIndex = count($this->breadcrumbs) - 1;
+
+            $this->breadcrumbs[$lastIndex]['label'] = $name;
+        }
+    }
+
     public function render()
     {
         return view('livewire.partials.breadcrumb');
