@@ -1,6 +1,6 @@
 <div class="ml-{{ $todo->parent_id ? '6' : '0' }} mb-1">
     <div
-        class="grid {{(\App\Helper\Context::isOrganization())? 'grid-cols-[minmax(260px,2fr)_repeat(6,minmax(150px,1fr))]' : 'grid-cols-[minmax(260px,2fr)_repeat(5,minmax(150px,1fr))]'}} min-w-[1024px] items-center gap-4 p-1 shadow-sm hover:shadow-md transition {{ $todo->parent_id ? '' : 'border-t ' }} border-b border-gray-200/20 dark:text-neutral-100">
+        class="grid {{(\App\Helper\Context::isOrganization())? 'grid-cols-[minmax(260px,2fr)_repeat(6,minmax(150px,1fr))]' : 'grid-cols-[minmax(260px,2fr)_repeat(5,minmax(150px,1fr))]'}} min-w-fit items-center gap-4 p-1 shadow-sm hover:shadow-md transition {{ $todo->parent_id ? '' : 'border-t ' }} border-b border-gray-200/20 dark:text-neutral-100">
         <div class="flex items-center space-x-2 w-full">
             @if(!$assignedToMe)
                 <button wire:click="toggleExpanded"
@@ -27,7 +27,7 @@
                         {{ $todo->name }}
                     </p>
                     @if(strlen($todo->name) >= 20)
-                        <span class="flex items-center justify-center w-fit whitespace-nowrap break-keep opacity-0 absolute z-50 -top-10 left-0 py-1 px-1.5
+                        <span class="pointer-events-none flex items-center justify-center w-fit whitespace-nowrap break-keep opacity-0 absolute z-50 -top-10 left-0 py-1 px-1.5
                          bg-zinc-100 border border-zinc-300 dark:bg-zinc-700 dark:border-zinc-600
                          rounded-lg group-hover:opacity-100 transition-opacity duration-200
                          text-sm text-zinc-800 dark:text-zinc-200">
@@ -203,9 +203,12 @@
                 @endforeach
             </div>
         </div>
-        <div>
-            Comments
-        </div>
+
+        <livewire:partials.todo.todo-comment
+            :todo="$todo"
+            wire:key="comment-todo-{{ $todo->id }}"
+        />
+
         <div> {{--Actions--}}
             @if(\App\Helper\Context::isPersonal() ||  auth()->user()->can(\App\Enums\PermissionEnum::TODOS_DELETE))
                 <flux:button :loading="false" :square="true" size="xs" icon="trash-2" variant="subtle"

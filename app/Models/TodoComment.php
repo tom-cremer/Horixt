@@ -24,6 +24,11 @@ class TodoComment extends Model
         return $this->belongsTo(TodoComment::class, 'parent_id');
     }
 
+    public function children()
+    {
+        return $this->hasMany(TodoComment::class, 'parent_id');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

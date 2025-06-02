@@ -19,7 +19,7 @@
     <div class="overflow-auto h-full w-full font-lexend">
 
         <div
-            class="grid {{(\App\Helper\Context::isOrganization())? 'grid-cols-[minmax(260px,2fr)_repeat(6,minmax(150px,1fr))]' : 'grid-cols-[minmax(260px,2fr)_repeat(5,minmax(150px,1fr))]'}} gap-2 min-w-[1024px]">
+            class="grid {{(\App\Helper\Context::isOrganization())? 'grid-cols-[minmax(260px,2fr)_repeat(6,minmax(150px,1fr))]' : 'grid-cols-[minmax(260px,2fr)_repeat(5,minmax(150px,1fr))]'}} min-w-fit items-center gap-4 p-1">
             <div class="flex items-center gap-2.5">
                 <flux:text variant="subtle" class="font-medium">Aa</flux:text>
                 <flux:text variant="subtle" size="lg">Todo name</flux:text>

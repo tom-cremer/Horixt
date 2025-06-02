@@ -74,7 +74,8 @@ class Todo extends Model
     /*-------------COMMENTS RELATIONSHIPS--------------*/
     public function comments(): HasMany
     {
-        return $this->hasMany(TodoComment::class, 'todo_id');
+        return $this->hasMany(TodoComment::class, 'todo_id')
+            ->whereNull('parent_id');
     }
 
 
