@@ -14,7 +14,7 @@
         @elseif($activeFeature === 'insights')
             <livewire:insights :projectId="$project->id"/>
         @elseif($activeFeature === 'settings')
-            Settings
+            <livewire:partials.project.setting :projectId="$project->id"/>
         @endif
     </div>
 </div>
