@@ -6,9 +6,12 @@ use App\Helper\Context;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Laravel\Scout\Searchable;
 
 class Project extends Model
 {
+    use Searchable;
+
     protected $fillable = [
         'name',
         'description',
@@ -23,6 +26,15 @@ class Project extends Model
     protected $casts = [
         'due_at' => 'date',
     ];
+
+    public function toSearchableArray()
+    {
+        return [
+            'name' => $this->name,
+            'description' => $this->description,
+            'due_at' => $this->due_at ? $this->due_at->toDateString() : null,
+        ];
+    }
 
     public function todos(): HasMany
     {
@@ -50,4 +62,5 @@ class Project extends Model
                 ->whereNull('organization_id');
         }
     }
+
 }
