@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "Horixt",
+    "name": "horixt/project-manager",
     "type": "project",
     "description": "The best project manager you will ever use :)",
     "keywords": [
@@ -13,6 +13,7 @@
     "require": {
         "php": "^8.2",
         "laravel/framework": "^12.0",
+        "laravel/scout": "^10.15",
         "laravel/tinker": "^2.10.1",
         "livewire/flux": "^2.1",
         "livewire/volt": "^1.6.7",
