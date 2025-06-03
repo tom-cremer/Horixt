@@ -8,9 +8,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Laravel\Scout\Searchable;
 
 class Todo extends Model
 {
+    use Searchable;
+
     protected $fillable = [
         'name',
         'description',
@@ -24,6 +27,13 @@ class Todo extends Model
         'organization_id',
         'parent_id',
     ];
+
+    public function toSearchableArray()
+    {
+        return [
+            'name' => $this->name,
+        ];
+    }
 
     /*-------------PROJECT RELATIONSHIPS--------------*/
     public function project() :HasOne

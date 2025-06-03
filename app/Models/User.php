@@ -14,13 +14,14 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Laravel\Scout\Searchable;
 use Spatie\Permission\Traits\HasRoles;
 
 #[ObservedBy(UserObserver::class)]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasUuid, HasRoles, HasFactory, Notifiable;
+    use HasUuid, HasRoles, HasFactory, Notifiable, Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -53,6 +54,14 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+        ];
+    }
+
+    public function toSearchableArray()
+    {
+        return [
+            'name' => $this->name,
+            'email' => $this->email,
         ];
     }
 

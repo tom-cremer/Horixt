@@ -1,14 +1,7 @@
 <div>
     <flux:header class="flex justify-end gap-3.5 px-0!">
         <livewire:partials.breadcrumb/>
-        <div class="max-w-[500px] w-full">
-            <flux:input
-                size="sm"
-                wire:model="search"
-                type="text"
-                placeholder="{{ __('Search') }}"
-            />
-        </div>
+        <livewire:partials.search/>
         <div class="flex items-center gap-2">
             <flux:dropdown x-data align="end" position="bottom">
                 <flux:button variant="subtle" square class="group" size="sm" aria-label="Preferred color scheme">
