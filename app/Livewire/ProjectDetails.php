@@ -32,7 +32,7 @@ class ProjectDetails extends HorixtComponent
     ];
 
 
-    public $activeFeature = 'todos';
+    public $activeFeature;
 
     public function mount($projectid)
     {
@@ -56,11 +56,23 @@ class ProjectDetails extends HorixtComponent
                 return redirect()->route('personal.projects.index');;
             }
         }
+
+        $sessionKey = "project_feature_{$projectid}";
+        $storedFeature = session($sessionKey, 'todos');
+        $this->activeFeature = array_key_exists($storedFeature, $this->features)
+            ? $storedFeature
+            : 'todos';
+
     }
 
     public function changeView(string $key)
     {
+        if (!array_key_exists($key, $this->features)) {
+            return;
+        }
+
         $this->activeFeature = $key;
+        session(["project_feature_{$this->project->id}" => $key]);
     }
 
 
