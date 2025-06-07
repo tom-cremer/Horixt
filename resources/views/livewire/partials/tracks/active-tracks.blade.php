@@ -14,7 +14,7 @@
         <span class="relative w-8 h-8 flex  items-center justify-center">
             @if(($activeTracks->count() > 0))
                 <span
-                    class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
+                    class="absolute inline-flex h-full w-full max-h-3.5 max-w-3.5 animate-ping rounded-full bg-green-400 opacity-60"></span>
             @endif
           <span
               class="relative inline-flex size-3 rounded-full {{!($activeTracks->count() > 0)? 'bg-zinc-500' : 'bg-green-500'}}"></span>
