@@ -1,79 +1,131 @@
-<div class="container mx-auto px-4 py-8 overflow-y-auto">
-    <div class="mb-6">
-        <p class="text-gray-600 dark:text-gray-400">Track your performance and analytics</p>
+<div class=" overflow-y-auto h-full font-lexend">
+    <div class="flex items-center justify-between ">
+        Sub-Menu
+
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 " >
-        {{-- Summary Card --}}
-        <div class="bg-white dark:bg-zinc-700 rounded-lg shadow p-6">
-            <flux:heading level="3" size="lg">Overview</flux:heading>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
+        {{--Weekly summary--}}
+        <div class="flex flex-col p-2.5 gap-2.5
+        bg-white dark:bg-zinc-700 border border-zinc-200
+        dark:border-zinc-600 rounded-lg shadow-sm"
+             wire:key="weekly-summary"
+        >
+            <div class="flex flex-col gap-0.5">
+                <flux:heading class="text-lg font-bold">Weekly Summary</flux:heading>
+            </div>
+            <div class="grid grid-cols-7 gap-2 items-baseline">
+                @foreach($this->formatWeeklyCompletedTodo() as $day)
+                    <flux:tooltip>
+                        <div class="grid grid-cols-1 grid-rows-[1fr_auto] justify-center gap-1 min-h-[120px]">
+                            {{--Custom vertical progress bar--}}
 
-            <div class="space-y-3">
+                            <div class="relative group flex w-full h-full bg-[#7F76FF]/10 overflow-hidden rounded-2xl"
+                                 wire:key="day-{{ $day->date }}">
+                                <div class="mt-auto w-full bg-[#7F76FF] rounded-sm transition-[height] duration-500 ease-in-out"
+                                     style="height: {{ $day->percentage }}%"></div>
+                            </div>
+                            <div class="mx-auto">
 
-                <div class="flex justify-between items-center">
-                    <span class="text-gray-600 dark:text-gray-400">Completed Today</span>
-                    <span class="font-medium text-gray-900 dark:text-white">{{ $project->todos()->where('is_done', true)->count() ?? 0 }}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-gray-600 dark:text-gray-400">Total Progress</span>
-                    <span class="font-medium text-gray-900 dark:text-white">{{ $progressPercentage ?? 0 }}%</span>
-                </div>
+                                <flux:text variant="strong" class="text-xs ">{{substr($day->day, 0, 3)}}</flux:text>
+                            </div>
+                        </div>
+
+                        <flux:tooltip.content class="max-w-[10rem] space-y-2">
+                            <p>{{$day->count}} Todos were completed on this day</p>
+                        </flux:tooltip.content>
+                    </flux:tooltip>
+
+                @endforeach
             </div>
         </div>
 
-        {{-- Recent Activity Card --}}
-        <div class="bg-white dark:bg-zinc-700 rounded-lg shadow p-6">
-            <flux:heading level="3" size="lg" >Recent Activity</flux:heading>
-            <div class="space-y-4">
-                @forelse($project->todos->take(3) ?? [] as $activity)
-                    <div class="flex items-center space-x-3">
-                        <div class="flex-shrink-0">
-                            <span class="inline-block h-2 w-2 rounded-full bg-green-500"></span>
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-sm text-gray-600 dark:text-gray-400">
-                                {{ $activity->name ?? 'Activity description' }}
-                            </p>
-                            <p class="text-xs text-gray-500 dark:text-gray-500">
-                                {{ $activity->created_at?->locale('en')->diffForHumans() ?? 'Recently' }}
-                            </p>
-                        </div>
-                    </div>
-                @empty
-                    <p class="text-gray-500 dark:text-gray-400">No recent activity</p>
-                @endforelse
+        {{--<div class="flex flex-col p-2.5 gap-2.5
+        bg-white dark:bg-zinc-700 border border-zinc-200
+        dark:border-zinc-600 rounded-lg shadow-sm">
+            <div class="flex flex-col gap-0.5">
+                <flux:heading class="text-lg font-bold">Global overview</flux:heading>
             </div>
-        </div>
+            <div class="flex justify-center items-center h-28 overflow-hidden">
 
-        {{-- Performance Metrics Card --}}{{--
-        <div class="bg-white dark:bg-zinc-700 rounded-lg shadow p-6">
-            <flux:heading level="3" size="lg" >Performance</flux:heading>
+                <div x-data="{
+                    progress: 0,
+                    init() {
+                        this.progress = {{$this->totalPercentage()}};
+                    }}"
+                    class="relative h-48 w-48 overflow-hidden transform translate-y-1/4">
+                    <div class="absolute h-48 w-48 top-0 left-0 border-8 border-[#7F76FF]/15 rounded-full">
 
-            <div class="space-y-4">
-                <div>
-                    <div class="flex justify-between mb-1">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Daily Goal Progress</span>
-                        <span class="text-sm font-medium text-gray-900 dark:text-white">70%</span>
                     </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-green-500 h-2 rounded-full" style="width: 70%"></div>
+                    <div class="absolute h-48 w-48 top-0 left-0 border-8 border-b-[#7F76FF] rounded-full "
+                    style=" transform: rotate({{ ($this->totalPercentage() / 100) * 360 }}deg); ">
+
+                    </div>
+                    <div
+                        class="absolute w-48 h-48 top-1/2 left-0  bg-white dark:bg-zinc-700 border-8 border-white dark:border-zinc-700">
+                    </div>
+
+                    --}}{{--Rounded ball left--}}{{--
+                    <div class="absolute  w-2 h-2 top-1/2 left-0 transform -translate-y-1/2  bg-[#7F76FF] rounded-full">
+                    </div>
+                    --}}{{--Rounded ball left--}}{{--
+                    <div class="absolute w-2 h-2 top-1/2 right-0 transform -translate-y-1/2 bg-[#7F76FF]  rounded-full">
                     </div>
                 </div>
 
-                <div>
-                    <div class="flex justify-between mb-1">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Weekly Completion Rate</span>
-                        <span class="text-sm font-medium text-gray-900 dark:text-white">85%</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-blue-500 h-2 rounded-full" style="width: 85%"></div>
-                    </div>
-                </div>
             </div>
+
         </div>--}}
+        {{--Global overview--}}
+        <div class="flex flex-col p-2.5 gap-2.5
+        bg-white dark:bg-zinc-700 border border-zinc-200
+        dark:border-zinc-600 rounded-lg shadow-sm">
+            <div class="flex flex-col gap-0.5">
+                <flux:heading class="text-lg font-bold">Global overview</flux:heading>
+            </div>
+
+            <div class="flex justify-center items-center h-28 overflow-hidden ">
+                <div
+                    class="relative h-48 w-48 overflow-hidden translate-y-1/4">
+
+                    <!-- Background circle -->
+                    <div class="absolute h-48 w-48 top-0 left-0 border-8 border-[#7F76FF]/15 rounded-full"></div>
+
+                    <!-- Animated progress arc -->
+                    <div class="absolute h-48 w-48 top-0 left-0 border-8 border-b-[#7F76FF] border-r-[#7F76FF] border-transparent
+                    rounded-full transition-transform duration-700 ease-in-out transform origin-center rotate-45 "
+                         :style="`transform: rotate({{(($this->totalPercentage()/100)*180)}}deg)`">
+                    </div>
+
+                    <!-- Cover inner circle -->
+                    <div
+                        class="absolute w-48 h-48 top-1/2 left-0 bg-white dark:bg-zinc-700 border-8 border-white dark:border-zinc-700">
+                    </div>
+
+                    <!-- Left Ball -->
+                    <div
+                        class="absolute w-2 h-2 top-1/2 left-0 transform -translate-y-1/2 bg-[#7F76FF] rounded-full"></div>
+
+                    <!-- Right Ball (conditionally colored/gray) -->
+                    <div class="absolute w-2 h-1 top-1/2 right-0 transform -translate-y-1/2 rounded-full
+                        {{ $this->totalPercentage() >= 100 ? 'bg-[#7F76FF]' : 'bg-[#edebff] dark:bg-[#494962]' }}"
+                         style="border-radius: 0 0 8px 8px ;">
+                    </div>
+
+
+                    <div class="h-1/2 w-full flex flex-col justify-end items-center">
+                        <flux:text variant="strong" class="pb-2 text-3xl font-bold text-center">
+                            {{ $this->totalPercentage() }}%
+                        </flux:text>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <div>
+</div>
+{{-- <div>
         @forelse($project->todos as $todo)
             <div class="flex items-center space-x-3 mt-4">
                 <div class="flex-shrink-0">
@@ -82,12 +134,11 @@
                 <div class="flex-1">
                     {{$todo->name}}
                     <p class="text-xs text-gray-500 dark:text-gray-500">
-                        {{ Carbon\CarbonInterval::seconds($this->totalDuration($todo) ?? 0)->cascade()->locale('en')->forHumans(['parts' => 2]) }}
+                        {{ Carbon\CarbonInterval::seconds($todo->tracks()->sum('durations') ?? 0)->cascade()->locale('en')->forHumans(['parts' => 2]) }}
                     </p>
                 </div>
             </div>
             @empty
                 <p class="text-gray-500 dark:text-gray-400">No data available</p>
         @endforelse
-    </div>
-</div>
+    </div>--}}
