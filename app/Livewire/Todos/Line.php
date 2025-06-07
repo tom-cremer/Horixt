@@ -116,7 +116,14 @@ class Line extends HorixtComponent
 
     public function updateStatus($status_id)
     {
-        $this->todo->update(['status_id' => $status_id]);
+        if ($status_id === Status::COMPLETED) {
+            $this->todo->update(['status_id' => $status_id,
+                'completed_at' => now()]);
+        } else {
+            $this->todo->update(['status_id' => $status_id,
+                'completed_at' => null]);
+        }
+
     }
 
     public function deleteTodo()
