@@ -304,6 +304,22 @@ select:focus[data-flux-control] {
     @apply size-4;
 } */
 
+
+/* === Animations === */
+
+/*Float*/
+@keyframes float {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-7px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
 /* === LIGHT MODE === 100 */
 .red       { background: #ffe2e2; }
 .orange    { background: #ffedd4; }
