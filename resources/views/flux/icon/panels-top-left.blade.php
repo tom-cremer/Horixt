@@ -18,7 +18,7 @@ $classes = Flux::classes('shrink-0')
     });
 
 $strokeWidth = match ($variant) {
-    'outline' => 2,
+    'outline' => 1.5,
     'mini' => 2.25,
     'micro' => 2.5,
 };
