@@ -320,6 +320,16 @@ select:focus[data-flux-control] {
     }
 }
 
+@keyframes gradient-x {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+.animate-gradient-x {
+    background-size: 200% 100%;
+    animation: gradient-x 10s ease infinite;
+}
+
 /* === LIGHT MODE === 100 */
 .red       { background: #ffe2e2; }
 .orange    { background: #ffedd4; }

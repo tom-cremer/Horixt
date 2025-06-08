@@ -5,7 +5,7 @@
 
 </head>
 <body
-    class="bg-[#FDFDFC] dark:bg-zinc-800 text-[#1b1b18] flex flex-col  px-4 pt-4 lg:px-5 lg:pt-5 min-h-screen font-lexend max-w-6xl mx-auto">
+    class="bg-[#FDFDFC]  dark:bg-zinc-800 text-[#1b1b18] flex flex-col   pt-4  lg:pt-5 min-h-screen font-lexend max-w-6xl mx-auto">
 
 
 <section class="relative h-screen max-h-[1024px] flex flex-col items-center px-6 bg-[#FDFDFC] dark:bg-zinc-800 overflow-hidden">
@@ -82,7 +82,7 @@
         </p>
         <div class="flex justify-center gap-4 flex-wrap">
             <a href="{{ route('register') }}"
-               class="px-6 py-3 bg-[#7F76FF] text-white rounded-xl shadow hover:bg-[#4733FF] font-semibold transition">
+               class="px-6 py-3 bg-[#7F76FF] text-white rounded-xl shadow hover:bg-[#675CFF] font-semibold transition">
                 Get Started
             </a>
             <a href="#features"
@@ -109,6 +109,18 @@
      </div>
  </div>
 </section>
+
+<section class="relative py-6 text-white text-center isolate shadow-lg rounded-xl">
+    <!-- Gradient background -->
+    <div class="absolute rounded-xl inset-0 bg-[linear-gradient(90deg,_#8b67f8,_#654aff,_#3935ff)] animate-gradient-x z-0"></div>
+
+    <div class="relative z-20 px-4">
+        <p class="text-xl md:text-2xl font-semibold ">
+            Ready to transform your workflow?
+        </p>
+    </div>
+</section>
+
 
 
 <!-- Features Section -->
@@ -146,8 +158,10 @@
     </div>
 </section>
 
-<section class="py-28 relative overflow-hidden">
-    <div class="max-w-6xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-12">
+<section class="py-20 relative bg-[#FDFDFC] dark:bg-zinc-700 rounded-4xl overflow-hidden">
+
+
+    <div class="max-w-6xl mx-auto px-10 flex flex-col lg:flex-row items-center gap-12">
         <div class="flex-1 space-y-6">
             <h2 class="text-3xl md:text-4xl font-extrabold text-zinc-900 dark:text-white">
                 One space. Every workflow.
@@ -170,8 +184,7 @@
 
         <div class="flex-1">
             <div class="rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-2xl">
-                <!-- Placeholder: Replace with animated dashboard demo/gif/video -->
-                <img src="/images/dashboard-mock.png" alt="Dashboard Demo" class="w-full">
+                <img src="https://placehold.co/300x250" alt="Dashboard Demo" class="w-full">
             </div>
         </div>
     </div>
@@ -186,7 +199,7 @@
         </p>
         <div class="flex flex-col sm:flex-row justify-center gap-4">
             <a href="{{ route('register') }}"
-               class="px-6 py-3 bg-[#7F76FF] text-white rounded-xl shadow hover:bg-[#4733FF] font-semibold transition">
+               class="px-6 py-3 bg-[#7F76FF] text-white rounded-xl shadow hover:bg-[#675CFF] font-semibold transition">
                 Get Started
             </a>
         </div>
