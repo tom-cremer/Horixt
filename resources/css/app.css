@@ -331,24 +331,26 @@ select:focus[data-flux-control] {
 }
 
 /* === LIGHT MODE === 100 */
-.red       { background: #ffe2e2; }
-.orange    { background: #ffedd4; }
-.amber     { background: #fef3c6; }
-.yellow    { background: #fef9c2; }
-.lime      { background: #ecfcca; }
-.green     { background: #dcfce7; }
-.emerald   { background: #d0fae5; }
-.teal      { background: #cbfbf1; }
-.cyan      { background: #cefafe; }
-.sky       { background: #dff2fe; }
-.blue      { background: #dbeafe; }
-.indigo    { background: #e0e7ff; }
-.violet    { background: #ede9fe; }
-.purple    { background: #ede9fe; }
-.fuchsia   { background: #fae8ff; }
-.pink      { background: #fce7f3; }
-.rose      { background: #ffe4e6; }
-.zinc      { background: #f4f4f5; }
+/* === LIGHT MODE === matches bg-{color}-400/20–25 */
+.red       { background: rgba(248, 113, 113, 1); }     /* red-400 */
+.orange    { background: rgba(251, 146, 60, 1); }      /* orange-400 */
+.amber     { background: rgba(251, 191, 36, 1); }     /* amber-400 */
+.yellow    { background: rgba(250, 204, 21, 1); }     /* yellow-400 */
+.lime      { background: rgba(163, 230, 53, 1); }     /* lime-400 */
+.green     { background: rgba(74, 222, 128, 1); }      /* green-400 */
+.emerald   { background: rgba(52, 211, 153, 1); }      /* emerald-400 */
+.teal      { background: rgba(45, 212, 191, 1); }      /* teal-400 */
+.cyan      { background: rgba(34, 211, 238, 1); }      /* cyan-400 */
+.sky       { background: rgba(56, 189, 248, 1); }      /* sky-400 */
+.blue      { background: rgba(96, 165, 250, 1); }      /* blue-400 */
+.indigo    { background: rgba(129, 140, 248, 1); }     /* indigo-400 */
+.violet    { background: rgba(167, 139, 250, 1); }     /* violet-400 */
+.purple    { background: rgba(192, 132, 252, 1); }     /* purple-400 */
+.fuchsia   { background: rgba(232, 121, 249, 1); }     /* fuchsia-400 */
+.pink      { background: rgba(244, 114, 182, 1); }     /* pink-400 */
+.rose      { background: rgba(251, 113, 133, 1); }     /* rose-400 */
+.zinc      { background: rgba(161, 161, 170, 1); }    /* zinc-400 */
+
 
 
 /* === LIGHT TEXT === 700 */
@@ -373,24 +375,25 @@ select:focus[data-flux-control] {
 
 
 /* === DARK MODE OVERRIDES === 400 op40 */
-.dark .red       { background: #ab1c1c; }
-.dark .orange    { background: #863f19; }
-.dark .amber     { background: #7c4e12; }
-.dark .yellow    { background: #78630f; }
-.dark .lime      { background: #587013; }
-.dark .green     { background: #365314; }
-.dark .emerald   { background: #166534; }
-.dark .teal      { background: #065F46; }
-.dark .cyan      { background: #0b695f; }
-.dark .sky       { background: #327983; }
-.dark .blue      { background: #0369A1; }
-.dark .indigo    { background: #1D4ED8; }
-.dark .violet    { background: #4338CA; }
-.dark .purple    { background: #6D28D9; }
-.dark .fuchsia   { background: #7E22CE; }
-.dark .pink      { background: #af1ca3; }
-.dark .rose      { background: #ad295f; }
-.dark .zinc      { background: #3F3F46; }
+/* === DARK MODE === matches dark:bg-{color}-400/40 */
+.dark .red       { background: rgba(248, 113, 113, 1); }
+.dark .orange    { background: rgba(251, 146, 60, 1); }
+.dark .amber     { background: rgba(251, 191, 36, 1); }
+.dark .yellow    { background: rgba(250, 204, 21, 1); }
+.dark .lime      { background: rgba(163, 230, 53, 1); }
+.dark .green     { background: rgba(74, 222, 128, 1); }
+.dark .emerald   { background: rgba(52, 211, 153, 1); }
+.dark .teal      { background: rgba(45, 212, 191, 1); }
+.dark .cyan      { background: rgba(34, 211, 238, 1); }
+.dark .sky       { background: rgba(56, 189, 248, 1); }
+.dark .blue      { background: rgba(96, 165, 250, 1); }
+.dark .indigo    { background: rgba(129, 140, 248, 1); }
+.dark .violet    { background: rgba(167, 139, 250, 1); }
+.dark .purple    { background: rgba(192, 132, 252, 1); }
+.dark .fuchsia   { background: rgba(232, 121, 249, 1); }
+.dark .pink      { background: rgba(244, 114, 182, 1); }
+.dark .rose      { background: rgba(251, 113, 133, 1); }
+.dark .zinc      { background: rgba(161, 161, 170, 1); }
 
 
 /* === DARK TEXT === 200 */
