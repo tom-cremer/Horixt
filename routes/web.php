@@ -29,7 +29,7 @@ Route::prefix('/personal')
         Route::redirect('settings', 'settings/profile')->name('settings');
         Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
         Volt::route('settings/password', 'settings.password')->name('settings.password');
-        Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
+        Volt::route('settings/preferences', 'settings.preferences')->name('settings.preferences');
 
         Route::get('/dashboard', Dashboard::class)->name('dashboard');
         Route::get('/organizations', Organizations::class)->name('organizations');
@@ -48,7 +48,7 @@ Route::prefix('/organization/{slug}')
         Route::redirect('settings', 'settings/profile')->name('settings');
         Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
         Volt::route('settings/password', 'settings.password')->name('settings.password');
-        Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
+        Volt::route('settings/preferences', 'settings.preferences')->name('settings.preferences');
 
         Route::get('/dashboard', Dashboard::class)->name('dashboard');
         Route::get('/members', Members::class)->name('members');
