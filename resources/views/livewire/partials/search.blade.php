@@ -1,82 +1,95 @@
 {{-- The best athlete wants his opponent at his best. --}}
-{{--<div class="relative max-w-[500px] w-full">
-    <flux:input
-        size="sm"
-        wire:model.live="search"
-        wire:change="searchGlobal"
-        type="text"
-        placeholder="{{ __('Search') }}"
-    />
+<div
+    class="relative max-w-[500px] w-full"
+    x-data="{
+        showSuggestions: false,
+        raw: @entangle('search'),
+        mode: @entangle('mode'),
+        updateSuggestions() {
+            const trimmed = this.raw.trim();
+            this.showSuggestions = trimmed.startsWith('@') && !['@todos', '@project', '@member'].some(tag => trimmed.startsWith(tag));
+        },
+        setTag(tag) {
+            this.raw = tag + ' ';
+            this.showSuggestions = false;
+        }
+    }"
+    x-init="$watch('raw', () => updateSuggestions())"
+>
 
-    @if(!empty($searchResults))
-        <div class="absolute top-10 right-0 z-50 max-w-[500px] w-full h-[200px] overflow-auto
-        bg-white border border-zinc-300 dark:bg-zinc-700 dark:border-zinc-600 rounded-md shadow-lg
-        p-2 flex flex-col gap-2">
-            @foreach($searchResults as $key => $result)
-                {{$key}}
-                {{$result}}
-            @endforeach
+    {{-- Input with badge --}}
+    <div class="relative">
+        <flux:input
+            size="sm"
+            x-model="raw"
+            wire:model.live="search"
+            type="text"
+            wire:keydown.tab.prevent="updateMode"
+            wire:keydown.escape.window.prevent="resetSearch"
+            placeholder="{{ __('Search') }}"
+            class="z-10 bg-transparent text-black dark:text-white caret-black dark:caret-white"
+        />
+
+        @if($mode !== 'global')
+            <flux:badge :color="$modeColors[$mode] ?? 'gray'" size="sm"
+                        class="absolute z-20 top-1/2 right-3 transform -translate-y-1/2">
+                {{ '@' . $mode }}
+                <flux:badge.close wire:click="removeMode" class="cursor-pointer"/>
+            </flux:badge>
+        @endif
+    </div>
+
+    {{-- Suggestions dropdown --}}
+    <div
+        x-cloak
+        x-show="showSuggestions"
+        x-transition
+        class="absolute top-12 left-0 w-full z-50 bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-600
+               rounded-md shadow-md p-2 space-y-1"
+    >
+        <div @click="setTag('@todos')" class="px-3 py-1 cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700">
+            @todos
+        </div>
+        <div @click="setTag('@project')" class="px-3 py-1 cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700">
+            @project
+        </div>
+        <div @click="setTag('@member')" class="px-3 py-1 cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700">
+            @member
+        </div>
+    </div>
+
+    {{-- No results message --}}
+    @if($mode !== 'global' && empty($searchResults))
+        <div class="absolute top-12 left-0 w-full z-40 bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-600
+                    rounded-md shadow-lg p-2 text-sm text-zinc-500 dark:text-zinc-400">
+            {{ __('No results found.') }}
         </div>
     @endif
-</div>--}}
-<div x-data="{ query: $wire:entangle('search') }" class="relative max-w-[500px] w-full">
 
-    {{-- Mirror with styled badges --}}
-    {{--<div class="absolute inset-0 z-50 pointer-events-none px-3 py-[7px] text-sm font-normal
-                whitespace-pre-wrap leading-[1.5rem] text-transparent"
-         style="font-family: inherit;">
-
-        <template x-for="word in query.split(' ')" :key="word">
-            <template x-if="word.startsWith('@')">
-                <span class="inline-block bg-blue-500 text-white px-2 py-0.5 rounded-md mr-1">
-                    <span x-text="word"></span>
-                </span>
-            </template>
-            <template x-if="!word.startsWith('@')">
-                <span class="text-zinc-500 mr-1" x-text="word + ' '"></span>
-            </template>
-        </template>
-    </div>--}}
-
-    {{-- Real input field --}}
-    <flux:input
-        size="sm"
-        wire:model.live="search"
-        wire:change="searchGlobal"
-        x-model="query"
-        type="text"
-        clearable
-        class="relative z-10 bg-transparent text-black dark:text-white caret-black dark:caret-white"
-        placeholder="{{ __('Search') }}"
-    />
-
-
-    {{-- Search Results --}}
-    @if(!empty($searchResults))
-        <div class="absolute top-10 right-0 z-40 max-w-[500px] w-full h-[200px] overflow-auto
-                    bg-white border border-zinc-300 dark:bg-zinc-700 dark:border-zinc-600
-                    rounded-md shadow-lg p-2 flex flex-col gap-2">
-            @foreach($searchResults as $key => $result)
-                @if(!empty($result))
-                    <h3 class="text-lg font-semibold text-zinc-800 dark:text-zinc-200">
+    {{-- Search results --}}
+    @if(!empty($searchResults) && !empty($search))
+        <div class="absolute top-12 left-0 w-full z-40 max-h-[300px] overflow-y-auto
+                    bg-white border border-zinc-300 dark:bg-zinc-800 dark:border-zinc-600
+                    rounded-md shadow-lg p-2 space-y-4">
+            @foreach($searchResults as $key => $items)
+                <div>
+                    <flux:heading level="2" size="sm" class="mb-2">
                         {{ ucfirst($key) }}
-                    </h3>
-                    @foreach($result as $item)
+                    </flux:heading>
 
-                        <div class="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-600 rounded-md">
-                            <a href="#" class="text-blue-600 dark:text-blue-400">
-                                {{ $item['name'] }}
-                            </a>
-                            <p class="text-sm text-zinc-500 dark:text-zinc-400">{{ $item['description'] ?? $item['email'] }}</p>
-                        </div>
-                    @endforeach
-                    <span class="block w-full border-t border-t-white"></span>
-                @else
-                    <div class="p-2 text-zinc-500 dark:text-zinc-400">
-                        {{ __('No results found') }}
-                    </div>
-                @endif
+                    @forelse($items as $item)
+                        <a href="#" class="block p-2 rounded hover:bg-zinc-100 dark:hover:bg-zinc-700">
+                            <flux:text>{{ $item['name'] }}</flux:text>
+                            <flux:text variant="subtle" class="text-xs">
+                                {{ $item['description'] ?? $item['email'] ?? '' }}
+                            </flux:text>
+                        </a>
+                    @empty
+                        <div class="text-zinc-500 dark:text-zinc-400 text-sm">No {{ $key }} found.</div>
+                    @endforelse
+                </div>
             @endforeach
         </div>
     @endif
+
 </div>
