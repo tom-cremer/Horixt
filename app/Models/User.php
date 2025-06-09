@@ -157,4 +157,9 @@ class User extends Authenticatable
         return $this->hasMany(TodoComment::class, 'user_id');
     }
 
+    /*-------------PREFERRED ORGANIZATION--------------*/
+    public function preferredOrganization(): HasOne
+    {
+        return $this->hasOne(Organization::class, 'id', 'preferred_organization_id');
+    }
 }
