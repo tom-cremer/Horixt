@@ -121,7 +121,7 @@ new class extends Component {
     @include('partials.settings-heading')
 
     <x-settings.layout :heading="__('Profile')" :subheading="__('Update your name and email address')">
-        <form wire:submit="updateProfileInformation" class="my-6 w-full space-y-6">
+        <form wire:submit="updateProfileInformation" class="my-6 mx-2 w-full max-w-xl space-y-6">
 
             <flux:input type="file" wire:model="avatar" label="Avatar"/>
 
@@ -131,7 +131,13 @@ new class extends Component {
                     <flux:avatar size="xl" src="{{\Illuminate\Support\Facades\Storage::url(\auth()->user()->avatar->path)}}" />
                     <flux:button variant="danger" type="button" size="sm" wire:click="deleteAvatar">Delete Avatar</flux:button>
                 </div>
-
+            @else
+                <div class="mb-4 flex items-center gap-4">
+                    <flux:avatar size="xl" initials="{{auth()->user()->initials()}}"/>
+                    <flux:text class="text-zinc-500 dark:text-zinc-400">
+                        {{ __('No avatar set. Upload one to personalize your profile.') }}
+                    </flux:text>
+                </div>
             @endif
 
 
