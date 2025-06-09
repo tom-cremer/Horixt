@@ -94,7 +94,7 @@
 
     <!-- Dashboard Preview -->
  <div
-     class=" relative w-full max-w-5xl overflow-hidden max-h-1/2 z-0 opacity-30 dark:opacity-20 pointer-events-none mt-10">
+     class="mt-auto relative w-full max-w-5xl overflow-hidden max-h-1/2 z-0 opacity-30 dark:opacity-20 pointer-events-none ">
      <!-- Desktop Screen -->
      <div class="hidden md:block rounded-3xl overflow-hidden border border-gray-200 dark:border-zinc-800">
          <img src="https://placehold.co/800x500" alt="{{config('app.name')}} Dashboard Preview - Desktop" class="w-full">
@@ -120,7 +120,6 @@
         </p>
     </div>
 </section>
-
 
 
 <!-- Features Section -->
