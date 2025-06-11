@@ -142,7 +142,7 @@ class User extends Authenticatable
     /*-------------Avatar--------------*/
     public function avatar(): HasOne
     {
-        return $this->hasOne(Avatar::class);
+        return $this->hasOne(Avatar::class)->whereNull('organization_id');
     }
 
     /*-------------Super Admin--------------*/
