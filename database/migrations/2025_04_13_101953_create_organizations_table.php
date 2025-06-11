@@ -16,11 +16,6 @@ return new class extends Migration
             $table->uuid()->unique(); // Unique identifier for the organization directory of the file manager
             $table->string('name');
             $table->string('slug')->unique(); // Slug for the organization, used in URLs
-            $table->text('description')->nullable();
-            $table->string('website')->nullable();
-            $table->string('email')->nullable();
-            $table->string('phone')->nullable();
-            $table->string('logo')->nullable();
             $table->unsignedBigInteger('owner_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
