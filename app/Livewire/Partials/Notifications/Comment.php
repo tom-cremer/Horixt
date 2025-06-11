@@ -2,12 +2,12 @@
 
 namespace App\Livewire\Partials\Notifications;
 
+use App\Livewire\Component\HorixtComponent;
 use App\Models\Notification;
 use App\Models\Todo;
 use App\Models\User;
-use Livewire\Component;
 
-class Comment extends Component
+class Comment extends HorixtComponent
 {
 
     public $notificationId;

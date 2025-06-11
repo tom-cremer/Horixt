@@ -3,12 +3,12 @@
 namespace App\Livewire\Partials\Notifications;
 
 use App\Enums\NotificationType;
+use App\Livewire\Component\HorixtComponent;
 use App\Models\Notification;
 use App\Models\Todo;
 use App\Models\User;
-use Livewire\Component;
 
-class Assignment extends Component
+class Assignment extends HorixtComponent
 {
     public $notificationId;
     public $notification;
