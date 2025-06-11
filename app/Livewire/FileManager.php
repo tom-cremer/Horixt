@@ -6,7 +6,6 @@ use App\Livewire\Component\HorixtComponent;
 use App\Models\Directories;
 use App\Models\Files;
 use Flux\Flux;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Validate;
