@@ -28,18 +28,21 @@
             <flux:button variant="primary" class="mt-6" wire:click="createAccount">
                 Create Account
             </flux:button>
-        @elseif ($invite->status === 'pending')
-            <flux:button variant="primary" class="mt-6" wire:click="accept">
-                Accept Invitation
-            </flux:button>
         @elseif ($invite->status === 'expired')
             <flux:text size="sm" class="text-red-300 mt-6 max-w-md">
                 This invitation has expired.
             </flux:text>
+        @elseif ($invite->status === 'pending')
+            <flux:button variant="primary" class="mt-6" wire:click="accept">
+                Accept Invitation
+            </flux:button>
         @else
             <flux:text size="lg" class="text-emerald-300 mt-6 max-w-md">
                 This invitation has been accepted.
             </flux:text>
+            <flux:button variant="primary" class="mt-6" wire:click="redirectToOrg">
+                Go to Organization
+            </flux:button>
         @endif
 
         <flux:text size="sm" class="text-neutral-400/80! mt-6 max-w-md">

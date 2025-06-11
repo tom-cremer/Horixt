@@ -3,9 +3,11 @@
 namespace App\Livewire;
 
 use App\Enums\RoleEnum;
+use App\Helper\TimezoneHelper;
 use App\Livewire\Component\HorixtComponent;
 use App\Models\OrganizationInvites;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
@@ -33,6 +35,7 @@ class OrgInvite extends HorixtComponent
 
     public function accept()
     {
+        TimezoneHelper::set();
         // Logic to accept the invite
         if ($this->invited_user) {
             $this->invite->status = 'accepted';
@@ -45,6 +48,14 @@ class OrgInvite extends HorixtComponent
             session(['team_id' => $this->organization->id]);
             setPermissionsTeamId(session('team_id'));
             $this->invited_user->assignRole(RoleEnum::MEMBER->value);
+        }
+    }
+
+    public function redirectToOrg()
+    {
+        if ($this->invited_user) {
+            Auth::login($this->invited_user);
+            return redirect()->route('organization.dashboard', ['slug' => $this->organization->slug]);
         }
     }
 
