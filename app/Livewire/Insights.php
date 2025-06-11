@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Helper\TimezoneHelper;
 use App\Livewire\Component\HorixtComponent;
 use App\Models\Project;
 use App\Models\Status;
@@ -28,6 +29,7 @@ class Insights extends HorixtComponent
 
     public function getWeeklyCompletedTodo()
     {
+        TimezoneHelper::set();
         return $this->project->todos()
             ->where('status_id', Status::COMPLETED)
             ->whereNotNull('completed_at')
@@ -39,6 +41,7 @@ class Insights extends HorixtComponent
 
     public function formatWeeklyCompletedTodo(): array
     {
+        TimezoneHelper::set();
         $completedTodos = $this->getWeeklyCompletedTodo();
 
         $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -80,7 +83,15 @@ class Insights extends HorixtComponent
 
     public function totalPercentage()
     {
-        return round(($this->project->todos()->where('status_id', Status::COMPLETED)->whereNotNull('completed_at')->count() / $this->project->todos()->count()) * 100);
+        $completedTodos = $this->project->todos()
+            ->where('status_id', Status::COMPLETED)
+            ->whereNotNull('completed_at')
+            ->count();
+
+        if ($completedTodos === 0) {
+            return 0; // Avoid division by zero
+        }
+        return round(( $completedTodos/ $this->project->todos()->count()) * 100);
 
     }
 
