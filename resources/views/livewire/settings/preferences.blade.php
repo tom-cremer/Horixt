@@ -102,7 +102,7 @@
                                     </button>
                                     <div x-show="editStatus"
                                          @click.away="editStatus = false"
-                                         class="absolute top-full right-0 grid grid-cols-4 items-center justify-center gap-2 bg-zinc-100 dark:bg-zinc-700 p-2 rounded-md z-10 shadow-md min-w-32">
+                                         class="absolute top-full right-full grid grid-cols-4 items-center justify-center gap-2 bg-zinc-100 dark:bg-zinc-700 p-2 rounded-md z-10 shadow-md min-w-32">
                                         @foreach($colors as $color)
                                             <button wire:click="updateStatusColor({{ $status->id }}, {{ $color->id }})"
                                                     class="w-6 h-6 rounded-full {{ $color->alias }} focus:ring-2 ring-offset-2 ring-zinc-500"
@@ -139,7 +139,7 @@
                                     </button>
                                     <div x-show="editPriority"
                                          @click.away="editPriority = false"
-                                         class="absolute top-full right-0 grid grid-cols-4 items-center justify-center gap-2 bg-zinc-100 dark:bg-zinc-700 p-2 rounded-md z-10 shadow-md min-w-32">
+                                         class="absolute top-full right-full grid grid-cols-4 items-center justify-center gap-2 bg-zinc-100 dark:bg-zinc-700 p-2 rounded-md z-10 shadow-md min-w-32">
                                         @foreach($colors as $color)
                                             <button
                                                 wire:click="updatePriorityColor({{ $priority->id }}, {{ $color->id }})"
