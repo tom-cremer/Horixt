@@ -2,6 +2,9 @@
 
 namespace App\Livewire\Partials\Todo;
 
+use App\Helper\Context;
+use App\Helper\NotificationHelper;
+use App\Helper\TimezoneHelper;
 use App\Livewire\Component\HorixtComponent;
 use App\Models\Todo;
 use App\Models\TodoComment as TodoCommentModel;
@@ -43,6 +46,7 @@ class TodoComment extends HorixtComponent
 
     public function addComment()
     {
+        TimezoneHelper::set();
         $this->validate([
             'content' => 'required|string|max:300',
         ]);
@@ -53,11 +57,22 @@ class TodoComment extends HorixtComponent
             'comment' => $this->content,
             'is_private' => $this->is_private,
         ]);
+
+        if (Context::isOrganization()) {
+            foreach ($this->todo->assignees as $assignee) {
+                if ($assignee->id !== auth()->user()->id) {
+                    NotificationHelper::comment($this->todo->id, $assignee->id, auth()->user()->id);
+                }
+            }
+        }
+
+
         $this->reset(['content']);
     }
 
     public function replyToComment($commentId)
     {
+        TimezoneHelper::set();
         $this->validate([
             "replyContent.$commentId" => 'required|string|max:300',
         ]);
@@ -74,6 +89,7 @@ class TodoComment extends HorixtComponent
 
     public function editComment($commentId)
     {
+        TimezoneHelper::set();
         $comment = TodoCommentModel::findOrFail($commentId);
         $this->editingContent = $comment->comment;
         $this->editingCommentId = $commentId;
@@ -81,6 +97,7 @@ class TodoComment extends HorixtComponent
 
     public function updateComment()
     {
+        TimezoneHelper::set();
         $this->validate([
             'editingContent' => 'required|string|max:300',
         ]);
@@ -103,6 +120,7 @@ class TodoComment extends HorixtComponent
 
     public function editReply($replyId)
     {
+        TimezoneHelper::set();
         $reply = TodoCommentModel::findOrFail($replyId);
         $this->editingReplyContent = $reply->comment;
         $this->editingReplyId = $replyId;
@@ -110,6 +128,7 @@ class TodoComment extends HorixtComponent
 
     public function updateReply()
     {
+        TimezoneHelper::set();
         $this->validate([
             'editingReplyContent' => 'required|string|max:300',
         ]);
