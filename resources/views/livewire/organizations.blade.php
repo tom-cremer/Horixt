@@ -11,9 +11,18 @@
                 wire:key="organization-{{ $organization->id }}"
             >
                 <div class="grid grid-cols-[auto_1fr] items-center gap-4">
-                    <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center">
-                        {{substr($organization->name, 0, 1)}}
-                    </div>
+                    @if($organization->avatar)
+                        <flux:avatar tooltip="{{$organization->name}}" size="lg"
+                                     class="ring-0! ring-transparent!"
+                                     src="{{\Illuminate\Support\Facades\Storage::url($organization->avatar->path)}}"/>
+                    @else
+                        <flux:avatar tooltip="{{$organization->name}}" size="lg"
+                                     name="{{$organization->name}}"
+                                     class="ring-0! ring-transparent!²"
+                                     color="auto"
+                                     color:seed="{{ $organization->id }}"
+                                     initials:single/>
+                    @endif
                     <div class="flex flex-col">
                         <flux:heading size="lg" class="mb-0! font-lexend">{{$organization->name}}</flux:heading>
                         <flux:subheading class="font-lexend">{{$organization->description}}</flux:subheading>
@@ -38,8 +47,12 @@
                                                      class="ring-0! ring-transparent!"
                                                      src="{{\Illuminate\Support\Facades\Storage::url($member->avatar->path)}}"/>
                                     @else
-                                        <flux:avatar tooltip="{{$member->name}}" size="sm" name="{{$member->name}}"
-                                                     class="ring-0! ring-transparent!"/>
+                                        <flux:avatar tooltip="{{$member->name}}" size="sm"
+                                                     name="{{$member->name}}"
+                                                     class="ring-0! ring-transparent!²"
+                                                     color="auto"
+                                                     color:seed="{{ $member->id }}"
+                                                     initials:single/>
                                     @endif
                                 @endforeach
                                 @if(count($members) >= 5)
@@ -54,10 +67,15 @@
                         <div class="flex items-center justify-center">
                             @if($organization->owner->avatar)
                                 <flux:avatar tooltip="{{$organization->owner->name}}" size="sm"
+                                             class="ring-0! ring-transparent!"
                                              src="{{\Illuminate\Support\Facades\Storage::url($organization->owner->avatar->path)}}"/>
                             @else
                                 <flux:avatar tooltip="{{$organization->owner->name}}" size="sm"
-                                             name="{{$organization->owner->name}}"/>
+                                             name="{{$organization->owner->name}}"
+                                             class="ring-0! ring-transparent!²"
+                                             color="auto"
+                                             color:seed="{{ $organization->owner->id }}"
+                                             initials:single/>
                             @endif
                         </div>
 
@@ -84,19 +102,12 @@
     </div>
 
     <flux:modal name="add-organization" class="md:w-96">
-        <div class="space-y-6">
+        <div class="space-y-4">
             <div>
                 <flux:heading size="lg">Add Organization</flux:heading>
             </div>
             <flux:input label="Name" placeholder="Org Name" wire:model="name"/>
             <flux:input label="Slug" placeholder="Slug" wire:model="slug"/>
-
-
-            <flux:input label="Description" placeholder="Description" wire:model="description"/>
-            <flux:input label="Email" placeholder="Email" wire:model="email"/>
-            <flux:input label="Website" placeholder="Website" wire:model="website"/>
-            <flux:input label="Phone" placeholder="Phone" wire:model="phone"/>
-
 
             <div class="flex">
                 <flux:spacer/>
