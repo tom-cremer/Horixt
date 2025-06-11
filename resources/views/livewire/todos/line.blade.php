@@ -71,7 +71,7 @@
                     @endforelse
                 </flux:avatar.group>
 
-                @if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::TODOS_ASSIGN->value))
+                @if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::TODOS_ASSIGN))
 
                     <flux:button square icon="user-round-cog" size="xs" variant="subtle"
                                  x-on:click="assigneeModal = true"
