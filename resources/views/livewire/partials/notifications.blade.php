@@ -1,6 +1,5 @@
 <div
-    x-data="{ open: false,
-      allNotifications: 'all',}"
+    x-data="{ open: false,allNotifications: true}"
     class="relative"
     x-on:keydown.escape.window="open = false"
     wire:poll.10s>
@@ -40,9 +39,9 @@
 
             <div class="flex items-center gap-2">
                 <flux:button variant="ghost" size="xs" class="relative font-medium!"
-                             x-on:click="allNotifications = 'all'">
+                             x-on:click="allNotifications = true">
                     All Notifications
-                    <span x-show="allNotifications === 'all'"
+                    <span x-show="allNotifications"
                           x-cloak
                           x-transition:enter="transition ease-out duration-150"
                           x-transition:enter-start="opacity-0 transform scale-95"
@@ -54,24 +53,9 @@
                           class="absolute w-full top-full left-0 mt-1 h-0.5 rounded-full bg-zinc-600 dark:bg-white"></span>
                 </flux:button>
                 <flux:button variant="ghost" size="xs" class=" relative font-medium!"
-                             x-on:click="allNotifications = 'unread'">
+                             x-on:click="allNotifications = false">
                     Unread
-                    <span x-show="allNotifications === 'unread'"
-                          x-cloak
-                          x-transition:enter="transition ease-out duration-150"
-                          x-transition:enter-start="opacity-0 transform scale-95"
-                          x-transition:enter-end="opacity-100 transform scale-100"
-                          x-transition:leave="transition ease-in duration-100"
-                          x-transition:leave-start="opacity-100 transform scale-100"
-                          x-transition:leave-end="opacity-0 transform scale-95"
-
-                          class="absolute w-full top-full left-0 mt-1 h-0.5 rounded-full bg-zinc-600 dark:bg-white"></span>
-                </flux:button>
-
-                <flux:button variant="ghost" size="xs" class=" relative font-medium!"
-                             x-on:click="allNotifications = 'invites'">
-                    Invites
-                    <span x-show="allNotifications === 'invites'"
+                    <span x-show="!allNotifications"
                           x-cloak
                           x-transition:enter="transition ease-out duration-150"
                           x-transition:enter-start="opacity-0 transform scale-95"
@@ -87,7 +71,7 @@
         <flux:separator/>
 
         <div
-            x-show="allNotifications === 'all'"
+            x-show="allNotifications"
             class="flex flex-col gap-2  overflow-y-auto max-h-full"
         wire:key="all-notifications-{{ $notifications->count() }}">
             @if(empty($notifications))
@@ -103,11 +87,11 @@
                             </flux:text>
                             <div class="flex gap-2 mt-2">
                                 <flux:button variant="primary" size="xs"
-                                             wire:click="acceptInvite({{ $invite->data['token'] }})">
+                                           wire:click="accept({{ $invite->id }})" >
                                     Accept
                                 </flux:button>
                                 <flux:button variant="filled" size="xs"
-                                             wire:click="declineInvite({{ $invite->data['token'] }})">Decline
+                                             wire:click="decline({{ $invite->id }})">Decline
                                 </flux:button>
                             </div>
                         </div>
@@ -135,7 +119,7 @@
         </div>
 
         <div
-            x-show="allNotifications === 'unread'"
+            x-show="!allNotifications"
             class="flex flex-col gap-2  overflow-y-auto max-h-full"
         wire:key="unread-notifications-{{ $unreadCount }}">
             @if(empty($unreadNotifications))
@@ -159,31 +143,6 @@
                 @endforeach
             @endif
         </div>
-        <div
-            x-show="allNotifications === 'invites'"
-            class="flex flex-col gap-2  overflow-y-auto max-h-full">
-            @if(empty($invitesNotifications))
-                <p class="text-zinc-500 dark:text-zinc-400 text-sm">No invites</p>
-            @else
-                @foreach($invitesNotifications as $invite)
-                    <div class="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg"
-                         wire:key="invite-{{ $invite->id }}">
-                        <flux:text variant="strong" class="text-sm">
-                            You have been invited to join the team
-                            <b>{{ \App\Models\Organization::find($invite->data['organization_id'])->name }}</b>.
-                        </flux:text>
-                        <div class="flex gap-2 mt-2">
-                            <flux:button variant="primary" size="xs"
-                                         wire:click="acceptInvite({{ $invite->data['token'] }})">
-                                Accept
-                            </flux:button>
-                            <flux:button variant="filled" size="xs"
-                                         wire:click="declineInvite({{ $invite->data['token'] }})">Decline
-                            </flux:button>
-                        </div>
-                    </div>
-                @endforeach
-            @endif
-        </div>
+
     </div>
 </div>
