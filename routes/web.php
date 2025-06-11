@@ -49,6 +49,7 @@ Route::prefix('/organization/{slug}')
         Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
         Volt::route('settings/password', 'settings.password')->name('settings.password');
         Volt::route('settings/preferences', 'settings.preferences')->name('settings.preferences');
+        Volt::route('settings/organization', 'settings.org-settings')->name('settings.org-settings');
 
         Route::get('/dashboard', Dashboard::class)->name('dashboard');
         Route::get('/members', Members::class)->name('members');
