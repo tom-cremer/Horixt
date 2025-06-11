@@ -30,6 +30,7 @@ class RoleSeeder extends Seeder
                 PermissionEnum::TODOS_UPDATE->value,
                 PermissionEnum::TODOS_DELETE->value,
                 PermissionEnum::TODOS_ASSIGN->value,
+                PermissionEnum::TODOS_COMMENT->value,
                 PermissionEnum::TRACKS_VIEW->value,
                 PermissionEnum::TRACKS_CREATE->value,
                 PermissionEnum::TRACKS_UPDATE->value,
