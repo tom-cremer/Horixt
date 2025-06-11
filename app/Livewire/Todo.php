@@ -56,6 +56,12 @@ class Todo extends HorixtComponent
             'user_id' => auth()->id(),
             'project_id' => $this->projectId,
         ]);
+        $this->dispatch('toast', [
+            'title' => 'Todo Added',
+            'message' => 'Todo has been added successfully.',
+            'type' => 'success', // success, warning, error, info
+            //'duration' => Default 5000ms,
+        ]);
         $this->reset(['name', 'trackable']);
     }
 
