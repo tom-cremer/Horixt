@@ -11,14 +11,16 @@ class ActiveTracks extends Component
     public $activeTracks;
     public $expanded = false;
 
-public function mount()
-{
-    $this->handleTrackUpdate();
-}
+    public function mount()
+    {
+        $this->handleTrackUpdate();
+    }
+
     public function toggle()
     {
         $this->expanded = !$this->expanded;
     }
+
     #[On('track-started')]
     #[On('track-ended')]
     public function handleTrackUpdate()
