@@ -8,7 +8,19 @@
         >
             <div class="truncate flex items-center gap-2">
 
-                <flux:avatar size="xs" initials="{{ substr($selectedOrganization->name, 0, 1) }}" />
+                @if($selectedOrganization->avatar)
+                    <flux:avatar tooltip="{{$selectedOrganization->name}}" size="xs"
+                                 class="ring-0! ring-transparent!"
+                                 src="{{\Illuminate\Support\Facades\Storage::url($selectedOrganization->avatar->path)}}"/>
+                @else
+                    <flux:avatar tooltip="{{$selectedOrganization->name}}" size="xs"
+                                 name="{{$selectedOrganization->name}}"
+                                 class="ring-0! ring-transparent!²"
+                                 color="auto"
+                                 color:seed="{{ $selectedOrganization->id }}"
+                                 initials:single/>
+                @endif
+
                 @if(!$collapsed)
                     <flux:text>{{ $selectedOrganization->name ?? 'Personal' }}</flux:text>
                 @endif
@@ -22,7 +34,7 @@
                     href="{{ route('personal.dashboard') }}"
                     wire:navigate
                 >
-                    Personal
+                    {{auth()->user()->name}}
                 </flux:menu.item>
             </flux:menu.group>
 
