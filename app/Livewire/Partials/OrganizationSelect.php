@@ -21,7 +21,7 @@ class OrganizationSelect extends Component
         $this->organizations = auth()->user()->organizations;
         $this->selectedOrganization = Context::isOrganization()
             ? Context::getOrganization()
-            : (object)['name' => 'Personal'];
+            : auth()->user();
     }
 
     #[On('sidebar-toggle')]
