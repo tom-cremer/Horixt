@@ -58,13 +58,14 @@
 
                 <flux:avatar.group>
                     @forelse($todo->assignees as $assignee)
-                        <flux:tooltip content="{{$assignee->name}}" position="bottom"
-                                      class="w-8 h-8 text-xs">
-                            <div class="p-1">
-                                <flux:avatar size="xs" name="{{$assignee->name}}" initials:single color="auto"
-                                             color:seed="{{ $assignee->id }}"/>
-                            </div>
-                        </flux:tooltip>
+                        @if($assignee->avatar)
+                            <flux:avatar tooltip="{{$assignee->name}}" size="xs" class="ring-0! ring-transparent!"
+                                         src="{{\Illuminate\Support\Facades\Storage::url($assignee->avatar->path)}}"/>
+                        @else
+                            <flux:avatar tooltip="{{$assignee->name}}" size="xs" name="{{$assignee->name}}"
+                                         class="ring-0! ring-transparent!" color="auto" color:seed="{{ $assignee->id }}"
+                                         initials:single/>
+                        @endif
                     @empty
                         <flux:text>No assignee yet</flux:text>
                     @endforelse
@@ -90,23 +91,34 @@
                                 size="sm"
                             />
 
-                            <div class="overflow-y-auto max-h-36 my-2">
+                            <div class="overflow-y-auto max-h-36 mt-3 mb-2">
                                 @foreach($searchResults as $result)
-                                    <div class="">
                                         <div
-                                            class="flex items-center gap-2 sm:gap-4 hover:bg-gray-100 dark:hover:bg-zinc-800 p-2 rounded-lg cursor-pointer"
+                                            class="grid grid-cols-[auto_1fr_auto] gap-1.5 hover:bg-gray-100 dark:hover:bg-zinc-800 p-2 rounded-lg cursor-pointer"
                                             wire:click="addAssignee({{$result->id}})">
-                                            <flux:avatar size="xs" name="{{$result->name}}" initials:single/>
+                                            @if($result->avatar)
+                                                <flux:avatar tooltip="{{$result->name}}" size="xs"
+                                                             class="ring-0! ring-transparent!"
+                                                             src="{{\Illuminate\Support\Facades\Storage::url($result->avatar->path)}}"/>
+                                            @else
+                                                <flux:avatar tooltip="{{$result->name}}" size="xs"
+                                                             name="{{$result->name}}"
+                                                             class="ring-0! ring-transparent!²"
+                                                             color="auto"
+                                                             color:seed="{{ $result->id }}"
+                                                             initials:single/>
+                                            @endif
                                             <flux:heading
-                                                class="flex gap-0.5 items-center"
+                                                class="whitespace-nowrap truncate!"
                                             >
                                                 {{$result->name}}
-                                                @if($result->id === auth()->id())
-                                                    <flux:badge size="sm" color="amber" class="ml-1">You</flux:badge>
-                                                @endif
+
                                             </flux:heading>
+                                            @if($result->id === auth()->id())
+                                                <flux:badge size="sm" color="amber" class="ml-1">You</flux:badge>
+                                            @endif
                                         </div>
-                                    </div>
+
                                 @endforeach
                             </div>
 
@@ -117,18 +129,30 @@
                             <div class="flex flex-col min-h-28 max-h-36 overflow-y-auto gap-1">
                                 @forelse($todo->assignees as $assignee)
                                     <div
-                                        class="flex items-center gap-2 sm:gap-4 hover:bg-gray-100 dark:hover:bg-zinc-800 p-2 rounded-lg cursor-pointer"
+                                        class="grid {{($assignee->id === auth()->id())? 'grid-cols-[auto_1fr_auto_auto]': 'grid-cols-[auto_1fr_auto]'}} items-center gap-1.5 hover:bg-gray-100 dark:hover:bg-zinc-800 p-2 rounded-lg cursor-pointer"
                                         wire:key="Assign-member-{{ $assignee->id }}-modal"
                                         wire:click="removeAssignee({{$assignee->id}})">
-                                        <flux:avatar size="xs" name="{{$assignee->name}}" initials:single/>
+                                        @if($assignee->avatar)
+                                            <flux:avatar tooltip="{{$assignee->name}}" size="xs"
+                                                         class="ring-0! ring-transparent!"
+                                                         src="{{\Illuminate\Support\Facades\Storage::url($assignee->avatar->path)}}"/>
+                                        @else
+                                            <flux:avatar tooltip="{{$assignee->name}}" size="xs"
+                                                         name="{{$assignee->name}}"
+                                                         class="ring-0! ring-transparent!²"
+                                                         color="auto"
+                                                         color:seed="{{ $assignee->id }}"
+                                                         initials:single/>
+                                        @endif
                                         <flux:heading
-                                            class="flex gap-0.5 items-center"
+                                            class="whitespace-nowrap truncate!"
                                         >
                                             {{$assignee->name}}
-                                            @if($assignee->id === auth()->id())
-                                                <flux:badge size="sm" color="amber" class="ml-1">You</flux:badge>
-                                            @endif
+
                                         </flux:heading>
+                                        @if($assignee->id === auth()->id())
+                                            <flux:badge size="sm" color="amber" class="ml-1">You</flux:badge>
+                                        @endif
                                         <flux:button square icon="x" size="xs" variant="subtle" class="ml-auto!"/>
                                     </div>
                                 @empty
@@ -144,18 +168,28 @@
                                     fn($member) => $todo->assignees->contains($member->id)
                                 ) as $member)
                                     <div
-                                        class="flex items-center gap-2 sm:gap-4 hover:bg-gray-100 dark:hover:bg-zinc-800 p-2 rounded-lg cursor-pointer"
+                                        class="grid {{($member->id === auth()->id())? 'grid-cols-[auto_1fr_auto_auto]': 'grid-cols-[auto_1fr_auto]'}} items-center gap-1.5 hover:bg-gray-100 dark:hover:bg-zinc-800 p-2 rounded-lg cursor-pointer"
                                         wire:key="Assign-member-{{ $member->id }}-modal"
                                         wire:click="addAssignee({{$member->id}})">
-                                        <flux:avatar size="xs" name="{{$member->name}}" initials:single/>
+                                        @if($member->avatar)
+                                            <flux:avatar tooltip="{{$member->name}}" size="xs"
+                                                         class="ring-0! ring-transparent!"
+                                                         src="{{\Illuminate\Support\Facades\Storage::url($member->avatar->path)}}"/>
+                                        @else
+                                            <flux:avatar tooltip="{{$member->name}}" size="xs"
+                                                         name="{{$member->name}}"
+                                                         class="ring-0! ring-transparent!"
+                                                         color="auto"
+                                                         color:seed="{{ $member->id }}"
+                                                         initials:single/>
+                                        @endif
                                         <flux:heading
-                                            class="flex gap-0.5 items-center"
-                                        >
+                                            class="whitespace-nowrap truncate!">
                                             {{$member->name}}
-                                            @if($member->id === auth()->id())
-                                                <flux:badge size="sm" color="amber" class="ml-1">You</flux:badge>
-                                            @endif
                                         </flux:heading>
+                                        @if($member->id === auth()->id())
+                                            <flux:badge size="sm" color="amber" class="ml-1">You</flux:badge>
+                                        @endif
                                     </div>
                                 @endforeach
                             </div>

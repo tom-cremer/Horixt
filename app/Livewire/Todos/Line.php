@@ -3,6 +3,8 @@
 namespace App\Livewire\Todos;
 
 use App\Helper\Context;
+use App\Helper\NotificationHelper;
+use App\Helper\TimezoneHelper;
 use App\Livewire\Component\HorixtComponent;
 use App\Models\Color;
 use App\Models\Priority;
@@ -113,24 +115,35 @@ class Line extends HorixtComponent
 
     public function addAssignee($memberId)
     {
-        $this->todo->assignees()->attach($memberId, ['assigned_by' => auth()->id()]);
+        $this->todo->assignees()->attach($memberId, ['assigned_by' => auth()->user()->id]);
+
+
         $this->dispatch('toast', [
             'title' => 'Assignee Added',
             'message' => 'The assignee has been added successfully.',
             'type' => 'success', // success, warning, error, info
             //'duration' => Default 5000ms,
         ]);
+        if ($memberId === auth()->user()->id) {
+            return;
+        }
+        NotificationHelper::assigned($this->todo->id, $memberId, auth()->user()->id, true);
     }
 
     public function removeAssignee($memberId)
     {
         $this->todo->assignees()->detach($memberId);
+
         $this->dispatch('toast', [
             'title' => 'Assignee Removed',
             'message' => 'The assignee has been removed successfully.',
             'type' => 'success', // success, warning, error, info
             //'duration' => Default 5000ms,
         ]);
+        if ($memberId === auth()->user()->id) {
+         return;
+        }
+        NotificationHelper::assigned($this->todo->id, $memberId, auth()->user()->id ,false);
     }
 
     public function updatePriority($priority_id)
@@ -146,6 +159,7 @@ class Line extends HorixtComponent
 
     public function updateStatus($status_id)
     {
+        TimezoneHelper::set();
         if ($status_id === Status::COMPLETED) {
             $this->todo->update([
                 'status_id' => $status_id,
