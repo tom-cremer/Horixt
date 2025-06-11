@@ -40,7 +40,7 @@ class NavButton extends HorixtComponent
     #[On('sidebar-toggle')]
     public function toggle()
     {
-        $this->collapsed = !$this->collapsed;
+        $this->collapsed = session('collapsed') ?? false;
     }
 
     public function render()
