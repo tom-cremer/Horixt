@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Enums\RoleEnum;
+use App\Helper\TimezoneHelper;
 use App\Livewire\Component\HorixtComponent;
 use App\Models\Todo;
 use App\Models\Track as TrackModel;
@@ -33,7 +34,7 @@ class Track extends HorixtComponent
 
     public function totalDuration()
     {
-        self::timezone();
+        TimezoneHelper::set();
         $total = 0;
         foreach ($this->tracks as $track) {
             $total += $track->durations;
@@ -46,7 +47,7 @@ class Track extends HorixtComponent
 
     public function start()
     {
-        self::timezone();
+        TimezoneHelper::set();
 
         $this->activeTrack = TrackModel::create([
             'todo_id' => $this->todo->id,
@@ -60,7 +61,7 @@ class Track extends HorixtComponent
 
     public function stop()
     {
-        self::timezone();
+        TimezoneHelper::set();
 
         if ($this->activeTrack) {
             $this->activeTrack->ended_at = now();
@@ -77,7 +78,7 @@ class Track extends HorixtComponent
 
     public function calculateDuration($started_at, $ended_at)
     {
-        self::timezone();
+        TimezoneHelper::set();
 
         $start = strtotime($started_at); // Convert to timestamp
         $end = strtotime($ended_at); // Convert to timestamp
@@ -87,7 +88,7 @@ class Track extends HorixtComponent
 
     public function edit($id)
     {
-        self::timezone();
+        TimezoneHelper::set();
 
         $track = TrackModel::find($id);
 
@@ -108,7 +109,7 @@ class Track extends HorixtComponent
 
     public function update($id)
     {
-        self::timezone();
+        TimezoneHelper::set();
 
         $validated = $this->validate([
             'started_at' => 'required|date_format:Y-m-d\TH:i:s|before_or_equal:ended_at',
@@ -144,8 +145,4 @@ class Track extends HorixtComponent
         return view('livewire.track');
     }
 
-    public function timezone()
-    {
-        date_default_timezone_set(session('timezone', 'UTC'));
-    }
 }
