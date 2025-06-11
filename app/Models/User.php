@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\NotificationType;
 use App\Observers\UserObserver;
 use App\Traits\HasUuid;
 use Database\Factories\UserFactory;
@@ -161,5 +162,19 @@ class User extends Authenticatable
     public function preferredOrganization(): HasOne
     {
         return $this->hasOne(Organization::class, 'id', 'preferred_organization_id');
+    }
+
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(Notification::class, 'user_id')
+            ->whereNotNull('user_id')
+            ->where('type', '!=', NotificationType::INVITATION->value)
+            ->orderBy('created_at', 'desc');
+    }
+
+    public function unreadNotifications()
+    {
+        return $this->notifications()
+            ->where('read_at', null);
     }
 }
