@@ -24,9 +24,11 @@ class Track extends HorixtComponent
     public $started_at;
     public $ended_at;
     public $durations;
+    public $modal = true;
 
-    public function mount($todo)
+    public function mount($todo, $modal = true)
     {
+        $this->modal = $modal;
         $this->todo = Todo::with('tracks')->findOrFail($todo);
         $this->tracks = $this->todo->tracks()->whereNotNull('ended_at')->orderBy('started_at', 'desc')->get();
         $this->activeTrack = $this->todo->tracks()->whereNull('ended_at')->first();

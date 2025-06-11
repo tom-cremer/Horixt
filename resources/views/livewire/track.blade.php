@@ -25,15 +25,28 @@
 
     {{-- Pop-up for Track History --}}
 
-    <flux:button variant="filled" :loading="false" size="sm" wire:click="toggleTrackHistory">
+    @if($modal)
+        <flux:button variant="filled" :loading="false" size="sm" wire:click="toggleTrackHistory">
     <span class="text-center min-w-14!" x-text="(() => {
         const seconds = timer;
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
         const remainingSeconds = seconds % 60;
         return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-    })()"></span>
-    </flux:button>
+        })()"></span>
+        </flux:button>
+    @else
+        <div
+            class="relative flex items-center font-medium justify-center gap-2 whitespace-nowrap bg-zinc-800/5  dark:bg-white/10  h-8 text-sm rounded-md text-center p-2">
+            <span class="text-center min-w-14!" x-text="(() => {
+        const seconds = timer;
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const remainingSeconds = seconds % 60;
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+        })()"></span>
+        </div>
+    @endif
 
     <div wire:click.outside="toggleTrackHistory"
          class="absolute min-w-md min-h-56 top-0 left-1/2 transform  bg-gray-50 dark:bg-zinc-700  shadow-lg rounded-lg p-4 z-[800] {{ $showTrackHistory ? '' : 'hidden' }}">
