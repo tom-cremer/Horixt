@@ -24,9 +24,6 @@ class OrganizationMiddleware
 
         session(['team_id' => $organizationId]);
 
-        Log::info($organizationId);
-        Log::info($organizationSlug);
-
 
         if (!auth()->check()) {
             return redirect()->route('login');
@@ -46,7 +43,7 @@ class OrganizationMiddleware
             return redirect()->route('personal.dashboard');
         }
 
-        Log::info("OrganizationMiddleware: User is a member of the organization with ID {$organizationId}");
+/*        Log::info("OrganizationMiddleware: User is a member of the organization with ID {$organizationId}");*/
         // Adding organization id to session()
         session(['organization_id' => $organizationId]);
 
