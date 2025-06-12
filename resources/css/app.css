@@ -398,24 +398,24 @@ select:focus[data-flux-control] {
 
 /* === DARK TEXT === 200 */
 
-.dark .red--text       { color: #fecdcd; }
-.dark .orange--text    { color: #fac2a1; }
-.dark .amber--text     { color: #FFD7A8; }
-.dark .yellow--text    { color: #fcdf4d; }
-.dark .lime--text      { color: #effe8a; }
-.dark .green--text     { color: #D9F99D; }
-.dark .emerald--text   { color: #BBF7D0; }
-.dark .teal--text      { color: #6EE7B7; }
-.dark .cyan--text      { color: #5EEAD4; }
-.dark .sky--text       { color: #A5F3FC; }
-.dark .blue--text      { color: #BAE6FD; }
-.dark .indigo--text    { color: #93C5FD; }
-.dark .violet--text    { color: #C7D2FE; }
-.dark .purple--text    { color: #DDD6FE; }
-.dark .fuchsia--text   { color: #E9D5FF; }
-.dark .pink--text      { color: #F5D0FE; }
-.dark .rose--text      { color: #FBCFE8; }
-.dark .zinc--text      { color: #F4F4F5; }
+.red--notes       { background-color: #fecdcd; }
+.orange--notes    { background-color: #fac2a1; }
+.amber--notes     { background-color: #FFD7A8; }
+.yellow--notes    { background-color: #fcdf4d; }
+.lime--notes      { background-color: #effe8a; }
+.green--notes     { background-color: #D9F99D; }
+.emerald--notes   { background-color: #BBF7D0; }
+.teal--notes      { background-color: #6EE7B7; }
+.cyan--notes      { background-color: #5EEAD4; }
+.sky--notes       { background-color: #A5F3FC; }
+.blue--notes      { background-color: #BAE6FD; }
+.indigo--notes    { background-color: #93C5FD; }
+.violet--notes    { background-color: #C7D2FE; }
+.purple--notes    { background-color: #DDD6FE; }
+.fuchsia--notes   { background-color: #E9D5FF; }
+.pink--notes      { background-color: #F5D0FE; }
+.rose--notes      { background-color: #FBCFE8; }
+.zinc--notes      { background-color: #F4F4F5; }
 
 
 .dark .badge-zinc    { background: #3F3F46; color: #F4F4F5; }
