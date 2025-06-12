@@ -103,6 +103,11 @@ class Breadcrumb extends HorixtComponent
                 'label' => __('Organizations'),
                 'url' => route('personal.organizations'),
             ];
+        } elseif ($routeName === 'personal.notes') {
+            $breadcrumbs[] = [
+                'label' => __('Notes'),
+                'url' => route('personal.notes'),
+            ];
         }
 
         $this->breadcrumbs = $breadcrumbs;
@@ -197,6 +202,11 @@ class Breadcrumb extends HorixtComponent
             $breadcrumbs[] = [
                 'label' => __('Assigned to me'),
                 'url' => route('organization.assigned-to-me', ['slug' => Context::getOrganizationSlug()]),
+            ];
+        }  elseif ($routeName === 'organization.notes') {
+            $breadcrumbs[] = [
+                'label' => __('Notes'),
+                'url' => route('organization.notes', ['slug' => Context::getOrganizationSlug()]),
             ];
         }
 
