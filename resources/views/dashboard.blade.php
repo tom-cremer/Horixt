@@ -34,8 +34,8 @@
                                 class="border-[1.5px] min-w-2 max-w-fit  text-center border-red-300 px-[3px] text-xs font-medium rounded-md">{{ $this->getAugmentationProjectByMonth() }}</span>
                             Decreased this month</p>
                     @else
-                        <p class="text-gray-600/80 font-normal text-xs mt-auto"><span
-                                class="border-[1.5px] min-w-2 max-w-fit  text-center border-gray-600/80 px-[3px] text-xs font-medium rounded-md">+{{ $this->getAugmentationProjectByMonth() }}</span>
+                        <p class="text-violet-950 font-normal text-xs mt-auto"><span
+                                class="border-[1.5px] min-w-2 max-w-fit  text-center border-violet-950 px-[3px] text-xs font-medium rounded-md">+{{ $this->getAugmentationProjectByMonth() }}</span>
                             this month</p>
                     @endif
                 </div>
