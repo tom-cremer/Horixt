@@ -63,4 +63,9 @@ class Project extends Model
         }
     }
 
+    public function organization(): HasOne
+    {
+        return $this->hasOne(Organization::class, 'id', 'organization_id');
+    }
+
 }

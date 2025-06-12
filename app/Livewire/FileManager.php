@@ -6,7 +6,6 @@ use App\Livewire\Component\HorixtComponent;
 use App\Models\Directories;
 use App\Models\Files;
 use Flux\Flux;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Validate;
@@ -29,6 +28,7 @@ class FileManager extends HorixtComponent
 
     public $newFileName;
     public $renameFileId;
+    public $renameSelectedFile = false;
     public $selectedFile;
 
     public $renameDirectoryName;
@@ -248,6 +248,22 @@ class FileManager extends HorixtComponent
         $this->newFileName = $file->name;
     }
 
+    public function editSelectedFile()
+    {
+
+        if ($this->selectedFile) {
+            $this->renameFileId = $this->selectedFile->id;
+            $this->newFileName = $this->selectedFile->name;
+            $this->renameSelectedFile = true;
+        } else {
+            $this->dispatch('toast', [
+                'title' => 'No File Selected',
+                'message' => 'Please select a file to rename.',
+                'type' => 'error',
+            ]);
+        }
+
+    }
     public function submitRenameFile()
     {
         $this->validate([
@@ -293,13 +309,13 @@ class FileManager extends HorixtComponent
             $file->path = $newPath;
             $file->save();
 
-            $this->reset('newFileName', 'renameFileId');
+            $this->reset('newFileName', 'renameFileId', 'renameSelectedFile');
         }
     }
 
     public function cancelRenameFile()
     {
-        $this->reset('newFileName', 'renameFileId');
+        $this->reset('newFileName', 'renameFileId', 'renameSelectedFile');
     }
 
     public function deleteFile($id)
@@ -344,6 +360,9 @@ class FileManager extends HorixtComponent
     public function render()
     {
 
+        if ($this->selectedFile) {
+            $this->selectedFile = Files::find($this->selectedFile->id);
+        }
         $directories = $this->currentDirectory->children ?? [];
         $files = $this->currentDirectory->files ?? [];
 

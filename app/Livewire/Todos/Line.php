@@ -3,6 +3,8 @@
 namespace App\Livewire\Todos;
 
 use App\Helper\Context;
+use App\Helper\NotificationHelper;
+use App\Helper\TimezoneHelper;
 use App\Livewire\Component\HorixtComponent;
 use App\Models\Color;
 use App\Models\Priority;
@@ -57,6 +59,12 @@ class Line extends HorixtComponent
         $this->todo->update(['name' => $this->newTodoTitle]);
         $this->editingTodo = false;
         $this->reset('newTodoTitle');
+        $this->dispatch('toast', [
+            'title' => 'Todo Updated',
+            'message' => 'The todo has been updated successfully.',
+            'type' => 'success', // success, warning, error, info
+            //'duration' => Default 5000ms,
+        ]);
     }
 
     public function cancelEdit()
@@ -97,32 +105,92 @@ class Line extends HorixtComponent
         $this->newSubTodoTitle = '';
         $this->expanded = true; // Auto expand
         $this->todo->refresh(); // Reload children
+        $this->dispatch('toast', [
+            'title' => 'Sub Todo Added',
+            'message' => 'The sub todo has been added successfully.',
+            'type' => 'success', // success, warning, error, info
+            //'duration' => Default 5000ms,
+        ]);
     }
 
     public function addAssignee($memberId)
     {
-        $this->todo->assignees()->attach($memberId, ['assigned_by' => auth()->id()]);
+        $this->todo->assignees()->attach($memberId, ['assigned_by' => auth()->user()->id]);
+
+
+        $this->dispatch('toast', [
+            'title' => 'Assignee Added',
+            'message' => 'The assignee has been added successfully.',
+            'type' => 'success', // success, warning, error, info
+            //'duration' => Default 5000ms,
+        ]);
+        if ($memberId === auth()->user()->id) {
+            return;
+        }
+        NotificationHelper::assigned($this->todo->id, $memberId, auth()->user()->id, true);
     }
 
     public function removeAssignee($memberId)
     {
         $this->todo->assignees()->detach($memberId);
+
+        $this->dispatch('toast', [
+            'title' => 'Assignee Removed',
+            'message' => 'The assignee has been removed successfully.',
+            'type' => 'success', // success, warning, error, info
+            //'duration' => Default 5000ms,
+        ]);
+        if ($memberId === auth()->user()->id) {
+         return;
+        }
+        NotificationHelper::assigned($this->todo->id, $memberId, auth()->user()->id ,false);
     }
 
     public function updatePriority($priority_id)
     {
         $this->todo->update(['priority_id' => $priority_id]);
+        $this->dispatch('toast', [
+            'title' => 'Todo Priority Updated',
+            'message' => 'The priority of the todo has been updated successfully.',
+            'type' => 'success', // success, warning, error, info
+            //'duration' => Default 5000ms,
+        ]);
     }
 
     public function updateStatus($status_id)
     {
-        $this->todo->update(['status_id' => $status_id]);
+        TimezoneHelper::set();
+        if ($status_id === Status::COMPLETED) {
+            $this->todo->update([
+                'status_id' => $status_id,
+                'completed_at' => now()
+            ]);
+        } else {
+            $this->todo->update([
+                'status_id' => $status_id,
+                'completed_at' => null
+            ]);
+        }
+
+        $this->dispatch('toast', [
+            'title' => 'Todo Status Updated',
+            'message' => 'The status of the todo has been updated successfully.',
+            'type' => 'success', // success, warning, error, info
+            //'duration' => Default 5000ms,
+        ]);
+
     }
 
     public function deleteTodo()
     {
         $this->todo->delete();
         $this->dispatch('todo-deleted');
+        $this->dispatch('toast', [
+            'title' => 'Todo Deleted',
+            'message' => 'Todo has been deleted successfully.',
+            'type' => 'success', // success, warning, error, info
+            //'duration' => Default 5000ms,
+        ]);
     }
 
     public function searchMember()
@@ -141,6 +209,21 @@ class Line extends HorixtComponent
     public function toggleTracks()
     {
         $this->todo->update(['is_trackable' => !$this->todo->is_trackable]);
+        if ($this->todo->is_trackable) {
+            $this->dispatch('toast', [
+                'title' => 'Tracking Enabled',
+                'message' => 'Tracking has been enabled for this todo.',
+                'type' => 'info', // success, warning, error, info
+                //'duration' => Default 5000ms,
+            ]);
+        } else {
+            $this->dispatch('toast', [
+                'title' => 'Tracking Disabled',
+                'message' => 'Tracking has been disabled for this todo.',
+                'type' => 'info', // success, warning, error, info
+                //'duration' => Default 5000ms,
+            ]);
+        }
     }
 
     public function render()

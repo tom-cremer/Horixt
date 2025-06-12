@@ -1,7 +1,7 @@
 <div class="font-lexend h-full flex flex-col ">
     <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-semibold">Members</h2>
-        @can(\App\Enums\PermissionEnum::ORG_MANAGE->value)
+        @can(\App\Enums\PermissionEnum::ORG_MANAGE)
             <livewire:partials.add-members/>
         @endcan
     </div>
@@ -25,16 +25,20 @@
                     <td class=" px-4 py-3  border-r border-zinc-300 dark:border-zinc-600">
                         <div class="flex flex-nowrap items-center gap-2">
 
-                            @if ($member->profile_photo_path)
-                                <img src="{{ $member->profile_photo_url }}" alt="{{ $member->name }}"
-                                     class="w-8 h-8 rounded-full">
+                            @if($member->avatar)
+                                <flux:avatar tooltip="{{$member->name}}" size="xs"
+                                             class="ring-0! ring-transparent!"
+                                             src="{{\Illuminate\Support\Facades\Storage::url($member->avatar->path)}}"/>
                             @else
-                                <div class="min-w-8 min-h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                                    <span class="text-gray-500 text-sm">{{ $member->initials()}}</span>
-                                </div>
+                                <flux:avatar tooltip="{{$member->name}}" size="xs"
+                                             name="{{$member->name}}"
+                                             class="ring-0! ring-transparent!²"
+                                             color="auto"
+                                             color:seed="{{ $member->id }}"
+                                             initials:single/>
                             @endif
 
-                            <span class="whitespace-nowrap">{{ $member->name }}</span>
+                            <span class="whitespace-nowrap truncate">{{ $member->name }}</span>
 
                             @if ($member->isOwner(\App\Helper\Context::getOrganizationId()))
                                 <flux:badge color="green" size="sm">Owner</flux:badge>
@@ -59,7 +63,7 @@
                                     <flux:text>No role</flux:text>
                                 @endforelse
                             </div>
-                            @if( auth()->user()->can(\App\Enums\PermissionEnum::ADMIN_MANAGE->value))
+                            @if( auth()->user()->can(\App\Enums\PermissionEnum::ADMIN_MANAGE))
 
                                 <flux:button square icon="user-round-cog" size="xs" variant="subtle"
                                              x-on:click="memberRoles = true" class="cursor-pointer"
@@ -151,11 +155,14 @@
                         {{ $member->pivot->is_active ? 'Active' : 'Inactive' }}
                     </td>
                     <td class="px-4 py-3 border-r border-zinc-300 dark:border-zinc-600 text-nowrap">
+                        @php
+                            \App\Helper\TimezoneHelper::set()
+                        @endphp
                         {{ $member->pivot->created_at->locale('en_US')->diffForHumans() }}
                     </td>
                     <td class="px-4 py-3 text-right ">
                         <div class="flex justify-end gap-2">
-                            @can(\App\Enums\PermissionEnum::ORG_MANAGE->value)
+                            @can(\App\Enums\PermissionEnum::ORG_MANAGE)
                                 {{--<livewire:partials.edit-member :member="$member" :key="$member->id"/>--}}
                                 <flux:button
                                     wire:click="editMember({{ $member->id }})"

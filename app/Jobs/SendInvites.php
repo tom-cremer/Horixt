@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Helper\NotificationHelper;
 use App\Mail\InviteEmail;
 use App\Models\Organization;
 use App\Models\OrganizationInvites;
@@ -37,11 +38,9 @@ class SendInvites implements ShouldQueue
         // Logic to send invites
         foreach ($this->inviteesList as $invitee) {
             $token = md5($invitee . time());
-
             // Check if the invitee already exists in the organization
             $existingUser = OrganizationInvites::where('email', $invitee)->where('status', 'like', 'pending')->where('created_at', '>=', now()->subDay(7))->first();
             if ($existingUser) {
-                // If the invitee already exists, skip sending the invite
                 continue;
             }
 
@@ -52,6 +51,9 @@ class SendInvites implements ShouldQueue
                 'token' => $token,
             ]);
 
+
+            NotificationHelper::invitation($invitee, $token, $this->user->id, $this->organization->id);
+            // Send the invite email
             Mail::to($invitee)->send(new InviteEmail($token, $this->user, $this->organization));
         }
 

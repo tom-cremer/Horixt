@@ -3,11 +3,12 @@
 namespace App\Livewire;
 
 use App\Helper\Context;
+use App\Livewire\Component\HorixtComponent;
 use Livewire\Component;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
 
-class AssignedToMe extends Component
+class AssignedToMe extends HorixtComponent
 {
     use WithPagination, WithoutUrlPagination;
     public $projects;

@@ -58,25 +58,26 @@
 
                 <flux:avatar.group>
                     @forelse($todo->assignees as $assignee)
-                        <flux:tooltip content="{{$assignee->name}}" position="bottom"
-                                      class="w-8 h-8 text-xs">
-                            <div class="p-1">
-                                <flux:avatar size="xs" name="{{$assignee->name}}" initials:single color="auto"
-                                             color:seed="{{ $assignee->id }}"/>
-                            </div>
-                        </flux:tooltip>
+                        @if($assignee->avatar)
+                            <flux:avatar tooltip="{{$assignee->name}}" size="xs" class="ring-0! ring-transparent!"
+                                         src="{{\Illuminate\Support\Facades\Storage::url($assignee->avatar->path)}}"/>
+                        @else
+                            <flux:avatar tooltip="{{$assignee->name}}" size="xs" name="{{$assignee->name}}"
+                                         class="ring-0! ring-transparent!" color="auto" color:seed="{{ $assignee->id }}"
+                                         initials:single/>
+                        @endif
                     @empty
                         <flux:text>No assignee yet</flux:text>
                     @endforelse
                 </flux:avatar.group>
 
-                @if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::TODOS_ASSIGN->value))
+                @if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::TODOS_ASSIGN))
 
                     <flux:button square icon="user-round-cog" size="xs" variant="subtle"
                                  x-on:click="assigneeModal = true"
                     />
                     {{--Modal--}}
-                    <div x-show="assigneeModal" x-on:click.away="assigneeModal = false"
+                    <div x-cloak x-show="assigneeModal" x-on:click.away="assigneeModal = false"
                          class="absolute bg-white dark:bg-zinc-700 top-10 right-0 rounded-lg shadow-md border border-zinc-200 dark:border-zinc-500
                 grid grid-cols-1 grid-rows-[repeat(4,minmax(auto,1fr)] gap-1.5 p-2.5 min-w-64 max-w-72 min-h-56  z-50"
                     >
@@ -90,23 +91,34 @@
                                 size="sm"
                             />
 
-                            <div class="overflow-y-auto max-h-36 my-2">
+                            <div class="overflow-y-auto max-h-36 mt-3 mb-2">
                                 @foreach($searchResults as $result)
-                                    <div class="">
                                         <div
-                                            class="flex items-center gap-2 sm:gap-4 hover:bg-gray-100 dark:hover:bg-zinc-800 p-2 rounded-lg cursor-pointer"
+                                            class="grid grid-cols-[auto_1fr_auto] gap-1.5 hover:bg-gray-100 dark:hover:bg-zinc-800 p-2 rounded-lg cursor-pointer"
                                             wire:click="addAssignee({{$result->id}})">
-                                            <flux:avatar size="xs" name="{{$result->name}}" initials:single/>
+                                            @if($result->avatar)
+                                                <flux:avatar tooltip="{{$result->name}}" size="xs"
+                                                             class="ring-0! ring-transparent!"
+                                                             src="{{\Illuminate\Support\Facades\Storage::url($result->avatar->path)}}"/>
+                                            @else
+                                                <flux:avatar tooltip="{{$result->name}}" size="xs"
+                                                             name="{{$result->name}}"
+                                                             class="ring-0! ring-transparent!²"
+                                                             color="auto"
+                                                             color:seed="{{ $result->id }}"
+                                                             initials:single/>
+                                            @endif
                                             <flux:heading
-                                                class="flex gap-0.5 items-center"
+                                                class="whitespace-nowrap truncate!"
                                             >
                                                 {{$result->name}}
-                                                @if($result->id === auth()->id())
-                                                    <flux:badge size="sm" color="amber" class="ml-1">You</flux:badge>
-                                                @endif
+
                                             </flux:heading>
+                                            @if($result->id === auth()->id())
+                                                <flux:badge size="sm" color="amber" class="ml-1">You</flux:badge>
+                                            @endif
                                         </div>
-                                    </div>
+
                                 @endforeach
                             </div>
 
@@ -117,18 +129,30 @@
                             <div class="flex flex-col min-h-28 max-h-36 overflow-y-auto gap-1">
                                 @forelse($todo->assignees as $assignee)
                                     <div
-                                        class="flex items-center gap-2 sm:gap-4 hover:bg-gray-100 dark:hover:bg-zinc-800 p-2 rounded-lg cursor-pointer"
+                                        class="grid {{($assignee->id === auth()->id())? 'grid-cols-[auto_1fr_auto_auto]': 'grid-cols-[auto_1fr_auto]'}} items-center gap-1.5 hover:bg-gray-100 dark:hover:bg-zinc-800 p-2 rounded-lg cursor-pointer"
                                         wire:key="Assign-member-{{ $assignee->id }}-modal"
                                         wire:click="removeAssignee({{$assignee->id}})">
-                                        <flux:avatar size="xs" name="{{$assignee->name}}" initials:single/>
+                                        @if($assignee->avatar)
+                                            <flux:avatar tooltip="{{$assignee->name}}" size="xs"
+                                                         class="ring-0! ring-transparent!"
+                                                         src="{{\Illuminate\Support\Facades\Storage::url($assignee->avatar->path)}}"/>
+                                        @else
+                                            <flux:avatar tooltip="{{$assignee->name}}" size="xs"
+                                                         name="{{$assignee->name}}"
+                                                         class="ring-0! ring-transparent!²"
+                                                         color="auto"
+                                                         color:seed="{{ $assignee->id }}"
+                                                         initials:single/>
+                                        @endif
                                         <flux:heading
-                                            class="flex gap-0.5 items-center"
+                                            class="whitespace-nowrap truncate!"
                                         >
                                             {{$assignee->name}}
-                                            @if($assignee->id === auth()->id())
-                                                <flux:badge size="sm" color="amber" class="ml-1">You</flux:badge>
-                                            @endif
+
                                         </flux:heading>
+                                        @if($assignee->id === auth()->id())
+                                            <flux:badge size="sm" color="amber" class="ml-1">You</flux:badge>
+                                        @endif
                                         <flux:button square icon="x" size="xs" variant="subtle" class="ml-auto!"/>
                                     </div>
                                 @empty
@@ -144,18 +168,28 @@
                                     fn($member) => $todo->assignees->contains($member->id)
                                 ) as $member)
                                     <div
-                                        class="flex items-center gap-2 sm:gap-4 hover:bg-gray-100 dark:hover:bg-zinc-800 p-2 rounded-lg cursor-pointer"
+                                        class="grid {{($member->id === auth()->id())? 'grid-cols-[auto_1fr_auto_auto]': 'grid-cols-[auto_1fr_auto]'}} items-center gap-1.5 hover:bg-gray-100 dark:hover:bg-zinc-800 p-2 rounded-lg cursor-pointer"
                                         wire:key="Assign-member-{{ $member->id }}-modal"
                                         wire:click="addAssignee({{$member->id}})">
-                                        <flux:avatar size="xs" name="{{$member->name}}" initials:single/>
+                                        @if($member->avatar)
+                                            <flux:avatar tooltip="{{$member->name}}" size="xs"
+                                                         class="ring-0! ring-transparent!"
+                                                         src="{{\Illuminate\Support\Facades\Storage::url($member->avatar->path)}}"/>
+                                        @else
+                                            <flux:avatar tooltip="{{$member->name}}" size="xs"
+                                                         name="{{$member->name}}"
+                                                         class="ring-0! ring-transparent!"
+                                                         color="auto"
+                                                         color:seed="{{ $member->id }}"
+                                                         initials:single/>
+                                        @endif
                                         <flux:heading
-                                            class="flex gap-0.5 items-center"
-                                        >
+                                            class="whitespace-nowrap truncate!">
                                             {{$member->name}}
-                                            @if($member->id === auth()->id())
-                                                <flux:badge size="sm" color="amber" class="ml-1">You</flux:badge>
-                                            @endif
                                         </flux:heading>
+                                        @if($member->id === auth()->id())
+                                            <flux:badge size="sm" color="amber" class="ml-1">You</flux:badge>
+                                        @endif
                                     </div>
                                 @endforeach
                             </div>
@@ -168,29 +202,42 @@
         <div x-data="{ statusModal: false }"
              class="relative"
         >
-            <flux:badge x-on:click="statusModal = true" color="{{\App\Helper\Context::isOrganization() ? $todo->status->organizationStatusColor->color->alias : $todo->status->userStatusColor->color->alias}}" class="cursor-pointer" aria-role="button"
-                        aria-pressed="false">
-                {{$todo->status->name}}
-            </flux:badge>
-            <div x-show="statusModal" x-on:click.away="statusModal = false"
+            <button x-on:click="statusModal = true"
+                    class="cursor-pointer" aria-role="button">
+                <flux:badge
+                    color="{{\App\Helper\Context::isOrganization() ? $todo->status->organizationStatusColor->color->alias : $todo->status->userStatusColor->color->alias}}">
+                    {{$todo->status->name}}
+                </flux:badge>
+            </button>
+            <div x-cloak x-show="statusModal" x-on:click.away="statusModal = false"
                  class="absolute bg-white dark:bg-zinc-700 top-0 left-1/2 transform -translate-x-1/8 rounded-lg shadow-md border border-zinc-200 dark:border-zinc-500
                 flex flex-wrap gap-2 p-2.5 w-full max-w-24 z-50"
             >
                 @foreach($statuses->reject(fn($status) =>
                 $status->id === $todo->status->id) as $status)
+                    <button wire:click="updateStatus({{$status->id}})"
+                            class="cursor-pointer" aria-role="button"
+                            wire:key="status-{{ $status->id }}">
 
-                    <flux:badge size="sm" color="{{\App\Helper\Context::isOrganization() ? $status->organizationStatusColor->color->alias : $status->userStatusColor->color->alias}}" wire:click="updateStatus({{$status->id}})" class="cursor-pointer"
-                                wire:key="status-{{ $status->id }}">{{$status->name}}</flux:badge>
+                        <flux:badge size="sm"
+                                    color="{{\App\Helper\Context::isOrganization() ? $status->organizationStatusColor->color->alias : $status->userStatusColor->color->alias}}"
+
+                        >{{$status->name}}</flux:badge>
+                    </button>
                 @endforeach
             </div>
         </div>
         <div x-data="{ priorityModal: false }"
              class="relative"
         >
-            <flux:badge x-on:click="priorityModal = true" color="{{\App\Helper\Context::isOrganization() ? $todo->priority->organizationPriorityColor->color->alias : $todo->priority->userPriorityColor->color->alias}}" class="cursor-pointer">
-                {{$todo->priority->name}}
-            </flux:badge>
-            <div x-show="priorityModal" x-on:click.away="priorityModal = false"
+            <button x-on:click="priorityModal = true"
+                    class="cursor-pointer" aria-role="button">
+                <flux:badge
+                    color="{{\App\Helper\Context::isOrganization() ? $todo->priority->organizationPriorityColor->color->alias : $todo->priority->userPriorityColor->color->alias}}">
+                    {{$todo->priority->name}}
+                </flux:badge>
+            </button>
+            <div x-cloak x-show="priorityModal" x-on:click.away="priorityModal = false"
                  class="absolute bg-white dark:bg-zinc-700 top-0 left-1/2 transform -translate-x-1/8 rounded-lg shadow-md border border-zinc-200 dark:border-zinc-500
                 flex flex-wrap gap-2 p-2.5 w-full max-w-24 z-50"
             >
@@ -198,8 +245,17 @@
                     @if($priority->id === $todo->priority->id)
                         @continue
                     @endif
-                    <flux:badge size="sm" color="{{\App\Helper\Context::isOrganization() ? $priority->organizationPriorityColor->color->alias : $priority->userPriorityColor->color->alias}}" wire:click="updatePriority({{$priority->id}})"
-                                class="cursor-pointer">{{$priority->name}}</flux:badge>
+                    <button class="cursor-pointer"
+                            aria-role="button"
+                            wire:click="updatePriority({{$priority->id}})"
+                            wire:key="status-{{ $priority->id }}"
+                    >
+
+                        <flux:badge size="sm"
+                                    color="{{\App\Helper\Context::isOrganization() ? $priority->organizationPriorityColor->color->alias : $priority->userPriorityColor->color->alias}}">
+                            {{$priority->name}}
+                        </flux:badge>
+                    </button>
                 @endforeach
             </div>
         </div>
@@ -216,7 +272,7 @@
                 />
             @endif
 
-            {{--TODO: Add the condition for the TODOS_TRACK !--}}
+            @if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::TODOS_TRACK)) @endif
             @if($todo->is_trackable)
                 <flux:tooltip content="Deactivate Tracks">
                     <flux:button :loading="false" :square="true" size="xs" icon="timer-off"

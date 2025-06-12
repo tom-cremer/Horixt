@@ -48,14 +48,71 @@
         --}}
         <livewire:partials.nav-button :collapsed="$collapsed" icon="folder" text="Files" beta="true"
                                       route="{{ \App\Helper\Context::isPersonal() ? route('personal.files') : route('organization.files', \App\Helper\Context::getOrganizationSlug()) }}"/>
+        <livewire:partials.nav-button :collapsed="$collapsed" icon="notebook" text="Notes"
+                                      route="{{ \App\Helper\Context::isPersonal() ? route('personal.notes') : route('organization.notes', \App\Helper\Context::getOrganizationSlug()) }}"/>
         <flux:separator/>
 
         {{-- Trays --}}
 
+        {{--Favorite Tray--}}
+
+        <div class="relative group {{$collapsed ? 'w-fit' : ''}}">
+            <div
+                class=" peer {{$collapsed ? 'flex' : 'grid grid-cols-[1fr_auto]'}} items-center gap-2 text-left text-sm font-semibold w-full "
+            >
+
+                <button
+                    class="{{$collapsed ? 'p-1' : 'px-2 py-1' }} flex items-center gap-2  transition-colors duration-200 cursor-pointer"
+                    href="{{ \App\Helper\Context::isPersonal() ? route('personal.projects.index') : route('organization.projects.index', \App\Helper\Context::getOrganizationSlug()) }}"
+                    wire:navigate>
+                <span
+                    class="flex items-center justify-center w-7 h-7 relative">
+                            <flux:icon name="star"/>
+                    </span>
+                    <span class="transition-all delay-300 ease-in-out {{$collapsed ? 'opacity-0 hidden' : ''}}">
+                        Favorites
+                    </span>
+                </button>
+                @unless($collapsed)
+                    <flux:button square :icon="$favTray ? 'chevron-down': 'chevron-right'" variant="subtle"
+                                 size="xs"
+                                 class="ml-auto" :loading="false"
+                                 wire:click.stop="toggleFavTray"
+                                 wire:keydown.alt.f.window.prevent="toggleFavTray"
+                    />
+                @endunless
+            </div>
+            <!-- Tooltip -->
+            @if($collapsed)
+                <div
+                    class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs font-medium rounded-md opacity-0 peer-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap
+                        dark:text-white dark:bg-zinc-700 bg-white text-zinc-800 border border-zinc-300 dark:border-zinc-600 shadow-sm">
+                    Favorites
+                </div>
+            @endif
+        </div>
+        <div x-data="{FavTray: $wire.entangle('favTray')}" x-show="FavTray"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 transform scale-95"
+             x-transition:enter-end="opacity-100 transform scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 transform scale-100"
+             x-transition:leave-end="opacity-0 transform scale-95"
+             class="{{ $collapsed ? 'm-auto' : 'ml-4' }} transition-all duration-150 flex flex-col gap-1">
+            @foreach($this->favProjects as $favorite)
+                <livewire:partials.nav-button :collapsed="$collapsed" icon="panels-top-left"
+                                              :text="$favorite->project->name"
+                                              wire:key="fav-{{ $favorite->project->id }}-{{ $favorite->project->updated_at }}"
+                                              route="{{ \App\Helper\Context::isPersonal()
+                             ? route('personal.projects.show', ['projectid' => $favorite->project->id])
+                             : route('organization.projects.show', ['slug' => \App\Helper\Context::getOrganizationSlug(), 'projectid' => $favorite->project->id]) }}"/>
+            @endforeach
+        </div>
+        <flux:separator/>
         {{--Project Tray--}}
         <div class="relative group {{$collapsed ? 'w-fit' : ''}}">
             <div
-                class=" peer grid grid-cols-[1fr_auto] items-center gap-2 text-left text-sm font-semibold w-full "
+                class=" peer {{$collapsed ? 'flex' : 'grid grid-cols-[1fr_auto]'}} items-center gap-2 text-left text-sm font-semibold w-full "
             >
 
                 <button
@@ -106,61 +163,7 @@
             @endforeach
         </div>
 
-        <flux:separator/>
-        {{--Favorite Tray--}}
 
-            <div class="relative group {{$collapsed ? 'w-fit' : ''}}">
-                <div
-                    class=" peer flex items-center gap-2 text-left text-sm font-semibold w-full "
-                >
-
-                    <button
-                        class="{{$collapsed ? 'p-1' : 'px-2 py-1' }} flex items-center gap-2  transition-colors duration-200 cursor-pointer"
-                        href="{{ \App\Helper\Context::isPersonal() ? route('personal.projects.index') : route('organization.projects.index', \App\Helper\Context::getOrganizationSlug()) }}"
-                        wire:navigate>
-                <span
-                    class="flex items-center justify-center w-7 h-7 relative">
-                            <flux:icon name="star"/>
-                    </span>
-                        <span class="transition-all delay-300 ease-in-out {{$collapsed ? 'opacity-0 hidden' : ''}}">
-                        Favorites
-                    </span>
-                    </button>
-                    @unless($collapsed)
-                        <flux:button square :icon="$favTray ? 'chevron-down': 'chevron-right'" variant="subtle"
-                                     size="xs"
-                                     class="ml-auto" :loading="false"
-                                     wire:click.stop="toggleFavTray"
-                                     wire:keydown.alt.f.window.prevent="toggleFavTray"
-                        />
-                    @endunless
-                </div>
-                <!-- Tooltip -->
-                @if($collapsed)
-                    <div
-                        class="absolute z-10 left-[65px] top-1/2 -translate-y-1/2 px-2 py-1 text-xs font-medium rounded-md opacity-0 peer-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap
-                        dark:text-white dark:bg-zinc-700 bg-white text-zinc-800 border border-zinc-300 dark:border-zinc-600 shadow-sm">
-                        Favorites
-                    </div>
-                @endif
-            </div>
-            <div x-data="{FavTray: $wire.entangle('favTray')}" x-show="FavTray"
-                 x-transition:enter="transition ease-out duration-300"
-                 x-transition:enter-start="opacity-0 transform scale-95"
-                 x-transition:enter-end="opacity-100 transform scale-100"
-                 x-transition:leave="transition ease-in duration-200"
-                 x-transition:leave-start="opacity-100 transform scale-100"
-                 x-transition:leave-end="opacity-0 transform scale-95"
-                 class="{{ $collapsed ? 'm-auto' : 'ml-4' }} transition-all duration-150 flex flex-col gap-1">
-                @foreach($this->favProjects as $favorite)
-                    <livewire:partials.nav-button :collapsed="$collapsed" icon="panels-top-left"
-                                                  :text="$favorite->project->name"
-                                                  wire:key="fav-{{ $favorite->project->id }}-{{ $favorite->project->updated_at }}"
-                                                  route="{{ \App\Helper\Context::isPersonal()
-                             ? route('personal.projects.show', ['projectid' => $favorite->project->id])
-                             : route('organization.projects.show', ['slug' => \App\Helper\Context::getOrganizationSlug(), 'projectid' => $favorite->project->id]) }}"/>
-                @endforeach
-            </div>
     </div>
 
 
@@ -177,7 +180,7 @@
                 <flux:profile
                     :chevron="false"
                     :initials="auth()->user()->initials()"
-                    avatar="{{config('app.url')}}/{{ auth()->user()->avatar->path }}"
+                    avatar="{{\Illuminate\Support\Facades\Storage::url(\auth()->user()->avatar->path)}}"
                 />
             @else
                 <flux:profile
@@ -191,7 +194,7 @@
                 <flux:profile
                     :name="auth()->user()->name"
                     :initials="auth()->user()->initials()"
-                    avatar="{{config('app.url')}}/{{ auth()->user()->avatar->path }}"
+                    avatar="{{\Illuminate\Support\Facades\Storage::url(\auth()->user()->avatar->path)}}"
                 />
             @else
                 <flux:profile
@@ -205,12 +208,18 @@
             <flux:menu.radio.group>
                 <div class="p-0 text-sm font-normal">
                     <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                        <span class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-lg">
-                            <span
-                                class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
-                                {{ auth()->user()->initials() }}
-                            </span>
-                        </span>
+                        @if(auth()->user()->avatar)
+                            <flux:avatar tooltip="{{auth()->user()->name}}" size="sm"
+                                         class="ring-0! ring-transparent!"
+                                         src="{{\Illuminate\Support\Facades\Storage::url(auth()->user()->avatar->path)}}"/>
+                        @else
+                            <flux:avatar tooltip="{{auth()->user()->name}}" size="sm"
+                                         name="{{auth()->user()->name}}"
+                                         class="ring-0! ring-transparent!²"
+                                         color="auto"
+                                         color:seed="{{ auth()->user()->id }}"
+                                         initials:single/>
+                        @endif
 
                         <div class="grid flex-1 text-left text-sm leading-tight">
                             <span class="truncate font-semibold">{{ auth()->user()->name }}</span>

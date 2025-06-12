@@ -8,6 +8,7 @@ use App\Observers\OrganizationObserver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 #[ObservedBy(OrganizationObserver::class)]
 class Organization extends Model
@@ -17,14 +18,9 @@ class Organization extends Model
     protected $fillable = [
         'name',
         'slug',
-        'description',
-        'website',
-        'email',
-        'phone',
-        /*'logo',*/
+        'logo',
         'owner_id',
     ];
-
 
     public function activeMembers()
     {
@@ -102,5 +98,20 @@ class Organization extends Model
     public function avatar(): HasOne
     {
         return $this->hasOne(Avatar::class);
+    }
+
+    public function initials(): string
+    {
+        return Str::of($this->name)
+            ->explode(' ')
+            ->map(fn(string $name) => Str::of($name)->substr(0, 1))
+            ->implode('');
+    }
+
+    /*-------------NOTES--------------*/
+
+    public function notes()
+    {
+        return $this->hasMany(Notes::class)->where('organization_id', $this->id);
     }
 }

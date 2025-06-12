@@ -57,7 +57,6 @@ class Sidebar extends HorixtComponent
     #[On('add-favorites')]
     public function loadProjects()
     {
-        Log::info('Loading projects');
         $this->projects = [];
         $this->favProjects = [];
         if (Context::isOrganization()) {

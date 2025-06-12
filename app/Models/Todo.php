@@ -26,8 +26,14 @@ class Todo extends Model
         'project_id',
         'organization_id',
         'parent_id',
+        'completed_at',
     ];
 
+    protected $casts = [
+        'is_done' => 'boolean',
+        'is_trackable' => 'boolean',
+        'completed_at' => 'datetime',
+    ];
     public function toSearchableArray()
     {
         return [

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\NotificationType;
 use App\Observers\UserObserver;
 use App\Traits\HasUuid;
 use Database\Factories\UserFactory;
@@ -141,7 +142,7 @@ class User extends Authenticatable
     /*-------------Avatar--------------*/
     public function avatar(): HasOne
     {
-        return $this->hasOne(Avatar::class);
+        return $this->hasOne(Avatar::class)->whereNull('organization_id');
     }
 
     /*-------------Super Admin--------------*/
@@ -157,4 +158,31 @@ class User extends Authenticatable
         return $this->hasMany(TodoComment::class, 'user_id');
     }
 
+    /*-------------PREFERRED ORGANIZATION--------------*/
+    public function preferredOrganization(): HasOne
+    {
+        return $this->hasOne(Organization::class, 'id', 'preferred_organization_id');
+    }
+
+    /*-------------NOTIFICATIONS--------------*/
+
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(Notification::class, 'user_id')
+            ->whereNotNull('user_id')
+            ->where('type', '!=', NotificationType::INVITATION->value)
+            ->orderBy('created_at', 'desc');
+    }
+
+    public function unreadNotifications()
+    {
+        return $this->notifications()
+            ->where('read_at', null);
+    }
+
+    /*-------------NOTES--------------*/
+    public function notes() : HasMany
+    {
+        return $this->hasMany(Notes::class)->whereNull('organization_id');
+    }
 }

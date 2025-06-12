@@ -13,10 +13,6 @@ class Organizations extends HorixtComponent
 
     public $name;
     public $slug;
-    public $description;
-    public $email;
-    public $website;
-    public $phone;
 
     public function toOrganization($id)
     {
@@ -33,19 +29,11 @@ class Organizations extends HorixtComponent
         $validatedAttribute = $this->validate([
             'name' => 'required|string|max:25',
             'slug' => 'required|string|max:13|unique:organizations|regex:/^[a-z0-9-]*$/',
-            'description' => 'nullable|string|max:255',
-            'email' => 'nullable|email|max:255',
-            'website' => 'nullable|string|max:255',
-            'phone' => 'nullable|string|max:255',
         ]);
 
         Organization::create([
             'name' => $validatedAttribute['name'],
             'slug' => $validatedAttribute['slug'],
-            'description' => $validatedAttribute['description'],
-            'email' => $validatedAttribute['email'],
-            'website' => $validatedAttribute['website'],
-            'phone' => $validatedAttribute['phone'],
             'owner_id' => auth()->id(),
         ]);
         $this->resetExcept(['organizations']);

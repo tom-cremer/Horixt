@@ -75,14 +75,14 @@ class Breadcrumb extends HorixtComponent
                 'label' => __('Profile'),
                 'url' => route('personal.settings.profile'),
             ];
-        } elseif ($routeName === 'personal.settings.appearance') {
+        } elseif ($routeName === 'personal.settings.preferences') {
             $breadcrumbs[] = [
                 'label' => __('Settings'),
                 'url' => route('personal.settings'),
             ];
             $breadcrumbs[] = [
-                'label' => __('Appearance'),
-                'url' => route('personal.settings.appearance'),
+                'label' => __('Preferences'),
+                'url' => route('personal.settings.preferences'),
             ];
         } elseif ($routeName === 'personal.settings.password') {
             $breadcrumbs[] = [
@@ -102,6 +102,11 @@ class Breadcrumb extends HorixtComponent
             $breadcrumbs[] = [
                 'label' => __('Organizations'),
                 'url' => route('personal.organizations'),
+            ];
+        } elseif ($routeName === 'personal.notes') {
+            $breadcrumbs[] = [
+                'label' => __('Notes'),
+                'url' => route('personal.notes'),
             ];
         }
 
@@ -165,14 +170,14 @@ class Breadcrumb extends HorixtComponent
                 'label' => __('Profile'),
                 'url' => route('organization.settings.profile', ['slug' => Context::getOrganizationSlug()]),
             ];
-        } elseif ($routeName === 'organization.settings.appearance') {
+        } elseif ($routeName === 'organization.settings.preferences') {
             $breadcrumbs[] = [
                 'label' => __('Settings'),
                 'url' => route('organization.settings', ['slug' => Context::getOrganizationSlug()]),
             ];
             $breadcrumbs[] = [
-                'label' => __('Appearance'),
-                'url' => route('organization.settings.appearance', ['slug' => Context::getOrganizationSlug()]),
+                'label' => __('Preferences'),
+                'url' => route('organization.settings.preferences', ['slug' => Context::getOrganizationSlug()]),
             ];
         } elseif ($routeName === 'organization.settings.password') {
             $breadcrumbs[] = [
@@ -197,6 +202,11 @@ class Breadcrumb extends HorixtComponent
             $breadcrumbs[] = [
                 'label' => __('Assigned to me'),
                 'url' => route('organization.assigned-to-me', ['slug' => Context::getOrganizationSlug()]),
+            ];
+        }  elseif ($routeName === 'organization.notes') {
+            $breadcrumbs[] = [
+                'label' => __('Notes'),
+                'url' => route('organization.notes', ['slug' => Context::getOrganizationSlug()]),
             ];
         }
 

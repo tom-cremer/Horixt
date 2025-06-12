@@ -4,6 +4,7 @@ use App\Livewire\AssignedToMe;
 use App\Livewire\Dashboard;
 use App\Livewire\FileManager;
 use App\Livewire\Members;
+use App\Livewire\NoteBoard;
 use App\Livewire\Organizations;
 use App\Livewire\OrgInvite;
 use App\Livewire\ProjectDetails;
@@ -29,7 +30,7 @@ Route::prefix('/personal')
         Route::redirect('settings', 'settings/profile')->name('settings');
         Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
         Volt::route('settings/password', 'settings.password')->name('settings.password');
-        Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
+        Volt::route('settings/preferences', 'settings.preferences')->name('settings.preferences');
 
         Route::get('/dashboard', Dashboard::class)->name('dashboard');
         Route::get('/organizations', Organizations::class)->name('organizations');
@@ -37,7 +38,7 @@ Route::prefix('/personal')
         Route::get('/projects', ProjectList::class)->name('projects.index');
         Route::get('/projects/{projectid}', ProjectDetails::class)->name('projects.show');
         Route::get('/files', FileManager::class)->name('files');
-
+        Route::get('/notes', NoteBoard::class)->name('notes');
     });
 
 
@@ -48,7 +49,8 @@ Route::prefix('/organization/{slug}')
         Route::redirect('settings', 'settings/profile')->name('settings');
         Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
         Volt::route('settings/password', 'settings.password')->name('settings.password');
-        Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
+        Volt::route('settings/preferences', 'settings.preferences')->name('settings.preferences');
+        Volt::route('settings/organization', 'settings.org-settings')->name('settings.org-settings');
 
         Route::get('/dashboard', Dashboard::class)->name('dashboard');
         Route::get('/members', Members::class)->name('members');
@@ -57,6 +59,8 @@ Route::prefix('/organization/{slug}')
         Route::get('/projects/{projectid}', ProjectDetails::class)->name('projects.show');
         Route::get('/files', FileManager::class)->name('files');
         Route::get('/assigned-to-me', AssignedToMe::class)->name('assigned-to-me');
+        Route::get('/notes', NoteBoard::class)->name('notes');
+
     });
 
 

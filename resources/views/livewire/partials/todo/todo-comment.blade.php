@@ -9,6 +9,7 @@
 
     <div
         x-show="open"
+        x-cloak
         x-transition:enter="transition ease-out duration-150"
         x-transition:enter-start="opacity-0 translate-x-2"
         x-transition:enter-end="opacity-100 translate-x-0"
@@ -81,6 +82,9 @@
                                     </flux:text>
                                 </div>
                                 <flux:text variant="subtle" class="text-xs mb-0.5">
+                                    @php
+                                     \App\Helper\TimezoneHelper::set()
+                                    @endphp
                                     {{ $comment->created_at->diffInMinutes() < 1 ? 'Just now' : $comment->created_at->locale('en_US')->diffForHumans() }}
                                 </flux:text>
 
@@ -190,6 +194,9 @@
                                                             </div>
                                                             <div class="flex items-center justify-start gap-2">
                                                                 <flux:text variant="subtle" class="text-xs">
+                                                                    @php
+                                                                        \App\Helper\TimezoneHelper::set()
+                                                                    @endphp
                                                                     {{ $reply->created_at->diffInMinutes() < 1 ? 'Just now' : $reply->created_at->locale('en_US')->diffForHumans() }}
                                                                 </flux:text>
                                                                 @if($reply->user_id === auth()->user()->id)
