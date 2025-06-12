@@ -164,6 +164,8 @@ class User extends Authenticatable
         return $this->hasOne(Organization::class, 'id', 'preferred_organization_id');
     }
 
+    /*-------------NOTIFICATIONS--------------*/
+
     public function notifications(): HasMany
     {
         return $this->hasMany(Notification::class, 'user_id')
@@ -176,5 +178,11 @@ class User extends Authenticatable
     {
         return $this->notifications()
             ->where('read_at', null);
+    }
+
+    /*-------------NOTES--------------*/
+    public function notes() : HasMany
+    {
+        return $this->hasMany(Notes::class)->whereNull('organization_id');
     }
 }

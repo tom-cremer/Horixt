@@ -4,6 +4,7 @@ use App\Livewire\AssignedToMe;
 use App\Livewire\Dashboard;
 use App\Livewire\FileManager;
 use App\Livewire\Members;
+use App\Livewire\NoteBoard;
 use App\Livewire\Organizations;
 use App\Livewire\OrgInvite;
 use App\Livewire\ProjectDetails;
@@ -37,7 +38,7 @@ Route::prefix('/personal')
         Route::get('/projects', ProjectList::class)->name('projects.index');
         Route::get('/projects/{projectid}', ProjectDetails::class)->name('projects.show');
         Route::get('/files', FileManager::class)->name('files');
-
+        Route::get('/notes', NoteBoard::class)->name('notes');
     });
 
 
@@ -58,6 +59,8 @@ Route::prefix('/organization/{slug}')
         Route::get('/projects/{projectid}', ProjectDetails::class)->name('projects.show');
         Route::get('/files', FileManager::class)->name('files');
         Route::get('/assigned-to-me', AssignedToMe::class)->name('assigned-to-me');
+        Route::get('/notes', NoteBoard::class)->name('notes');
+
     });
 
 

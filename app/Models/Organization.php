@@ -22,7 +22,6 @@ class Organization extends Model
         'owner_id',
     ];
 
-
     public function activeMembers()
     {
         return $this->belongsToMany(User::class)
@@ -107,5 +106,12 @@ class Organization extends Model
             ->explode(' ')
             ->map(fn(string $name) => Str::of($name)->substr(0, 1))
             ->implode('');
+    }
+
+    /*-------------NOTES--------------*/
+
+    public function notes()
+    {
+        return $this->hasMany(Notes::class)->where('organization_id', $this->id);
     }
 }
