@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Helper\Context;
 use App\Helper\TimezoneHelper;
 use App\Livewire\Component\HorixtComponent;
 use App\Models\Project;
@@ -20,10 +21,15 @@ class Insights extends HorixtComponent
     public $completedToday = 0;
     public $progressPercentage = 0;
 
+    public $todos = [];
+    public $statusFilter = null;
+    public $statuses = [];
     public function mount($projectId)
     {
+        $this->statuses = Status::all();
         $this->projectId = $projectId;
         $this->project = Project::find($this->projectId);
+
     }
 
 
@@ -95,8 +101,26 @@ class Insights extends HorixtComponent
 
     }
 
+    public function loadTodo()
+    {
+        if ($this->project) {
+            $query = $this->project->todos()
+                ->when(Context::isPersonal(), function ($query) {
+                    return $query->whereNull('organization_id');
+                }, function ($query) {
+                    return $query->where('organization_id', Context::getOrganizationId());
+                })
+                ->when($this->statusFilter, function ($query) {
+                    return $query->where('status_id', $this->statusFilter);
+                });
+
+            $this->todos = $query->get();
+        }
+    }
+
     public function render()
     {
+        self::loadTodo();
         return view('livewire.insights');
     }
 }
