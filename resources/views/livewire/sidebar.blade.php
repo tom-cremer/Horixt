@@ -48,6 +48,8 @@
         --}}
         <livewire:partials.nav-button :collapsed="$collapsed" icon="folder" text="Files" beta="true"
                                       route="{{ \App\Helper\Context::isPersonal() ? route('personal.files') : route('organization.files', \App\Helper\Context::getOrganizationSlug()) }}"/>
+        <livewire:partials.nav-button :collapsed="$collapsed" icon="notebook" text="Notes"
+                                      route="{{ \App\Helper\Context::isPersonal() ? route('personal.notes') : route('organization.notes', \App\Helper\Context::getOrganizationSlug()) }}"/>
         <flux:separator/>
 
         {{-- Trays --}}
