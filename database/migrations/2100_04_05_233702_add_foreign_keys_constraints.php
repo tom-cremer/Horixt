@@ -101,6 +101,12 @@ return new class extends Migration
         Schema::table('app_notifications', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
+
+        Schema::table('notes', function (Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
+            $table->foreign('color_id')->references('id')->on('colors')->onDelete('cascade');
+        });
     }
 
     /**
@@ -198,6 +204,13 @@ return new class extends Migration
 
         Schema::table('app_notifications', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
+        });
+
+        Schema::table('notes', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+            $table->dropForeign(['organization_id']);
+            $table->dropForeign(['color_id']);
+
         });
 
     }
