@@ -63,6 +63,7 @@
                                 </flux:menu.item>
                             </flux:menu>
                         </flux:dropdown>
+
                     </div>
                     <flux:text class="text-sm mb-2 dark:text-zinc-800">{{ $note->content }}</flux:text>
                     <flux:text variant="subtle" class="mt-auto text-xs dark:text-zinc-700">
