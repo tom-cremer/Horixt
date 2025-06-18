@@ -9,6 +9,7 @@ use App\Models\Todo;
 use App\Models\Track as TrackModel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Livewire\Attributes\On;
 
 class Track extends HorixtComponent
 {
@@ -71,11 +72,28 @@ class Track extends HorixtComponent
             $this->activeTrack->save();
 
             $this->dispatch('track-ended');
+            $this->dispatch('track-stopped', $this->activeTrack->id);
             $this->reset(['activeTrack']);
         }
 
         $this->tracks = $this->todo->tracks()->whereNotNull('ended_at')->orderBy('started_at', 'desc')->get();
         $this->timer = $this->totalDuration();
+    }
+
+    #[On('track-stopped')]
+    public function TrackStop($trackId)
+    {
+        Log::info('Track stopped event received for track ID: ' . $trackId);
+        if ($this->activeTrack && $this->activeTrack->id == $trackId) {
+            Log::info('Stopping active track with ID: ' . $trackId);
+            TimezoneHelper::set();
+            $this->activeTrack->ended_at = now();
+            $this->activeTrack->durations = $this->calculateDuration($this->activeTrack->started_at, $this->activeTrack->ended_at);
+            $this->activeTrack->save();
+
+            $this->dispatch('track-ended');
+            $this->reset(['activeTrack']);
+        }
     }
 
     public function calculateDuration($started_at, $ended_at)
