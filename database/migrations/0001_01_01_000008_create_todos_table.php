@@ -13,12 +13,9 @@ return new class extends Migration {
         Schema::create('todos', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('description');
-            $table->boolean('is_done')->default(false);
             $table->boolean('is_trackable')->default(true);
             $table->unsignedBigInteger('status_id');
             $table->unsignedBigInteger('priority_id');
-            $table->unsignedBigInteger('color_id');
             $table->unsignedBigInteger('user_id'); // Mode solo
             $table->unsignedBigInteger('project_id')->nullable();
             $table->unsignedBigInteger('organization_id')->nullable();
