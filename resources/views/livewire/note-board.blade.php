@@ -1,11 +1,28 @@
 <div class="p-4 space-y-4 " wire:poll.60s>
     <div class="flex items-center justify-between">
-        <flux:heading level="2" class="font-semibold text-2xl!">Notes</flux:heading>
+        @if($mode)
+            <flux:heading level="2" class="font-semibold text-2xl!">
+                Briefs
+            </flux:heading>
+        @else
+            <flux:heading level="2" class="font-semibold text-2xl!">
+                Notes
+            </flux:heading>
+        @endif
+
         <div x-data="{ colorModal: false }" class="relative">
-            <flux:button variant="filled" icon="plus" size="sm" :loading="false"
-                         x-on:click="colorModal = true">
-                Add Note
-            </flux:button>
+            @if($mode)
+                <flux:button variant="filled" icon="plus" size="sm" :loading="false"
+                             x-on:click="colorModal = true">
+                    Add Brief
+                </flux:button>
+            @else
+                <flux:button variant="filled" icon="plus" size="sm" :loading="false"
+                             x-on:click="colorModal = true">
+                    Add Note
+                </flux:button>
+            @endif
+
             <div x-show="colorModal"
                  x-cloak
                  x-transition:enter="transition ease-out duration-100"
@@ -36,14 +53,14 @@
                 @if($noteToEditId === $note->id)
                     <div class="mt-2">
                         <div class="flex flex-col gap-1.5">
-                        <flux:input type="text" wire:model="title" size="sm" placeholder="Edit title" class="bg-white! dark:bg-white! text-zinc-800!  dark:text-zinc-800! rounded-md "/>
+                        <flux:input type="text" wire:model="title" size="sm" placeholder="Edit title" class="bg-white! dark:bg-zinc-600! text-zinc-800! rounded-md "/>
                         <flux:textarea wire:model="content" placeholder="Edit content"
-                                       class="mt-2 bg-white! dark:bg-white! text-zinc-800! dark:text-zinc-800! rounded-md" resize="none"></flux:textarea>
+                                       class="mt-2 bg-white! dark:bg-zinc-600! text-zinc-800! dark:text-zinc-300! rounded-md" resize="none"></flux:textarea>
                         </div>
                         <div class="flex justify-end gap-2">
-                            <flux:button size="sm" wire:click="cancelEdit"
+                            <flux:button size="sm" wire:click="cancelEdit" variant="filled"
                                          class="mt-2">Cancel</flux:button>
-                        <flux:button variant="primary" size="sm" wire:click="updateNote"
+                            <flux:button  size="sm" wire:click="updateNote"
                                       class="mt-2">Save</flux:button>
                         </div>
                     </div>
