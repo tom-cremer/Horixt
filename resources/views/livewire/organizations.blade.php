@@ -55,8 +55,8 @@
                                                      initials:single/>
                                     @endif
                                 @endforeach
-                                @if(count($members) >= 5)
-                                    <flux:avatar>{{count($members) - 5}}+</flux:avatar>
+                                @if(count($members) > 5)
+                                    <flux:avatar size="sm">{{count($members) - 5}}+</flux:avatar>
                                 @endif
                             </flux:avatar.group>
                         </div>
