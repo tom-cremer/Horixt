@@ -15,14 +15,9 @@ class OrganizationObserver
      */
     public function created(Organization $organization): void
     {
-        auth()->user()->organizations()->attach($organization->id);
-        session(['team_id' => $organization->id]);
-        setPermissionsTeamId(session('team_id'));
-        auth()->user()->assignRole(RoleEnum::ADMIN->value);
-
-        FileManagerHelper::createOrganizationDirectory($organization, auth()->user());
         StatusColorHelper::seedOrganizationStatusColor($organization);
         PriorityColorHelper::seedOrganizationPriorityColor($organization);
+
     }
 
     /**
