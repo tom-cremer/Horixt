@@ -25,22 +25,22 @@
                             </flux:badge>
                         </div>
                     </div>
-                    <div class="ml-auto flex gap-2">
+                    <div class="ml-auto flex gap-1.5">
                         @if($project->favorite)
-                            <flux:button square :loading="false" size="sm" wire:click.stop="removeFromFavorites({{$project->id}})">
+                            <flux:button square :loading="false" size="sm" variant="ghost" wire:click.stop="removeFromFavorites({{$project->id}})">
                                 <flux:icon.star variant="solid" class="size-5 text-amber-400 dark:text-amber-300"/>
                             </flux:button>
                         @else
-                            <flux:button square :loading="false" size="sm" wire:click.stop="addToFavorites({{$project->id}})">
+                            <flux:button square :loading="false" variant="ghost" size="sm" wire:click.stop="addToFavorites({{$project->id}})">
                                 <flux:icon.star class="size-5 "/>
                             </flux:button>
                         @endif
 
                         @if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::PROJECT_UPDATE))
-                            <flux:button wire:click.stop="editProject({{$project->id}})" size="sm">Edit</flux:button>
+                            <flux:button wire:click.stop="editProject({{$project->id}})" size="sm" variant="ghost">Edit</flux:button>
                         @endif
                         @if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::PROJECT_DELETE))
-                            <flux:button wire:click.stop="deleteProject({{$project->id}})" size="sm" variant="danger">
+                            <flux:button wire:click.stop="deleteProject({{$project->id}})" size="sm" variant="filled">
                                 Delete
                             </flux:button>
                         @endif
