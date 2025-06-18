@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Enums\RoleEnum;
+use App\Helper\FileManagerHelper;
 use App\Livewire\Component\HorixtComponent;
 use App\Models\Organization;
 use Flux\Flux;
@@ -31,11 +33,18 @@ class Organizations extends HorixtComponent
             'slug' => 'required|string|max:13|unique:organizations|regex:/^[a-z0-9-]*$/',
         ]);
 
-        Organization::create([
+        $organization = Organization::create([
             'name' => $validatedAttribute['name'],
             'slug' => $validatedAttribute['slug'],
             'owner_id' => auth()->id(),
         ]);
+
+        auth()->user()->organizations()->attach($organization->id);
+        session(['team_id' => $organization->id]);
+        setPermissionsTeamId(session('team_id'));
+        auth()->user()->assignRole(RoleEnum::ADMIN->value);
+
+        FileManagerHelper::createOrganizationDirectory($organization, auth()->user());
         $this->resetExcept(['organizations']);
         Flux::modal('add-organization')->close();
     }
