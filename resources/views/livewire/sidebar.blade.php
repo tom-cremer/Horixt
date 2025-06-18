@@ -7,12 +7,12 @@
         hover:bg-gray-300 dark:hover:bg-zinc-500 transition-all duration-200 ease-in-out">
         <flux:icon name="chevron-right" class="text-zinc-500 dark:text-white
         w-4.5 h-4.5 transition-all duration-200 ease-in-out
-        {{ $collapsed ? 'rotate-180' : '' }}"/>
+        {{ $collapsed ? '' : 'rotate-180' }}"/>
     </button>
 
 
     {{-- Logo --}}
-    <div class="flex items-center gap-2 p-3 cursor-pointer mr-auto {{ $collapsed ? 'justify-center' : '' }}"
+    <div class="flex items-center gap-2 px-3 pb-3 pt-0 cursor-pointer mr-auto {{ $collapsed ? 'justify-center' : '' }}"
          href="{{ \App\Helper\Context::isPersonal() ? route('personal.dashboard') : route('organization.dashboard', \App\Helper\Context::getOrganizationSlug()) }}"
          wire:navigate>
         {{-- Logo --}}
