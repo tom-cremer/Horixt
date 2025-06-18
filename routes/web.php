@@ -10,7 +10,6 @@ use App\Livewire\Organizations;
 use App\Livewire\OrgInvite;
 use App\Livewire\ProjectDetails;
 use App\Livewire\ProjectList;
-use App\Livewire\Todo;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
