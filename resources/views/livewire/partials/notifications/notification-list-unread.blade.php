@@ -1,12 +1,9 @@
 <div
      class="flex flex-col gap-2 overflow-y-auto max-h-full">
-
-    {{--Notifications List--}}
-    @if(empty($notifications))
-        <p class="text-zinc-500 dark:text-zinc-400 text-sm">No notifications</p>
+    @if(empty($unreadNotifications))
+        <p class="text-zinc-500 dark:text-zinc-400 text-sm">No Unread Notifications</p>
     @else
-
-        @foreach($notifications as $notification)
+        @foreach($unreadNotifications as $notification)
             @if($notification->type === \App\Enums\NotificationType::UNASSIGNMENT)
                 <livewire:partials.notifications.assignment :notificationId="$notification->id"
                                                             wire:key="unassignment-{{$notification->id}}-{{$notification->updated_at}}"/>
