@@ -42,11 +42,6 @@ class Breadcrumb extends HorixtComponent
                 'label' => __('Dashboard'),
                 'url' => route('personal.dashboard'),
             ];
-        } elseif ($routeName === 'personal.todos') {
-            $breadcrumbs[] = [
-                'label' => __('Todos'),
-                'url' => route('personal.todos'),
-            ];
         } elseif ($routeName === 'personal.projects.index') {
             $breadcrumbs[] = [
                 'label' => __('Projects'),
@@ -137,11 +132,6 @@ class Breadcrumb extends HorixtComponent
                 'label' => __('Dashboard'),
                 'url' => route('organization.dashboard', ['slug' => Context::getOrganizationSlug()]),
             ];
-        } elseif ($routeName === 'organization.todos') {
-            $breadcrumbs[] = [
-                'label' => __('Todos'),
-                'url' => route('organization.todos', ['slug' => Context::getOrganizationSlug()]),
-            ];
         } elseif ($routeName === 'organization.projects.index') {
             $breadcrumbs[] = [
                 'label' => __('Projects'),
@@ -187,6 +177,15 @@ class Breadcrumb extends HorixtComponent
             $breadcrumbs[] = [
                 'label' => __('Password'),
                 'url' => route('organization.settings.password', ['slug' => Context::getOrganizationSlug()]),
+            ];
+        } elseif ($routeName === 'organization.settings.org-settings') {
+            $breadcrumbs[] = [
+                'label' => __('Settings'),
+                'url' => route('organization.settings', ['slug' => Context::getOrganizationSlug()]),
+            ];
+            $breadcrumbs[] = [
+                'label' => __('Organization'),
+                'url' => route('organization.settings.org-settings', ['slug' => Context::getOrganizationSlug()]),
             ];
         } elseif ($routeName === 'organization.files') {
             $breadcrumbs[] = [
