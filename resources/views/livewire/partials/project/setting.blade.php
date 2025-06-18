@@ -3,6 +3,8 @@
         <flux:heading size="lg">Project Settings</flux:heading>
         <flux:text variant="subtle">Manage your project’s name, priority, and status.</flux:text>
     </div>
+@if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::PROJECT_MANAGE))
+
 
     <form wire:submit.prevent="saveSettings" class="flex flex-col gap-5">
         <flux:input
@@ -36,4 +38,12 @@
             <flux:button type="submit" variant="filled" >Save Changes</flux:button>
         </div>
     </form>
+    @else
+    <div>
+        <flux:text variant="subtle" class="text-sm">
+            Oups, You do not have permission to edit project settings.
+        </flux:text>
+    </div>
+    @endif
+
 </div>
