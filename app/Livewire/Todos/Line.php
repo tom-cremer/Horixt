@@ -42,6 +42,12 @@ class Line extends HorixtComponent
         if (Context::isOrganization()) {
             $this->members = Context::getOrganization()->members;
         }
+
+
+        $sessionKey = "todo_{$todo->id}_expanded";
+        $storedExpanded = session($sessionKey, false);
+        $this->expanded = $storedExpanded;
+
     }
 
     public function editTodo()
@@ -76,6 +82,7 @@ class Line extends HorixtComponent
     public function toggleExpanded()
     {
         $this->expanded = !$this->expanded;
+        session(["todo_{$this->todo->id}_expanded" => $this->expanded]);
     }
 
     public function showSubForm()
@@ -90,8 +97,6 @@ class Line extends HorixtComponent
         ]);
         Todo::create([
             'name' => $this->newSubTodoTitle,
-            'description' => '',
-            'is_done' => false,
             'is_trackable' => $this->trackable,
             'status_id' => Status::DEFAULT,
             'priority_id' => Priority::DEFAULT,

@@ -23,7 +23,14 @@
                     <flux:button icon="x" variant="subtle" size="xs" wire:click="cancelEdit"/>
                 @else
 
-                    <p class="w-full truncate! font-medium font-lexend @if($todo->is_done) line-through text-gray-400 @endif">
+                    <p
+                    @class([
+                            'w-full truncate! font-medium font-lexend',
+                            'text-zinc-800 dark:text-zinc-200' => $todo->status_id === \App\Models\Status::IN_PROGRESS,
+                            'text-gray-400 dark:text-gray-500' => $todo->status_id === \App\Models\Status::NOT_STARTED,
+                            'text-red-400 dark:text-red-300' => $todo->status_id === \App\Models\Status::STUCK,
+                            'line-through text-zinc-500 dark:text-zinc-400' => $todo->status_id === \App\Models\Status::COMPLETED,
+                        ])>
                         {{ $todo->name }}
                     </p>
                     @if(strlen($todo->name) >= 20)
@@ -93,31 +100,31 @@
 
                             <div class="overflow-y-auto max-h-36 mt-3 mb-2">
                                 @foreach($searchResults as $result)
-                                        <div
-                                            class="grid grid-cols-[auto_1fr_auto] gap-1.5 hover:bg-gray-100 dark:hover:bg-zinc-800 p-2 rounded-lg cursor-pointer"
-                                            wire:click="addAssignee({{$result->id}})">
-                                            @if($result->avatar)
-                                                <flux:avatar tooltip="{{$result->name}}" size="xs"
-                                                             class="ring-0! ring-transparent!"
-                                                             src="{{\Illuminate\Support\Facades\Storage::url($result->avatar->path)}}"/>
-                                            @else
-                                                <flux:avatar tooltip="{{$result->name}}" size="xs"
-                                                             name="{{$result->name}}"
-                                                             class="ring-0! ring-transparent!²"
-                                                             color="auto"
-                                                             color:seed="{{ $result->id }}"
-                                                             initials:single/>
-                                            @endif
-                                            <flux:heading
-                                                class="whitespace-nowrap truncate!"
-                                            >
-                                                {{$result->name}}
+                                    <div
+                                        class="grid grid-cols-[auto_1fr_auto] gap-1.5 hover:bg-gray-100 dark:hover:bg-zinc-800 p-2 rounded-lg cursor-pointer"
+                                        wire:click="addAssignee({{$result->id}})">
+                                        @if($result->avatar)
+                                            <flux:avatar tooltip="{{$result->name}}" size="xs"
+                                                         class="ring-0! ring-transparent!"
+                                                         src="{{\Illuminate\Support\Facades\Storage::url($result->avatar->path)}}"/>
+                                        @else
+                                            <flux:avatar tooltip="{{$result->name}}" size="xs"
+                                                         name="{{$result->name}}"
+                                                         class="ring-0! ring-transparent!²"
+                                                         color="auto"
+                                                         color:seed="{{ $result->id }}"
+                                                         initials:single/>
+                                        @endif
+                                        <flux:heading
+                                            class="whitespace-nowrap truncate!"
+                                        >
+                                            {{$result->name}}
 
-                                            </flux:heading>
-                                            @if($result->id === auth()->id())
-                                                <flux:badge size="sm" color="amber" class="ml-1">You</flux:badge>
-                                            @endif
-                                        </div>
+                                        </flux:heading>
+                                        @if($result->id === auth()->id())
+                                            <flux:badge size="sm" color="amber" class="ml-1">You</flux:badge>
+                                        @endif
+                                    </div>
 
                                 @endforeach
                             </div>
@@ -293,7 +300,7 @@
     </div>
 
     @if($expanded)
-        <div class="ml-4 space-y-2">
+        <div class="ml-4 mt-2 mb-3 flex flex-col ">
             @if(!$assignedToMe)
                 @foreach($todo->children as $child)
                     <livewire:todos.line :todo="$child" :assignedToMe="$assignedToMe" :key="$child->id"/>
@@ -301,18 +308,27 @@
             @endif
 
             @if(!$assignedToMe)
-                <div class="mt-2 px-1 flex items-center space-x-2">
-                    <flux:input
-                        type="text"
-                        size="sm"
-                        kbd="Enter"
-                        placeholder="New sub-todo"
-                        wire:model="newSubTodoTitle"
-                        wire:keydown.enter="addSubTodo"
-                        clearable/>
-                    <flux:switch wire:model="trackable" align="left" label="Trackable" size="sm"/>
-                    <input type="hidden" wire:model="parent_id" value="{{ $todo->id }}">
-                </div>
+                @if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::TODOS_CREATE))
+                    <div class="mt-0.5 px-1 grid grid-cols-[1fr_auto_auto] items-center gap-1.5">
+                        <flux:input
+                            type="text"
+                            size="sm"
+                            placeholder="New sub-todo"
+                            wire:model="newSubTodoTitle"
+                            wire:keydown.enter.prevent="addSubTodo"
+                            clearable/>
+                        <flux:switch wire:model="trackable" align="left" label="Trackable" size="sm"/>
+                        <input type="hidden" wire:model="parent_id" value="{{ $todo->id }}">
+                        <flux:button
+                            type="button"
+                            size="sm"
+                            wire:click="addSubTodo"
+                            :loading="false">
+                            Add
+                        </flux:button>
+                    </div>
+
+                @endif
             @endif
         </div>
     @endif
