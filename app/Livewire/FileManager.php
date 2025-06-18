@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Helper\Context;
 use App\Livewire\Component\HorixtComponent;
 use App\Models\Directories;
 use App\Models\Files;
@@ -36,11 +37,15 @@ class FileManager extends HorixtComponent
 
     public function mount()
     {
-        $this->currentDirectory = auth()->user()->directories()
+        $this->currentDirectory = Context::isPersonal() ? auth()->user()->directories()
             ->where('path', 'like', '%personal/' . auth()->user()->uuid . '%')
             ->where('user_id', auth()->id())
             ->whereNull('parent_id')
-            ->first();
+            ->first()
+            : Context::getOrganization()->directories()
+                ->where('path', 'like', '%organizations/' . Context::getOrganization()->uuid . '%')
+                ->whereNull('parent_id')
+                ->first();
         $this->buildBreadcrumbs();
     }
 
@@ -69,9 +74,7 @@ class FileManager extends HorixtComponent
      * */
     public function navigateToDirectory($id)
     {
-        $dir = Directories::where('id', $id)
-            ->where('user_id', auth()->id())
-            ->firstOrFail();
+        $dir = Directories::find($id);
 
         $this->currentDirectory = $dir;
         $this->buildBreadcrumbs();
@@ -264,6 +267,7 @@ class FileManager extends HorixtComponent
         }
 
     }
+
     public function submitRenameFile()
     {
         $this->validate([
@@ -338,7 +342,6 @@ class FileManager extends HorixtComponent
     }
 
 
-
     public function fileModal($id)
     {
         $this->selectedFile = Files::find($id);
@@ -357,6 +360,7 @@ class FileManager extends HorixtComponent
             'type' => 'success',
         ]);
     }
+
     public function render()
     {
 
