@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('organization_id')->nullable();
             $table->unsignedBigInteger('color_id')->nullable();
+            $table->unsignedBigInteger('project_id')->nullable();
             $table->string('title')->nullable();
             $table->text('content')->nullable();
             $table->timestamps();
