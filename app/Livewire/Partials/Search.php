@@ -6,7 +6,6 @@ use App\Helper\Context;
 use App\Livewire\Component\HorixtComponent;
 use App\Models\Project;
 use App\Models\Todo;
-use App\Models\User;
 
 class Search extends HorixtComponent
 {
@@ -36,10 +35,10 @@ class Search extends HorixtComponent
         } elseif (str_starts_with($trimmed, '@project')) {
             $this->mode = 'projects';
             $this->search = str_replace('@project', '', $this->search);
-        } elseif (str_starts_with($trimmed, '@member')) {
+        } /*elseif (str_starts_with($trimmed, '@member')) {
             $this->mode = 'members';
             $this->search = str_replace('@member', '', $this->search);
-        } else {
+        }*/ else {
             return;
         }
     }
@@ -55,6 +54,7 @@ class Search extends HorixtComponent
         $this->mode = 'global';
         $this->searchResults = [];
     }
+
     protected function performSearch(): array
     {
         $query = trim(preg_replace('/^@(\w+)/', '', $this->search));
@@ -67,10 +67,10 @@ class Search extends HorixtComponent
             return ['projects' => Project::search($query)->get()];
         }
 
-        if ($this->mode === 'members' && Context::isOrganization()) {
+        /*if ($this->mode === 'members' && Context::isOrganization()) {
             $members = Context::getOrganization()->members->pluck('id')->toArray();
             return ['members' => User::search($query)->whereIn('id', $members)->get()];
-        }
+        }*/
 
         // Global mode
         $results = [
@@ -78,12 +78,50 @@ class Search extends HorixtComponent
             'projects' => Project::search($query)->get(),
         ];
 
-        if (Context::isOrganization()) {
+        /*if (Context::isOrganization()) {
             $members = Context::getOrganization()->members->pluck('id')->toArray();
             $results['members'] = User::search($query)->whereIn('id', $members)->get();
-        }
+        }*/
 
         return $results;
+    }
+
+
+    public function viewTodo($todoId)
+    {
+        $todo = Todo::findOrFail($todoId);
+        if ($todo) {
+
+            $project = $todo->project;
+
+            // expand task parent of the todo if it exists
+            if ($todo->parent) {
+                $parent = $todo->parent;
+                while ($parent) {
+                    session(["todo_{$parent->id}_expanded" => true]);
+                    $parent = $parent->parent;
+                }
+            }
+
+            // redirect to the project of the todo
+            if (!empty($project)) {
+                if ($project->organization_id) {
+                    return redirect()->route('organization.projects.show', ['projectid' => $project->id, 'slug' => $project->organization->slug]);
+                }
+                return redirect()->route('personal.projects.show', ['projectid' => $project->id]);
+            }
+        }
+    }
+
+    public function viewProject($projectId)
+    {
+        $project = Project::findOrFail($projectId);
+        if ($project) {
+            if (Context::isOrganization() && $project->organization_id === Context::getOrganizationId()) {
+                return redirect()->route('organization.projects.show', ['projectid' => $project->id, 'slug' => $project->organization->slug]);
+            }
+            return redirect()->route('personal.projects.show', ['projectid' => $project->id]);
+        }
     }
 
     public function render()
