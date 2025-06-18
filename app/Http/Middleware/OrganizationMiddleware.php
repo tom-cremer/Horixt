@@ -39,7 +39,7 @@ class OrganizationMiddleware
             ->exists();
 
         if (!$isMember) {
-            Log::info("OrganizationMiddleware: User is not a member of the organization with ID {$organizationId}");
+/*            Log::info("OrganizationMiddleware: User is not a member of the organization with ID {$organizationId}");*/
             return redirect()->route('personal.dashboard');
         }
 
