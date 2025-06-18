@@ -25,6 +25,10 @@ class ProjectDetails extends HorixtComponent
             'label' => 'Insights',
             'icon' => 'chart-spline',
         ],
+        'briefs' => [
+            'label' => 'Briefs',
+            'icon' => 'notepad-text',
+        ],
         'settings' => [
             'label' => 'Settings',
             'icon' => 'settings',
