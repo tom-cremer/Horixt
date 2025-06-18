@@ -122,7 +122,7 @@
                                     <div class="mt-2 text-center">
                                         <flux:tooltip content="{{ $item['project']->name }}">
                                             <flux:text variant="strong"
-                                                       class="text-sm font-semibold truncate max-w-24">{{ $item['project']->name }}</flux:text>
+                                                       class="text-sm font-semibold truncate max-w-16">{{ $item['project']->name }}</flux:text>
                                         </flux:tooltip>
                                         <div class="text-xs text-zinc-500">
                                             @php
@@ -172,7 +172,7 @@
                                 wire:navigate
                                 class="flex justify-between items-center gap-2 bg-zinc-50 dark:bg-zinc-600 rounded-md p-2 hover:bg-zinc-100 dark:hover:bg-zinc-500 transition">
                                 <flux:tooltip content="{{ $project->name }}">
-                                    <flux:text variant="strong" class="text-sm font-semibold truncate max-w-full">
+                                    <flux:text variant="strong" class="text-sm font-semibold truncate max-w-40">
                                         {{ $project->name }}
                                     </flux:text>
                                 </flux:tooltip>
