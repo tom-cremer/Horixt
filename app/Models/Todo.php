@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -12,16 +13,13 @@ use Laravel\Scout\Searchable;
 
 class Todo extends Model
 {
-    use Searchable;
+    use Searchable, HasFactory;
 
     protected $fillable = [
         'name',
-        'description',
-        'is_done',
         'is_trackable',
         'status_id',
         'priority_id',
-        'color_id',
         'user_id',
         'project_id',
         'organization_id',
@@ -30,7 +28,6 @@ class Todo extends Model
     ];
 
     protected $casts = [
-        'is_done' => 'boolean',
         'is_trackable' => 'boolean',
         'completed_at' => 'datetime',
     ];

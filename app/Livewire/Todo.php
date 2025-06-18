@@ -46,8 +46,6 @@ class Todo extends HorixtComponent
         ]);
         Todos::create([
             'name' => $this->name,
-            'description' => '',
-            'is_done' => false,
             'is_trackable' => $this->trackable,
             'status_id' => Status::DEFAULT,
             'priority_id' => Priority::DEFAULT,
@@ -85,9 +83,8 @@ class Todo extends HorixtComponent
                     ->where('organization_id', Context::getOrganizationId())
                     ->with(['project', 'status', 'priority'])
                     ->orderBy('created_at', 'desc')
-                    ->paginate(12);
+                    ->paginate(10);
             }
-            /*$this->completedTodos = Todos::where('user_id', auth()->id())->where('is_done', true)->where('organization_id', Context::getOrganizationId())->with(['project', 'status', 'priority'])->pluck('id')->toArray();*/
         } else {
             $todos = Todos::where('user_id', auth()->id())
                 ->where('project_id', $this->projectId)
@@ -95,7 +92,7 @@ class Todo extends HorixtComponent
                 ->where('organization_id', null)
                 ->with(['project', 'status', 'priority'])
                 ->orderBy('created_at', 'desc')
-                ->paginate(12);
+                ->paginate(10);
             /*$this->completedTodos = Todos::where('user_id', auth()->id())->where('is_done', true)->where('organization_id', null)->with(['project', 'status', 'priority'])->pluck('id')->toArray();*/
         }
 
