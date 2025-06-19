@@ -109,7 +109,7 @@
                 @endphp
                 {{-- Top 3 Projects Podium --}}
                 <div
-                    class=" flex flex-col gap-4 bg-white dark:bg-zinc-700 border border-zinc-300 dark:border-zinc-600 shadow-md rounded-xl p-2.5 min-h-52 max-h-64 ">
+                    class="min-h-[230px] flex flex-col gap-4 bg-white dark:bg-zinc-700 border border-zinc-300 dark:border-zinc-600 shadow-md rounded-xl p-2.5 min-h-52 max-h-64 ">
                     <flux:text variant="strong" class="text-lg font-semibold">Top 3 Projects</flux:text>
                     <div class="grid grid-cols-3 justify-end items-end gap-4 w-full h-full mx-auto ">
                         @foreach($podium as $index => $item)
@@ -163,7 +163,7 @@
 
                 {{-- Recent Projects --}}
                 <div
-                    class=" flex flex-col gap-4 bg-white dark:bg-zinc-700 border border-zinc-300 dark:border-zinc-600 shadow-md rounded-xl p-2 min-w-60 min-h-52">
+                    class="min-h-[230px] flex flex-col gap-4 bg-white dark:bg-zinc-700 border border-zinc-300 dark:border-zinc-600 shadow-md rounded-xl p-2 min-w-60 min-h-52">
                     <flux:text variant="strong" class="text-lg font-semibold">Recent Projects</flux:text>
                     <div class="flex flex-col gap-2">
                         @foreach($projects->take(5) as $project)

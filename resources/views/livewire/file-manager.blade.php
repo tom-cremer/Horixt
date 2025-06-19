@@ -8,7 +8,7 @@
             mouseY = $event.clientY;
             $wire.toggleContextMenu(mouseX, mouseY)"
 >
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-center justify-between gap-4">
         <flux:heading level="2" size="lg" class="">
             File Manager
         </flux:heading>
