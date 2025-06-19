@@ -6,12 +6,15 @@
                               :current="($activeFeature === $key)">{{ucfirst($feature['label'])}}</flux:navbar.item>
         @endforeach
     </flux:navbar>
-    <flux:navlist class="flex sm:hidden">
-        @foreach($features as $key => $feature)
-            <flux:navlist.item wire:click="changeView('{{$key}}')" icon="{{$feature['icon']}}"
-                              :current="($activeFeature === $key)">{{ucfirst($feature['label'])}}</flux:navlist.item>
-        @endforeach
-    </flux:navlist>
+    <flux:dropdown class="block sm:hidden">
+        <flux:button icon:trailing="chevron-down">Change Tabs</flux:button>
+        <flux:menu>
+            @foreach($features as $key => $feature)
+                <flux:menu.item wire:click="changeView('{{$key}}')" icon="{{$feature['icon']}}"
+                                   :current="($activeFeature === $key)">{{ucfirst($feature['label'])}}</flux:menu.item>
+            @endforeach
+        </flux:menu>
+    </flux:dropdown>
     <div class="py-2.5 flex-1 overflow-hidden">
         @if($activeFeature === 'todos')
             <livewire:todo :projectId="$project->id"/>
