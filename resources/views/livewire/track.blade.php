@@ -93,7 +93,7 @@
                             </flux:text>
                             @if ($track->ended_at)
                                 <flux:text class="whitespace-nowrap">
-                                    Duration: {{ \Carbon\CarbonInterval::seconds($track->durations)->cascade()->locale('en_US')->format('%Hh%Im') }}</flux:text>
+                                    Duration: {{ \Carbon\CarbonInterval::seconds($track->durations)->cascade()->locale('en_US')->format('%Dd%Hh%Im') }}</flux:text>
                             @endif
                         </div>
                     @endif
