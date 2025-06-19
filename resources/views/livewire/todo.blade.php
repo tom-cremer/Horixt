@@ -1,24 +1,26 @@
 <div class="h-full flex flex-col justify-between gap-4">
     @if(!$assignedToMe)
         @if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::TODOS_CREATE))
-            <flux:fieldset>
-                <div class="px-1 mt-2 h-8 grid grid-cols-[1fr_auto_auto] items-center gap-1.5 space-x-2">
-                    <flux:input
-                        type="text"
-                        size="sm"
-                        placeholder="New Todo"
-                        wire:model="name"
-                        wire:keydown.enter="addTodo"
-                        clearable/>
+            <flux:fieldset
+                class="min-h-fit px-1 mt-2 h-8 grid grid-cols-1 sm:grid-cols-[1fr_auto_auto] items-center! gap-1.5 space-x-2">
+                <flux:input
+                    type="text"
+                    size="sm"
+                    placeholder="New Todo"
+                    wire:model="name"
+                    wire:keydown.enter="addTodo"
+                    clearable/>
+                <div class="flex items-center ">
                     <flux:switch align="left" label="Trackable" wire:model.live="trackable"/>
-                    <flux:button
-                        type="button"
-                        size="sm"
-                        wire:click="addTodo"
-                        :loading="false">
-                        Add Todo
-                    </flux:button>
                 </div>
+                <flux:button
+                    type="button"
+                    size="sm"
+                    wire:click="addTodo"
+                    :loading="false">
+                    Add Todo
+                </flux:button>
+
             </flux:fieldset>
         @endif
     @endif
