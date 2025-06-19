@@ -9,15 +9,23 @@
                 <flux:heading size="lg">Add members</flux:heading>
                 <flux:text class="mt-2">Invites members to the organization.</flux:text>
             </div>
+            <div class="grid grid-cols-[1fr_auto] items-center gap-2">
 
-            <flux:input
-                label="Members"
-                placeholder="Enter email addresses separated by spaces"
-                wire:model.defer="email"
-                type="email"
-                class="w-full"
-                wire:keydown.space.prevent="addEmail"
-            />
+                <flux:field>
+                    <flux:label>Email</flux:label>
+                    <flux:input
+                        placeholder="Enter email addresses separated by spaces"
+                        wire:model.defer="email"
+                        type="email"
+                        size="sm"
+                        class="w-full"
+                        wire:keydown.space.prevent="addEmail"
+                    />
+
+                </flux:field>
+                <flux:button size="sm" class="mt-auto" wire:click="addEmail">Add Email</flux:button>
+            </div>
+            <flux:error name="email" class="mt-1.5!"/>
             <div class="flex flex-col gap-2.5 mb-4">
                 <flux:heading size="lg">Invitees</flux:heading>
                 <div class="flex flex-wrap gap-2">

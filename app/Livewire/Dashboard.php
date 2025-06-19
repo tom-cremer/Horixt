@@ -26,7 +26,6 @@ class Dashboard extends HorixtComponent
     {
         $this->statuses = Status::all();
         $this->priorities = Priority::all();
-
     }
 
 
@@ -127,6 +126,7 @@ class Dashboard extends HorixtComponent
 
         if (Context::isPersonal()) {
             return auth()->user()->todos()
+                ->whereNull('organization_id')
                 ->where(function ($query) {
                     $query->whereHas('tracks', function ($query) {
                         $query->where('created_at', '>=', now()->subDays(5))
@@ -137,6 +137,7 @@ class Dashboard extends HorixtComponent
                 ->get();
         } else {
             return Context::getOrganization()->todos()
+                ->where('organization_id', Context::getOrganizationId())
                 ->where(function ($query) {
                     $query->whereHas('tracks', function ($query) {
                         $query->where('created_at', '>=', now()->subDays(5));

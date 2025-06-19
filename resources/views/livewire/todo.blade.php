@@ -1,19 +1,28 @@
 <div class="h-full flex flex-col justify-between gap-4">
     @if(!$assignedToMe)
-        <flux:fieldset>
-            <div class="px-1 mt-2 h-8 grid grid-cols-[1fr_auto] items-center gap-1.5 space-x-2">
+        @if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::TODOS_CREATE))
+            <flux:fieldset
+                class="min-h-fit px-1 mt-2 h-8 grid grid-cols-1 sm:grid-cols-[1fr_auto_auto] items-center! gap-1.5 space-x-2">
                 <flux:input
                     type="text"
                     size="sm"
-                    kbd="Enter"
                     placeholder="New Todo"
-                    class=""
                     wire:model="name"
                     wire:keydown.enter="addTodo"
                     clearable/>
-                <flux:switch align="left" label="Trackable" wire:model.live="trackable"/>
-            </div>
-        </flux:fieldset>
+                <div class="flex items-center ">
+                    <flux:switch align="left" label="Trackable" wire:model.live="trackable"/>
+                </div>
+                <flux:button
+                    type="button"
+                    size="sm"
+                    wire:click="addTodo"
+                    :loading="false">
+                    Add Todo
+                </flux:button>
+
+            </flux:fieldset>
+        @endif
     @endif
 
     <div class="overflow-auto h-full w-full font-lexend">
@@ -53,7 +62,7 @@
 
         </div>
 
-        <div class="my-4 flex flex-col gap-1.5 min-w-[1024px]">
+        <div class="my-4 flex flex-col gap-2 min-w-[1024px]">
             @foreach($todos as $todo)
                 <livewire:todos.line :todo="$todo" :assignedToMe="$assignedToMe" :key="$todo->id"/>
             @endforeach

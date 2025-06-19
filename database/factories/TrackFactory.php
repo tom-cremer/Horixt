@@ -2,9 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Color;
-use App\Models\Priority;
-use App\Models\Status;
 use App\Models\Track;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -14,12 +11,21 @@ class TrackFactory extends Factory
 
     public function definition(): array
     {
+        $startedAt = $this->faker->dateTimeBetween('-6 hours', 'now');
+        $endedAt = $this->faker->dateTimeBetween($startedAt, '+4 hours');
+
+        $start = strtotime($startedAt->format('Y-m-d H:i:s')); // Convert to timestamp
+        $end = strtotime($endedAt->format('Y-m-d H:i:s')); // Convert to timestamp
+
+        $duration = max(0, $end - $start);
+
         return [
-            'started_at' => $this->faker->dateTime(),
-            'ended_at' => $this->faker->dateTime(),
+            'started_at' => $startedAt,
+            'ended_at' => $endedAt,
             'user_id' => $this->faker->numberBetween(1, 10),
             'todo_id' => $this->faker->numberBetween(1, 10),
-            'durations' => $this->faker->numberBetween(0, 10000),
+            'durations' => $duration,
         ];
+
     }
 }

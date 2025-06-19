@@ -1,11 +1,19 @@
 <div
     x-data="{ open: false }"
 >
+    <div class="grid grid-cols-[auto_1fr] items-center gap-2 mb-2">
 
-    <flux:button icon="message-circle-plus" variant="filled" size="sm"
-                 x-on:click="open = !open">
-        Add Comment
-    </flux:button>
+        <flux:button icon="message-circle-plus" variant="filled" size="sm" square
+                     x-on:click="open = !open"/>
+
+        <flux:text variant="subtle" class="text-sm">
+            @if($comments->count() > 0)
+                {{$comments->count()}} {{Str::plural('Comment', $comments->count())}}
+            @else
+                No comments yet
+            @endif
+        </flux:text>
+    </div>
 
     <div
         x-show="open"
@@ -18,7 +26,7 @@
         x-transition:leave-end="opacity-0 translate-x-2"
         x-on:click.away="open = false"
         x-on:keydown.escape.window="open = false"
-        class="overflow-hidden max-w-xl w-full absolute top-0 right-0 bg-white border-l border-zinc-300 dark:border-zinc-600  dark:bg-zinc-800 rounded-l-lg h-screen p-5 shadow-lg z-50
+        class="overflow-hidden max-w-xl w-full absolute top-0 right-0 bg-white border-l border-zinc-300 dark:border-zinc-600  dark:bg-zinc-800 rounded-l-lg h-screen p-5 shadow-2xl z-50
         flex flex-col
         "
     >
@@ -58,7 +66,7 @@
 
             <div
                 class="flex flex-col gap-3 overflow-y-auto grow pr-1 {{(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::TODOS_COMMENT))? "max-h-[calc(100vh-280px)]" : "max-h-[calc(100vh-170px)]" }}"
-                wire:poll.60s>
+                wire:poll.10s>
                 @forelse($comments as $comment)
                     <div
                         class="flex flex-col gap-2
@@ -83,14 +91,15 @@
                                 </div>
                                 <flux:text variant="subtle" class="text-xs mb-0.5">
                                     @php
-                                     \App\Helper\TimezoneHelper::set()
+                                        \App\Helper\TimezoneHelper::set()
                                     @endphp
                                     {{ $comment->created_at->diffInMinutes() < 1 ? 'Just now' : $comment->created_at->locale('en_US')->diffForHumans() }}
                                 </flux:text>
 
                                 @if($comment->updated_at != $comment->created_at )
                                     <flux:text variant="subtle" class="text-xs mb-0.5">
-                                        (Edited {{ $comment->updated_at->diffInMinutes() < 1 ? 'Just now' : $comment->updated_at->locale('en_US')->diffForHumans() }})
+                                        (Edited {{ $comment->updated_at->diffInMinutes() < 1 ? 'Just now' : $comment->updated_at->locale('en_US')->diffForHumans() }}
+                                        )
                                     </flux:text>
                                 @endif
                             </div>

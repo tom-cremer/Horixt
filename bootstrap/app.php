@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'organization' => \App\Http\Middleware\OrganizationMiddleware::class,
             'check.invite.token' => \App\Http\Middleware\CheckInviteTokenMiddleware::class,
             'superadmin' => \App\Http\Middleware\SuperAdminMiddleware::class,
+            'check.nfc.token' => \App\Http\Middleware\CheckNfcToken::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -1,7 +1,14 @@
 <div class="relative gap-4"
      wire:keydown.alt.e.window.prevent="createDirectory"
+     x-data="{
+            mouseX: 0,
+            mouseY: 0}"
+     @contextmenu.prevent="
+            mouseX = $event.clientX;
+            mouseY = $event.clientY;
+            $wire.toggleContextMenu(mouseX, mouseY)"
 >
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-center justify-between gap-4">
         <flux:heading level="2" size="lg" class="">
             File Manager
         </flux:heading>
@@ -9,11 +16,11 @@
         <div class="flex flex-row gap-2">
             <flux:button.group>
 
-                <flux:button icon="folder-plus" variant="filled" size="sm"
+                <flux:button :loading="false" icon="folder-plus" variant="filled" size="sm"
                              wire:click="createDirectory">
                     New Directory
                 </flux:button>
-                <flux:button icon="upload" variant="filled" size="sm"
+                <flux:button :loading="false" icon="upload" variant="filled" size="sm"
                              wire:click="fileUploadModal">
                     Upload File
                 </flux:button>
@@ -37,13 +44,7 @@
 
         {{-- Subdirectories --}}
         <div
-            x-data="{
-            mouseX: 0,
-            mouseY: 0}"
-            @contextmenu.prevent="
-            mouseX = $event.clientX;
-            mouseY = $event.clientY;
-            $wire.toggleContextMenu(mouseX, mouseY)"
+
             class="relative flex flex-col gap-2 mt-4">
             @foreach ($directories as $directory)
                 <div
@@ -131,7 +132,7 @@
                 class="absolute z-10 p-2 bg-white dark:bg-zinc-700 rounded shadow border border-zinc-200 dark:border-zinc-600
              min-w-72 flex flex-col gap-2
             "
-                style="top: {{ $y-65 }}px; left: {{ $x - (session('collapsed')? '80' : '310') }}px;"
+                style="top: {{ $y - 120 }}px; left: {{ $x - (session('collapsed')? '80' : '310') }}px;"
             >
                 <div class="flex flex-row justify-end items-center gap-2">
                     <flux:button square :loading="false" variant="subtle" icon="x" size="xs"
@@ -221,11 +222,11 @@
                             <flux:heading level="3" size="lg">
                                 {{ $selectedFile->name .'.'. $selectedFile->extension }}
                             </flux:heading>
-                            @if(\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::FILES_RENAME))
-                                <flux:button icon="square-pen" size="xs" variant="subtle"
-                                             wire:click="editSelectedFile"
-                                             class="opacity-30 group-hover:opacity-100 transition-opacity duration-200"/>
-                            @endif
+                                @if(!$selectedFile->locked && (\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::FILES_RENAME)))
+                                    <flux:button icon="square-pen" size="xs" variant="subtle"
+                                                 wire:click="editSelectedFile"
+                                                 class="opacity-30 group-hover:opacity-100 transition-opacity duration-200"/>
+                                @endif
                         </div>
                     @endif
 
@@ -249,7 +250,6 @@
                                 <flux:icon
                                     name="{{ $selectedFile->locked ? 'lock' : 'lock-open' }}"
                                     variant="mini"
-                                    class="{{ $selectedFile->locked ? 'text-red-500' : 'text-green-500' }}"
                                 />
                                 {{ $selectedFile->locked ? 'Locked' : 'Unlocked' }}
                             </flux:button>

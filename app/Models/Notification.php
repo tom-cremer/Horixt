@@ -34,6 +34,12 @@ class Notification extends Model
         $this->update(['read_at' => now()]);
     }
 
+    public function markAsUnread()
+    {
+        TimezoneHelper::set();
+        $this->update(['read_at' => null]);
+    }
+
     public function scopeUnread($query)
     {
         return $query->whereNull('read_at');

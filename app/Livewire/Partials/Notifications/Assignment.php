@@ -39,13 +39,32 @@ class Assignment extends HorixtComponent
     {
         $this->notification->markAsRead();
         self::refresh();
-        $this->dispatch('notificationRead');
+
+    }
+
+    public function markAsUnread()
+    {
+        $this->notification->markAsUnread();
+        self::refresh();
     }
 
     public function viewTodo()
     {
         $project = $this->todo->project;
 
+        // expand task parent of the todo if it exists
+        if ($this->todo->parent) {
+            $parent = $this->todo->parent;
+            while ($parent) {
+                session(["todo_{$parent->id}_expanded" => true]);
+                $parent = $parent->parent;
+            }
+        }
+
+        // mark the notification as read
+        $this->notification->markAsRead();
+
+        // redirect to the project of the todo
         if (!empty($project)) {
             if ($project->organization_id) {
                 return redirect()->route('organization.projects.show', ['projectid' => $project->id, 'slug' => $project->organization->slug]);
@@ -70,6 +89,8 @@ class Assignment extends HorixtComponent
         }
     }
 
+
+    #[On('mark-all-as-read')]
     public function render()
     {
 

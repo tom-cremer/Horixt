@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helper\Context;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -10,7 +11,7 @@ use Laravel\Scout\Searchable;
 
 class Project extends Model
 {
-    use Searchable;
+    use Searchable, HasFactory;
 
     protected $fillable = [
         'name',
@@ -19,7 +20,6 @@ class Project extends Model
         'organization_id',
         'status_id',
         'priority_id',
-        'color_id',
         'due_at',
     ];
 
@@ -55,6 +55,7 @@ class Project extends Model
     {
         if (Context::isOrganization()) {
             return $this->hasOne(FavoriteProject::class, 'project_id', 'id')
+                ->where('user_id', auth()->id())
                 ->where('organization_id', Context::getOrganizationId());
         } else {
             return $this->hasOne(FavoriteProject::class, 'project_id', 'id')
@@ -66,6 +67,12 @@ class Project extends Model
     public function organization(): HasOne
     {
         return $this->hasOne(Organization::class, 'id', 'organization_id');
+    }
+
+
+    public function briefs()
+    {
+        return $this->hasMany(Notes::class, 'project_id', 'id');
     }
 
 }

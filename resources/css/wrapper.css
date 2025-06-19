@@ -1,0 +1,161 @@
+.wrapper {
+    position: relative;
+    max-width: 1560px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+}
+
+@media (max-width: 1600px) {
+    .wrapper {
+        max-width: none;
+        width: 100%;
+        padding: 0 50px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .wrapper {
+        padding: 0 5%;
+    }
+}
+
+.wrapper--small {
+    max-width: 1440px;
+    padding: 0;
+}
+
+@media (max-width: 1500px) {
+    .wrapper--small {
+        max-width: none;
+        padding: 0 50px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .wrapper--small {
+        padding: 0 5%;
+    }
+}
+
+.wrapper--small2 {
+    max-width: 1220px;
+    padding: 0;
+}
+
+@media (max-width: 1400px) {
+    .wrapper--small2 {
+        max-width: none;
+        padding: 0 50px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .wrapper--small2 {
+        padding: 0 5%;
+    }
+}
+
+.wrapper--smaller {
+    max-width: 1080px;
+    padding: 0;
+}
+
+@media (max-width: 1180px) {
+    .wrapper--smaller {
+        max-width: 100%;
+        padding: 0 50px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .wrapper--smaller {
+        padding: 0 5%;
+    }
+}
+
+.wrapper--text {
+    max-width: 860px;
+    padding: 0;
+}
+
+@media (max-width: 900px) {
+    .wrapper--text {
+        max-width: none;
+        padding: 0 50px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .wrapper--text {
+        padding: 0 5%;
+    }
+}
+
+.wrapper--large {
+    max-width: 1660px;
+}
+
+@media (max-width: 1700px) {
+    .wrapper--large {
+        max-width: none;
+        padding: 0 50px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .wrapper--large {
+        padding: 0 5%;
+    }
+}
+
+.wrapper--xlarge {
+    max-width: 1820px;
+}
+
+@media (max-width: 1900px) {
+    .wrapper--xlarge {
+        max-width: none;
+        padding: 0 50px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .wrapper--xlarge {
+        padding: 0 5%;
+    }
+}
+
+.wrapper--full {
+    max-width: none;
+    width: 100%;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+@media (max-width: 1900px) {
+    .wrapper--full {
+        max-width: 1780px;
+        padding: 0;
+    }
+}
+
+@media (max-width: 1800px) {
+    .wrapper--full {
+        max-width: none;
+        padding: 0 50px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .wrapper--full {
+        padding: 0 5%;
+    }
+}
+
+.wrapper--none {
+    max-width: none !important;
+    width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}

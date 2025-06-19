@@ -4,12 +4,12 @@ use App\Livewire\AssignedToMe;
 use App\Livewire\Dashboard;
 use App\Livewire\FileManager;
 use App\Livewire\Members;
+use App\Livewire\Nfc;
 use App\Livewire\NoteBoard;
 use App\Livewire\Organizations;
 use App\Livewire\OrgInvite;
 use App\Livewire\ProjectDetails;
 use App\Livewire\ProjectList;
-use App\Livewire\Todo;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -22,6 +22,9 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+Route::get('/nfc/{token}', Nfc::class)
+    ->middleware(['check.nfc.token'])
+    ->name('nfc');
 
 Route::prefix('/personal')
     ->middleware(['personal'])
@@ -34,7 +37,6 @@ Route::prefix('/personal')
 
         Route::get('/dashboard', Dashboard::class)->name('dashboard');
         Route::get('/organizations', Organizations::class)->name('organizations');
-        Route::get('/todos', Todo::class)->name('todos');
         Route::get('/projects', ProjectList::class)->name('projects.index');
         Route::get('/projects/{projectid}', ProjectDetails::class)->name('projects.show');
         Route::get('/files', FileManager::class)->name('files');
@@ -54,7 +56,6 @@ Route::prefix('/organization/{slug}')
 
         Route::get('/dashboard', Dashboard::class)->name('dashboard');
         Route::get('/members', Members::class)->name('members');
-        Route::get('/todos', Todo::class)->name('todos');
         Route::get('/projects', ProjectList::class)->name('projects.index');
         Route::get('/projects/{projectid}', ProjectDetails::class)->name('projects.show');
         Route::get('/files', FileManager::class)->name('files');

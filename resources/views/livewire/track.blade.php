@@ -63,7 +63,8 @@
                                      src="{{\Illuminate\Support\Facades\Storage::url($track->user->avatar->path)}}"/>
                     @else
                         <flux:avatar tooltip="{{$track->user->name}}" size="xs" name="{{$track->user->name}}"
-                                     class="ring-0! ring-transparent!"/>
+                                     class="ring-0! ring-transparent!" color="auto" color:seed="{{ $track->user->id }}"
+                                     initials:single/>
                     @endif
 
                     @if(isset($this->trackToEdit) && $this->trackToEdit == $track->id)
@@ -88,25 +89,27 @@
                                 @contextmenu.prevent="$wire.edit({{ $track->id }})"
                                 class="whitespace-nowrap"
                             >
-                                {{ $track->started_at->format('d/m/y H:i:s') }}
-                                - {{ $track->ended_at ? $track->ended_at->format('d/m/y H:i:s') : 'Ongoing' }}
+                                {{ $track->ended_at ? ($track->started_at->format('d/m/y') === $track->ended_at->format('d/m/y') ? $track->started_at->format('d/m/y H:i') . ' - ' . $track->ended_at->format('H:i') : $track->started_at->format('d/m/y H:i') . ' - ' . $track->ended_at->format('d/m/y H:i')) : 'Ongoing' }}
                             </flux:text>
                             @if ($track->ended_at)
                                 <flux:text class="whitespace-nowrap">
-                                    Duration: {{ $track->durations }} seconds
-                                </flux:text>
+                                    Duration: {{ \Carbon\CarbonInterval::seconds($track->durations)->cascade()->locale('en_US')->format('%Dd%Hh%Im') }}</flux:text>
                             @endif
                         </div>
                     @endif
                     <div class="flex grow gap-1.5 justify-end">
-                        @if(!(isset($this->trackToEdit) && $this->trackToEdit == $track->id))
+                        @if(!(isset($this->trackToEdit) && $this->trackToEdit === $track->id))
+                            @if( ($track->user_id === auth()->user()->id || auth()->user()->hasRole('admin')) && (\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::TRACKS_UPDATE)) )
 
-                            <flux:button :loading="false" :square="true" size="xs" icon="square-pen"
-                                         wire:click="edit({{ $track->id }})"/>
+                                <flux:button :loading="false" :square="true" size="xs" icon="square-pen" variant="filled"
+                                             wire:click="edit({{ $track->id }})"/>
+                            @endif
                         @endif
-                        <flux:button :loading="false" :square="true" size="xs" icon="trash-2" variant="danger"
-                                     wire:click="deleteTrack({{ $track->id }})"
-                        />
+                        @if( ($track->user_id === auth()->user()->id || auth()->user()->hasRole('admin')) && (\App\Helper\Context::isPersonal() || auth()->user()->can(\App\Enums\PermissionEnum::TRACKS_DELETE)) )
+                            <flux:button :loading="false" :square="true" size="xs" icon="trash-2" variant="filled"
+                                         wire:click="deleteTrack({{ $track->id }})"
+                            />
+                        @endif
                     </div>
 
                 </div>
@@ -120,6 +123,16 @@
             clearInterval(interval);
             setTimeout(() => $wire.stop(), 1000);
         });
+
+        if ({{$activeTrack ? 'true' : 'false'}}) {
+            window.Echo.private(`track.{{ $activeTrack?->id }}`)
+                .listen('TrackStopped', (e) => {
+                    if (e.trackId === {{ $activeTrack?->id }}) {
+                        $wire.stop();
+                    }
+                });
+        }
+
     </script>
     @endscript
 </div>

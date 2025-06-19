@@ -10,7 +10,7 @@
     })"
 
     @class([
-     'font-lexend bg-white dark:bg-zinc-700 border border-neutral-200 dark:border-neutral-500 fixed bottom-4 right-4 z-50 px-4 py-3 rounded-xl shadow text-sm max-w-sm transition-transform transition-opacity duration-400 ease-in-out',
+     'font-lexend bg-zinc-50 dark:bg-zinc-600 border border-neutral-200 dark:border-neutral-500 fixed bottom-6 right-5 z-50 px-4 py-3 rounded-xl shadow text-sm max-w-sm transition-transform transition-opacity duration-400 ease-in-out',
      'opacity-0 translate-y-4' => !$visible,
      'opacity-100 translate-y-0' => $visible,
  ])

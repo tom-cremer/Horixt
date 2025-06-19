@@ -168,10 +168,7 @@ class User extends Authenticatable
 
     public function notifications(): HasMany
     {
-        return $this->hasMany(Notification::class, 'user_id')
-            ->whereNotNull('user_id')
-            ->where('type', '!=', NotificationType::INVITATION->value)
-            ->orderBy('created_at', 'desc');
+        return $this->hasMany(Notification::class, 'user_id');
     }
 
     public function unreadNotifications()

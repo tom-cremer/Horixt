@@ -1,7 +1,7 @@
 <div class="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-600 rounded-lg">
 
     <div class="grid grid-cols-[auto_1fr_auto] gap-2">
-        <div>
+        <div wire:click="viewTodo">
             @if($author->avatar)
                 <flux:avatar tooltip="{{$author->name}}" size="xs"
                              class="ring-0! ring-transparent!"
@@ -15,7 +15,7 @@
                              initials:single/>
             @endif
         </div>
-        <div class="flex flex-col">
+        <div class="flex flex-col" wire:click="viewTodo">
             <flux:text variant="strong" class="text-sm">
                 <b>{{$author->name}}</b> {{$type ? 'assigned you to a task' : 'unassigned you to a task'}}
                 <b>{{ $todo->name }}</b>
@@ -36,13 +36,9 @@
             <flux:button icon="ellipsis" size="xs" variant="filled"/>
 
             <flux:menu>
-                <flux:menu.item icon="square-arrow-out-up-right"
-                                wire:click="viewTodo">
-                    Go to project
-                </flux:menu.item>
-                <flux:menu.item icon="mail-check"
-                                wire:click="markAsRead">
-                    Mark as read
+                <flux:menu.item icon="mail-minus"
+                                wire:click="markAsUnread">
+                    Mark as Unread
                 </flux:menu.item>
             </flux:menu>
         </flux:dropdown>

@@ -20,7 +20,6 @@ return new class extends Migration {
             $table->unsignedBigInteger('organization_id')->nullable(); // Mode organisation
             $table->unsignedBigInteger('status_id');
             $table->unsignedBigInteger('priority_id');
-            $table->unsignedBigInteger('color_id');
             $table->dateTime('due_at')->nullable();
             $table->timestamps();
         });

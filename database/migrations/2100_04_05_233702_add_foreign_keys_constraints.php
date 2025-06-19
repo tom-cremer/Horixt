@@ -20,13 +20,11 @@ return new class extends Migration
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
             $table->foreign('status_id')->references('id')->on('statuses')->onDelete('cascade');
             $table->foreign('priority_id')->references('id')->on('priorities')->onDelete('cascade');
-            $table->foreign('color_id')->references('id')->on('colors')->onDelete('cascade');
         });
 
         Schema::table('todos', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
-            $table->foreign('color_id')->references('id')->on('colors')->onDelete('cascade');
             $table->foreign('status_id')->references('id')->on('statuses')->onDelete('cascade');
             $table->foreign('priority_id')->references('id')->on('priorities')->onDelete('cascade');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
@@ -106,6 +104,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
             $table->foreign('color_id')->references('id')->on('colors')->onDelete('cascade');
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
         });
     }
 
@@ -124,13 +123,11 @@ return new class extends Migration
             $table->dropForeign(['organization_id']);
             $table->dropForeign(['status_id']);
             $table->dropForeign(['priority_id']);
-            $table->dropForeign(['color_id']);
         });
 
         Schema::table('todos', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
             $table->dropForeign(['project_id']);
-            $table->dropForeign(['color_id']);
             $table->dropForeign(['status_id']);
             $table->dropForeign(['priority_id']);
             $table->dropForeign(['organization_id']);
@@ -210,7 +207,7 @@ return new class extends Migration
             $table->dropForeign(['user_id']);
             $table->dropForeign(['organization_id']);
             $table->dropForeign(['color_id']);
-
+            $table->dropForeign(['project_id']);
         });
 
     }
