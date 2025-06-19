@@ -81,93 +81,16 @@
 
                 <!-- Texte -->
                 <div class="text-center mt-8">
-                    <h1 class="text-3xl md:text-5xl font-bold font-display">Prêts à vivre une aventure&nbsp;?</h1>
+                    <h1 class="text-3xl md:text-5xl font-bold font-lexend relative z-20 ">Prêts à vivre une aventure&nbsp;?</h1>
                     <p class="mt-2 text-lg opacity-70">Plongez dans l'univers d'{{config('app.name')}}</p>
                 </div>
             </div>
         </div>
     </section>
-    <section class="mt-32 relative text-white px-4">
-        <div class="wrapper w-full max-w-6xl mx-auto text-center">
-            <h2 class="text-4xl font-display font-bold">Ce que vous pouvez faire avec Horixt</h2>
-            <p class="mt-2 text-lg text-white/60">Une suite d’outils modulaires, conçus pour vous faire gagner du
-                temps.</p>
 
-            <div class="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                <div class="bg-white/5 rounded-xl p-6 backdrop-blur hover:bg-white/10 transition">
-                    <h3 class="text-xl font-semibold">Gérer vos tâches</h3>
-                    <p class="text-white/60 mt-2 text-sm">Des to-dos imbriqués, assignables, avec des commentaires et
-                        des suivis de temps intégrés.</p>
-                </div>
-                <div class="bg-white/5 rounded-xl p-6 backdrop-blur hover:bg-white/10 transition">
-                    <h3 class="text-xl font-semibold">Organiser vos projets</h3>
-                    <p class="text-white/60 mt-2 text-sm">Suivi de projet visuel, statuts personnalisés, membres et
-                        clients liés.</p>
-                </div>
-                <div class="bg-white/5 rounded-xl p-6 backdrop-blur hover:bg-white/10 transition">
-                    <h3 class="text-xl font-semibold">Partager des fichiers</h3>
-                    <p class="text-white/60 mt-2 text-sm">Un gestionnaire de fichiers sécurisé, lié à vos tâches,
-                        projets ou notes.</p>
-                </div>
-                <div class="bg-white/5 rounded-xl p-6 backdrop-blur hover:bg-white/10 transition">
-                    <h3 class="text-xl font-semibold">Suivre le temps</h3>
-                    <p class="text-white/60 mt-2 text-sm">Activez un timer sur une tâche, obtenez des stats, gérez vos
-                        forfaits client.</p>
-                </div>
-                <div class="bg-white/5 rounded-xl p-6 backdrop-blur hover:bg-white/10 transition">
-                    <h3 class="text-xl font-semibold">Prendre des notes</h3>
-                    <p class="text-white/60 mt-2 text-sm">Notes liées, post-it, annotations rapides sur les projets en
-                        cours.</p>
-                </div>
-                <div class="bg-white/5 rounded-xl p-6 backdrop-blur hover:bg-white/10 transition">
-                    <h3 class="text-xl font-semibold">Tout centraliser</h3>
-                    <p class="text-white/60 mt-2 text-sm">Un tableau de bord par organisation ou personnel, pour tout
-                        voir en un coup d’œil.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section class="mt-32 relative text-white px-4">
-        <div class="wrapper w-full max-w-5xl mx-auto text-center">
-            <h2 class="text-4xl font-display font-bold">Une interface fluide et intuitive</h2>
-            <p class="mt-2 text-lg text-white/60">Conçue pour vous laisser travailler sans friction.</p>
 
-            <div class="relative mt-16 overflow-hidden rounded-2xl shadow-2xl border border-white/10">
-                <video
-                    class="w-full"
-                    autoplay muted loop playsinline
-                    src="/videos/horixt-overview.mp4"
-                ></video>
-                <!-- ou une image mockup -->
-                <!-- <img src="/images/horixt-dashboard-preview.png" alt="Horixt Dashboard" class="w-full"> -->
-            </div>
-        </div>
-    </section>
 
-    <section class="mt-32 relative text-white px-4">
-        <div class="wrapper w-full max-w-5xl mx-auto text-center">
-            <h2 class="text-4xl font-display font-bold">Pour les indépendants, les équipes, les organisations</h2>
-            <p class="mt-2 text-lg text-white/60">Horixt s’adapte à votre échelle.</p>
 
-            <div class="mt-12 flex flex-col md:flex-row justify-center gap-8 text-left">
-                <div class="bg-white/5 rounded-xl p-6 w-full md:w-1/3 backdrop-blur">
-                    <h3 class="text-xl font-semibold">Mode Solo</h3>
-                    <p class="text-white/60 mt-2 text-sm">Gratuit, privé, tout est stocké chez vous. Pour vos projets
-                        persos ou freelances.</p>
-                </div>
-                <div class="bg-white/5 rounded-xl p-6 w-full md:w-1/3 backdrop-blur">
-                    <h3 class="text-xl font-semibold">Petites équipes</h3>
-                    <p class="text-white/60 mt-2 text-sm">Collaboration en temps réel, partage de fichiers, suivi simple
-                        des projets.</p>
-                </div>
-                <div class="bg-white/5 rounded-xl p-6 w-full md:w-1/3 backdrop-blur">
-                    <h3 class="text-xl font-semibold">Organisations</h3>
-                    <p class="text-white/60 mt-2 text-sm">Gestion des rôles, espace sécurisé, statistiques et connexion
-                        client.</p>
-                </div>
-            </div>
-        </div>
-    </section>
     <footer class="mt-38 ">
         <div class="wrapper flex flex-col items-center gap-10 min-h-24">
 
